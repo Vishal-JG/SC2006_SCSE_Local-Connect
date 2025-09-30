@@ -10,7 +10,7 @@ import {
 
 export default function AuthPage() {
   const [isLogin, setIsLogin] = useState(true);
-  const [loginEmail, setLoginEmail] = useState('');
+  const [loginEmail, setLoginEmail] = useState(''); 
   const [loginPassword, setLoginPassword] = useState('');
   const [signUpFirstName, setSignUpFirstName] = useState('');
   const [signUpLastName, setSignUpLastName] = useState('');
