@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { getAuth, onAuthStateChanged, getIdToken } from 'firebase/auth';
 
 
 const firebaseConfig = {
@@ -22,5 +22,16 @@ onAuthStateChanged(auth, user => {
     console.log('No user')
   }
 })
+const user = auth.currentUser;
+if (user) {
+  const idToken = await getIdToken(user);
+  fetch('http://localhost:5000/api/login', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + idToken
+    }
+  });
+}
 
 export {app, auth};

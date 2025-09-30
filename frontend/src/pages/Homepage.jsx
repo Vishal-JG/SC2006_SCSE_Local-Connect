@@ -1,16 +1,25 @@
 import React from 'react';
 import { auth } from '../firebase';
 import { signOut } from 'firebase/auth';
+import axios from 'axios';
+
 
 export default function Home({ user }) {
-  const handleLogout = async () => {
-    try {
-      await signOut(auth);
-      // After sign-out, the onAuthStateChanged in App.jsx will detect and update UI
-    } catch (error) {
-      console.error("Logout failed:", error);
-    }
-  };
+
+const handleLogout = async () => {
+  try {
+    const idToken = await auth.currentUser.getIdToken();  // Get token BEFORE signOut
+
+    await axios.post('http://localhost:5000/api/logout', {}, {
+      headers: { Authorization: `Bearer ${idToken}` }
+    });
+
+    await signOut(auth);  // Call signOut AFTER notifying backend
+  } catch (error) {
+    console.error("Logout failed:", error);
+  }
+};
+
 
   return (
     <div>
