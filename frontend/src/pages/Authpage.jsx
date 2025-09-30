@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './Authpage.css';
-import { auth } from './firebase'; 
+import { auth } from '../firebase'; 
 
 import {
   signInWithEmailAndPassword,
