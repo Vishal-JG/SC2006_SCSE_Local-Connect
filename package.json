@@ -1,0 +1,23 @@
+{
+  "name": "sc2006_scse_local-connect",
+  "version": "1.0.0",
+  "description": "Local Connect project",
+  "main": "index.js",
+  "scripts": {
+    "start-backend": "node backend/index.js",
+    "test": "echo \"No tests specified\" && exit 0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Vishal-JG/SC2006_SCSE_Local-Connect.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Vishal-JG/SC2006_SCSE_Local-Connect/issues"
+  },
+  "homepage": "https://github.com/Vishal-JG/SC2006_SCSE_Local-Connect#readme",
+  "dependencies": {
+  
+  }
+}
