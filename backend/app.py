@@ -2,6 +2,7 @@ import firebase_admin
 from firebase_admin import credentials, auth
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+from controllers.external_api_controller import external_bp #import external api
 import os
 from dotenv import load_dotenv
 
@@ -13,6 +14,7 @@ firebase_admin.initialize_app(cred)
 
 app = Flask(__name__)
 CORS(app)  # enable CORS for all routes
+app.register_blueprint(external_bp, url_prefix="/api") #register blueprint of external api
 
 @app.route('/api/login', methods=['POST'])
 def api_login():
