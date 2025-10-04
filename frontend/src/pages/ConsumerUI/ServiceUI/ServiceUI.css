@@ -1,0 +1,75 @@
+.explore-services-list {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr); /* 5 columns */
+    grid-template-rows: repeat(2, 1fr);    /* 2 rows */
+    gap: 32px;
+    justify-items: center;
+    margin: 32px 0;
+}
+.top {
+    display: flex;
+    align-items: stretch; /* Make children take full height */
+    height: 48px;         /* Set to match your h1's height, adjust as needed */
+}
+.top Button {
+    width: 2vw;
+    height: 2vw;
+    display: flex;
+    justify-content: center;
+}
+.btn {
+    height: 100%;
+    width: 48px;          /* Make button square, adjust as needed */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #b3e5fc;
+    border: none;
+    border-radius: 6px;
+    padding: 0;
+    margin-right: 12px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.services-list h1 {
+    margin-bottom: 4vw;
+    height: 100%;
+    display: flex;
+    align-items: center;  /* Vertically center text */
+    margin: 0;
+}
+
+.services-list-item {
+    background: linear-gradient(135deg, #737373 0%, #D9D9D9 100%);
+    width: 130px;
+    height: 130px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 16px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.10);
+    transition: transform 0.15s, box-shadow 0.15s;
+    cursor: pointer;
+}
+
+.services-list-item:hover {
+    transform: translateY(-4px) scale(1.04);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.16);
+}
+
+.services-list-item img {
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+    margin-bottom: 8px;
+}
+
+.services-list-item p {
+    margin: 0;
+    font-size: 1rem;
+    color: #222;
+    text-align: center;
+    font-weight: 500;
+}

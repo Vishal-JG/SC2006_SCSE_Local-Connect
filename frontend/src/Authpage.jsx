@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './Authpage.css';
 import { auth } from './firebase'; 
+import { useNavigate } from "react-router-dom";
 
 import {
   signInWithEmailAndPassword,
@@ -19,6 +20,7 @@ export default function AuthPage() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [message, setMessage] = useState('');
 
+  const navigate = useNavigate();
   const clearMessage = () => setMessage('');
 
   const handleLogin = async (e) => {
@@ -27,6 +29,7 @@ export default function AuthPage() {
     try {
       const userCredential = await signInWithEmailAndPassword(auth, loginEmail, loginPassword);
       setMessage(`Login successful! Welcome, ${userCredential.user.email}`);
+      navigate("/service");
     } catch (error) {
       setMessage(`Error: ${error.message}`);
     }
