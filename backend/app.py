@@ -4,8 +4,8 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import os
 from dotenv import load_dotenv
-
 load_dotenv()
+
 key_path = os.getenv('GOOGLE_APPLICATION_CREDENTIALS')
 
 cred = credentials.Certificate(key_path)  
