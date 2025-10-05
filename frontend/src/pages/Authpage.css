@@ -1,13 +1,6 @@
-body {
-  font-family: Arial, sans-serif;
-  background-color: #f4f4f4;
-  margin: 0;
-  padding: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  min-height: 100vh;
-}
+/* body {
+  display: flex;  
+}  */
 
 .container {
   background: white;
@@ -15,6 +8,8 @@ body {
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   width: 320px;
+  margin: auto auto;
+  margin-top: 5rem;
 }
 
 h2 {
