@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import './Authpage.css';
 import { auth } from './firebase'; 
 import { useNavigate } from "react-router-dom";
+import { auth } from '../firebase'; 
+import axios from 'axios';
 
 import {
   signInWithEmailAndPassword,
@@ -11,7 +13,7 @@ import {
 
 export default function AuthPage() {
   const [isLogin, setIsLogin] = useState(true);
-  const [loginEmail, setLoginEmail] = useState('');
+  const [loginEmail, setLoginEmail] = useState(''); 
   const [loginPassword, setLoginPassword] = useState('');
   const [signUpFirstName, setSignUpFirstName] = useState('');
   const [signUpLastName, setSignUpLastName] = useState('');
@@ -23,39 +25,61 @@ export default function AuthPage() {
   const navigate = useNavigate();
   const clearMessage = () => setMessage('');
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    clearMessage();
-    try {
-      const userCredential = await signInWithEmailAndPassword(auth, loginEmail, loginPassword);
-      setMessage(`Login successful! Welcome, ${userCredential.user.email}`);
-      navigate("/service");
-    } catch (error) {
-      setMessage(`Error: ${error.message}`);
-    }
-  };
+ const handleLogin = async (e) => {
+  e.preventDefault();
+  clearMessage();
 
-  const handleSignUp = async (e) => {
-    e.preventDefault();
-    clearMessage();
-    if (signUpPassword !== confirmPassword) {
-      setMessage("Passwords do not match");
-      return;
-    }
-    try {
-      const userCredential = await createUserWithEmailAndPassword(
-        auth,
-        signUpEmail,
-        signUpPassword
-      );
-      await updateProfile(userCredential.user, {
-        displayName: `${signUpFirstName} ${signUpLastName}`,
-      });
-      setMessage("Account created successfully!");
-    } catch (error) {
-      setMessage(`Error: ${error.message}`);
-    }
-  };
+  try {
+    const userCredential = await signInWithEmailAndPassword(auth, loginEmail, loginPassword);
+    // Get Firebase ID token for the user
+    const idToken = await userCredential.user.getIdToken();
+
+    // Notify backend of login with token for verification and logging
+    await axios.post('http://localhost:5000/api/login', {}, {
+      headers: { Authorization: `Bearer ${idToken}` }
+    });
+
+    setMessage(`Login successful! Welcome, ${userCredential.user.email}`);
+  } catch (error) {
+    setMessage(`Error: ${error.message}`);
+  }
+};
+
+
+const handleSignUp = async (e) => {
+  e.preventDefault();
+  clearMessage();
+
+  if (signUpPassword !== confirmPassword) {
+    setMessage("Passwords do not match");
+    return;
+  }
+
+  try {
+    const userCredential = await createUserWithEmailAndPassword(
+      auth,
+      signUpEmail,
+      signUpPassword
+    );
+
+    await updateProfile(userCredential.user, {
+      displayName: `${signUpFirstName} ${signUpLastName}`,
+    });
+
+    // Get Firebase ID token after signup
+    const idToken = await userCredential.user.getIdToken();
+
+    // Notify backend of signup event
+    await axios.post('http://localhost:5000/api/signup', {}, {
+      headers: { Authorization: `Bearer ${idToken}` }
+    });
+
+    setMessage("Account created successfully!");
+  } catch (error) {
+    setMessage(`Error: ${error.message}`);
+  }
+};
+
 
   return (
     <div className="container">
