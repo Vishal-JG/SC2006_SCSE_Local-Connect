@@ -1,18 +1,20 @@
+// SearchBar.jsx
 import React, { useState, useEffect, useRef } from "react";
-import { FaSearch } from "react-icons/fa";
-import filterIcon from "../assets/filter.png";
-import "./SearchBar.css";
+import { FaSearch, FaFilter } from "react-icons/fa";
+import './SearchBar.css'; 
+// Example usage: <SearchBar value={search} onChange={...} suggestions={...} ... />
 
-const SearchBar = ({ 
-  value, 
-  onChange, 
-  suggestions = [], 
-  onSuggestionClick, 
-  onFilterClick, 
+const SearchBar = ({
+  value,
+  onChange,
+  suggestions = [],
+  onSuggestionClick,
+  onFilterClick,
   fetchResults // optional async function for backend
 }) => {
   const [focused, setFocused] = useState(false);
   const [results, setResults] = useState([]);
+  const [highlight, setHighlight] = useState(-1);
   const containerRef = useRef(null);
 
   // Close dropdown if clicked outside
@@ -20,20 +22,20 @@ const SearchBar = ({
     const handleClickOutside = (event) => {
       if (containerRef.current && !containerRef.current.contains(event.target)) {
         setFocused(false);
+        setHighlight(-1);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Fetch from backend if function is provided
+  // Fetch from backend if function provided
   useEffect(() => {
     if (!fetchResults) return;
     if (value.trim() === "") {
       setResults([]);
       return;
     }
-
     const timeoutId = setTimeout(async () => {
       try {
         const data = await fetchResults(value);
@@ -42,51 +44,82 @@ const SearchBar = ({
         setResults([]);
       }
     }, 400);
-
     return () => clearTimeout(timeoutId);
   }, [value, fetchResults]);
 
   // Local filtering fallback
   const filteredSuggestions = !fetchResults
     ? suggestions.filter((opt) =>
-        opt.toLowerCase().includes(value.toLowerCase())
+        (typeof opt === "string" ? opt : opt.name)
+          .toLowerCase()
+          .includes(value.toLowerCase())
       )
     : results;
 
+  // Keyboard navigation
+  const handleKeyDown = (e) => {
+    if (!focused || filteredSuggestions.length === 0) return;
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      setHighlight((prev) => (prev + 1) % filteredSuggestions.length);
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      setHighlight((prev) =>
+        prev === -1
+          ? filteredSuggestions.length - 1
+          : (prev - 1 + filteredSuggestions.length) % filteredSuggestions.length
+      );
+    } else if (e.key === "Enter" && highlight > -1) {
+      onSuggestionClick(filteredSuggestions[highlight]);
+      setFocused(false);
+      setHighlight(-1);
+    }
+  };
+
   return (
     <div className="search-bar-container" ref={containerRef}>
-      <div className="search-input-wrapper">
-        <FaSearch className="search-icon" />
+      <div className="search-bar-input-wrapper">
+        <FaSearch className="text-gray-500" style={{ marginRight: "6px" }} />
         <input
+          className="search-bar-input"
           type="text"
-          className="search-input"
           placeholder="Search..."
           value={value}
           onChange={onChange}
           onFocus={() => setFocused(true)}
+          onKeyDown={handleKeyDown}
           autoComplete="off"
         />
-        <button 
-          className="filter-btn" 
+        <button
+          className="search-bar-filter"
           aria-label="Filter"
           onClick={onFilterClick}
+          type="button"
         >
-          <img src={filterIcon} alt="filter" />
+          <FaFilter />
         </button>
       </div>
-
-      {focused && filteredSuggestions.length > 0 && (
-        <ul className="search-dropdown">
+      {focused && value.trim() && filteredSuggestions.length > 0 && (
+        <div className="search-bar-dropdown" role="listbox">
+          <div style={{ fontSize: "0.85rem", padding: "10px 18px", color: "#555", borderBottom: "1px solid #eaeaea" }}>
+            Search Results
+          </div>
           {filteredSuggestions.map((opt, idx) => (
-            <li 
-              key={idx} 
-              className="search-option"
+            <p
+              key={idx}
+              role="option"
+              aria-selected={highlight === idx}
+              className={`search-bar-dropdown-item${highlight === idx ? " highlighted" : ""}`}
               onMouseDown={() => onSuggestionClick(opt)}
+              onMouseEnter={() => setHighlight(idx)}
+              style={{
+                background: highlight === idx ? "#f2f6fa" : "transparent"
+              }}
             >
               {typeof opt === "string" ? opt : opt.name}
-            </li>
+            </p>
           ))}
-        </ul>
+        </div>
       )}
     </div>
   );

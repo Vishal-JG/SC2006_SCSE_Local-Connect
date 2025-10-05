@@ -1,13 +1,17 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
 
 .header{
+    color: white;
+    text-shadow: 0 0 3px black;
     display: flex;
+    height: 100vh;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin-top: 3vw;
-    border-radius: 30px;
-    background-color: #bde0fe;
+    background-color: #0D0B23;
+    background-image: linear-gradient(135deg, #4e49a5 0%, #050221 100%); 
+    background-size: cover;
+    background-repeat: no-repeat;
     animation: fadeIn 3s;
 }
 
@@ -42,6 +46,7 @@
 }
 
 .testimonial {
+    text-shadow: 0 0 0 white;
     padding: 30px 10px;
     background-color: #FFFFFFB2;
     margin-top: 3vw;

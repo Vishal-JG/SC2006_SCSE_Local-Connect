@@ -4,7 +4,6 @@ import arrow from '../../../assets/arrow_back.png'
 import serviceImages from '../../../assets/services';
 import SearchBar from '../../../components/SearchBar';
 import { useNavigate } from "react-router-dom";
-import HomeButton from '../../../components/HomeButton';
 
 const ServiceUI = () => {
   const navigate = useNavigate();
@@ -16,7 +15,6 @@ const ServiceUI = () => {
   return (
     <>
       <div className='services-list' id="services-list">
-        <HomeButton />
         <div className='top'>
           <h1>Discover our services</h1>
         </div>

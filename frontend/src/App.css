@@ -6,15 +6,11 @@
     font-family: "Oufit", sans-serif;
 }
 
-body{
-    min-width: 100vh;
-}
 
 a{
     text-decoration: none;
     color: inherit;
 }
-.app {
-    margin: auto;
-    width: 80%;
-}
+
+ 
+

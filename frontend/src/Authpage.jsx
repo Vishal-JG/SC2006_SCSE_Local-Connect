@@ -59,105 +59,107 @@ export default function AuthPage() {
 
   return (
     <div className="container">
-      <div className="toggle-buttons">
-        <button
-          className={isLogin ? 'active' : ''}
-          onClick={() => {
-            setIsLogin(true);
-            clearMessage();
-          }}
-        >
-          Login
-        </button>
-        <button
-          className={!isLogin ? 'active' : ''}
-          onClick={() => {
-            setIsLogin(false);
-            clearMessage();
-          }}
-        >
-          Sign Up
-        </button>
+      <div className="login-alignment">
+        <div className="toggle-buttons">
+          <button
+            className={isLogin ? 'active' : ''}
+            onClick={() => {
+              setIsLogin(true);
+              clearMessage();
+            }}
+          >
+            Login
+          </button>
+          <button
+            className={!isLogin ? 'active' : ''}
+            onClick={() => {
+              setIsLogin(false);
+              clearMessage();
+            }}
+          >
+            Sign Up
+          </button>
+        </div>
+
+        {isLogin ? (
+          <form onSubmit={handleLogin} className="form">
+            <h2>Login</h2>
+
+            <label htmlFor="loginEmail">Email (username):</label>
+            <input
+              type="email"
+              id="loginEmail"
+              value={loginEmail}
+              onChange={(e) => setLoginEmail(e.target.value)}
+              required
+            />
+
+            <label htmlFor="loginPassword">Password:</label>
+            <input
+              type="password"
+              id="loginPassword"
+              value={loginPassword}
+              onChange={(e) => setLoginPassword(e.target.value)}
+              required
+            />
+
+            <button type="submit">Login</button>
+            <p className="message">{message}</p>
+          </form>
+        ) : (
+          <form onSubmit={handleSignUp} className="form">
+            <h2>Create Account</h2>
+
+            <label htmlFor="firstName">First Name:</label>
+            <input
+              type="text"
+              id="firstName"
+              value={signUpFirstName}
+              onChange={(e) => setSignUpFirstName(e.target.value)}
+              required
+            />
+
+            <label htmlFor="lastName">Last Name:</label>
+            <input
+              type="text"
+              id="lastName"
+              value={signUpLastName}
+              onChange={(e) => setSignUpLastName(e.target.value)}
+              required
+            />
+
+            <label htmlFor="signUpEmail">Email (username):</label>
+            <input
+              type="email"
+              id="signUpEmail"
+              value={signUpEmail}
+              onChange={(e) => setSignUpEmail(e.target.value)}
+              required
+            />
+
+            <label htmlFor="signUpPassword">Password:</label>
+            <input
+              type="password"
+              id="signUpPassword"
+              value={signUpPassword}
+              onChange={(e) => setSignUpPassword(e.target.value)}
+              required
+            />
+
+            <label htmlFor="confirmPassword">Confirm Password:</label>
+            <input
+              type="password"
+              id="confirmPassword"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              required
+            />
+
+            <button type="submit">Create Account</button>
+            <p className="message">{message}</p>
+          </form>
+        )}
       </div>
-
-      {isLogin ? (
-        <form onSubmit={handleLogin} className="form">
-          <h2>Login</h2>
-
-          <label htmlFor="loginEmail">Email (username):</label>
-          <input
-            type="email"
-            id="loginEmail"
-            value={loginEmail}
-            onChange={(e) => setLoginEmail(e.target.value)}
-            required
-          />
-
-          <label htmlFor="loginPassword">Password:</label>
-          <input
-            type="password"
-            id="loginPassword"
-            value={loginPassword}
-            onChange={(e) => setLoginPassword(e.target.value)}
-            required
-          />
-
-          <button type="submit">Login</button>
-          <p className="message">{message}</p>
-        </form>
-      ) : (
-        <form onSubmit={handleSignUp} className="form">
-          <h2>Create Account</h2>
-
-          <label htmlFor="firstName">First Name:</label>
-          <input
-            type="text"
-            id="firstName"
-            value={signUpFirstName}
-            onChange={(e) => setSignUpFirstName(e.target.value)}
-            required
-          />
-
-          <label htmlFor="lastName">Last Name:</label>
-          <input
-            type="text"
-            id="lastName"
-            value={signUpLastName}
-            onChange={(e) => setSignUpLastName(e.target.value)}
-            required
-          />
-
-          <label htmlFor="signUpEmail">Email (username):</label>
-          <input
-            type="email"
-            id="signUpEmail"
-            value={signUpEmail}
-            onChange={(e) => setSignUpEmail(e.target.value)}
-            required
-          />
-
-          <label htmlFor="signUpPassword">Password:</label>
-          <input
-            type="password"
-            id="signUpPassword"
-            value={signUpPassword}
-            onChange={(e) => setSignUpPassword(e.target.value)}
-            required
-          />
-
-          <label htmlFor="confirmPassword">Confirm Password:</label>
-          <input
-            type="password"
-            id="confirmPassword"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            required
-          />
-
-          <button type="submit">Create Account</button>
-          <p className="message">{message}</p>
-        </form>
-      )}
     </div>
   );
 }

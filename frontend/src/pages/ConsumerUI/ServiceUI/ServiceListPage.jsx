@@ -6,7 +6,7 @@ import BackButton from "../../../components/BackButton";
 
 // Dummy data with images and ratings
 const dummyServices = {
-  plumbing: [
+  plumbingservices: [
     {
       id: 1,
       name: "Elco Plumbing Co.",
@@ -36,12 +36,12 @@ const dummyServices = {
         "https://images.unsplash.com/photo-1520880867055-1e30d1cb001c?auto=format&fit=crop&w=400&q=80",
     },
   ],
-  // Add more categories later
 };
 
 const ServiceListPage = () => {
   const { type } = useParams();
-  const services = dummyServices[type] || [];
+  const normalizedType = type.toLowerCase().replace(/\s+/g, '');
+  const services = dummyServices[normalizedType] || [];
   const [search, setSearch] = useState("");
 
   // Filter services based on search input (case-insensitive)
@@ -49,7 +49,6 @@ const ServiceListPage = () => {
     service.name.toLowerCase().includes(search.toLowerCase())
   );
 
-  // Suggestions (just the service names for now)
   const suggestions = services.map((s) => s.name);
 
   return (
@@ -59,11 +58,11 @@ const ServiceListPage = () => {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             suggestions={suggestions}
-            onSuggestionClick={(val) => setSearch(val)} // auto-fill on click
+            onSuggestionClick={(val) => setSearch(val)}  
         />
 
         <h2 className="service-title">
-            {type.charAt(0).toUpperCase() + type.slice(1)} Services
+            {type.charAt(0).toUpperCase() + type.slice(1)}
         </h2>
 
         <div className="service-card-grid">

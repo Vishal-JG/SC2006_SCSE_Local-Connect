@@ -10,16 +10,16 @@ import tutor from './tutor.png';
 import vector1 from './Vector (1).png';
 
 const serviceImages = [
-  { name: 'Chef', src: chef },
-  { name: 'Delivery', src: delivery },
-  { name: 'Electrical', src: electrical },
-  { name: 'Cleaning', src: cleaning },
-  { name: 'Mechanic', src: mechanic },
-  { name: 'Repair', src: repair },
-  { name: 'Salon', src: salon },
-  { name: 'Technological', src: technological },
-  { name: 'Tutor', src: tutor },
-  { name: 'plumbing', src: vector1 },
+  { name: 'Personal Chef', src: chef },
+  { name: 'Package Delivery', src: delivery },
+  { name: 'Electrician Services', src: electrical },
+  { name: 'Home Cleaning', src: cleaning },
+  { name: 'Auto Mechanic', src: mechanic },
+  { name: 'Handyman Repairs', src: repair },
+  { name: 'Beauty Salon', src: salon },
+  { name: 'Tech Support', src: technological },
+  { name: 'Private Tutoring', src: tutor },
+  { name: 'Plumbing Services', src: vector1 },
 ];
 
 export default serviceImages;

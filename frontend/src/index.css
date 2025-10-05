@@ -1,3 +1,14 @@
+html, body {
+    background-image: url("./assets/white-background.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;  
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+}
+
 @keyframes fadeIn {
     0%{
         opacity: 0;

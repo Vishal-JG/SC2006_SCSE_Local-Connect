@@ -1,16 +1,22 @@
 .explore-services-list {
     display: grid;
-    grid-template-columns: repeat(5, 1fr); /* 5 columns */
-    grid-template-rows: repeat(2, 1fr);    /* 2 rows */
-    gap: 32px;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    grid-template-rows: repeat(2, 1fr);    
+    gap: 64px;
     justify-items: center;
     margin: 32px 0;
+    max-width: 1100px;
+    margin-left: auto;
+    margin-right: auto;
 }
 .top {
+    margin-top: 3vw;
     display: flex;
-    align-items: stretch; /* Make children take full height */
-    height: 48px;         /* Set to match your h1's height, adjust as needed */
+    align-items: stretch;  
+    height: 48px;    
+    justify-content: center;      
 }
+
 .top Button {
     width: 2vw;
     height: 2vw;
@@ -33,43 +39,50 @@
     transition: background 0.2s;
 }
 .services-list h1 {
-    margin-bottom: 4vw;
-    height: 100%;
-    display: flex;
-    align-items: center;  /* Vertically center text */
-    margin: 0;
+    margin-bottom: 36px;
+    font-size: 2.1rem;
+    color: #232323;
+    font-weight: 700;
+    text-align: center;
 }
 
 .services-list-item {
-    background: linear-gradient(135deg, #737373 0%, #D9D9D9 100%);
-    width: 130px;
-    height: 130px;
+    background: rgba(245, 246, 250, 0.9);
+    width: 140px;
+    height: 140px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    border-radius: 16px;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.10);
+    border-radius: 18px;
+    box-shadow: 0 4px 16px rgba(60,70,110,0.10);
     transition: transform 0.15s, box-shadow 0.15s;
     cursor: pointer;
+    border: 1px solid #ececec;
 }
 
 .services-list-item:hover {
-    transform: translateY(-4px) scale(1.04);
-    box-shadow: 0 8px 24px rgba(0,0,0,0.16);
+    transform: translateY(-8px) scale(1.04);
+    box-shadow: 0 12px 36px rgba(54,112,255,0.12);
+    border-color: #c9e7ff;
 }
 
 .services-list-item img {
-    width: 48px;
-    height: 48px;
+    width: 52px;
+    height: 52px;
+    background: #0f0f4e;  
+    border: 1px solid #e0e0e0;
+    border-radius: 10px; 
+    padding: 9px;  
     object-fit: contain;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
+    filter: grayscale(100%) brightness(0.95);
 }
 
 .services-list-item p {
     margin: 0;
-    font-size: 1rem;
-    color: #222;
+    font-size: 1.06rem;
+    color: #36394c;
     text-align: center;
-    font-weight: 500;
+    letter-spacing: 0.01em;
 }
