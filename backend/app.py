@@ -5,8 +5,8 @@ from flask_cors import CORS
 from controllers.external_api_controller import external_bp #import external api
 import os
 from dotenv import load_dotenv
-
 load_dotenv()
+
 key_path = os.getenv('GOOGLE_APPLICATION_CREDENTIALS')
 
 cred = credentials.Certificate(key_path)  

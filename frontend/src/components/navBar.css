@@ -1,0 +1,81 @@
+.navbar {
+    font-size: 1rem;
+    box-sizing: border-box;
+    min-width: 100vw; 
+    background: #181A1B;
+    color: #F5F6FA;
+    padding: 18px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    height: 5rem;
+}
+.nav-middle{
+    margin-left: 2rem;
+    padding-right: 0;
+    margin: 0;
+}
+.nav-left {
+    flex-shrink: 0;
+    width: 8rem;
+    height: 5rem;
+    cursor: pointer;
+}
+
+.nav-middle ul,
+.nav-right ul {
+    display: flex;
+    align-items: center;
+    list-style: none;   
+    gap: 28px;
+    margin: 0;
+    padding: 0;
+}
+
+.nav-middle li,
+.nav-right li {
+    cursor: pointer;
+    font-weight: 500;
+    transition: color 0.2s, bottom-border-color 2s;
+    padding-bottom: 6px;
+}
+
+.nav-middle li:hover,
+.nav-right li:hover,
+.nav-middle .active {
+    color: #3B82F6;
+    border-bottom: 2px solid #3B82F6;
+}
+
+.nav-right button {
+    background: transparent;
+    color: #F5F6FA;
+    border: 1px solid #3B82F6;
+    padding: 8px 24px;
+    border-radius: 24px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease;
+}
+
+.nav-right button:hover {
+    background: #3B82F6;
+    color: #fff;
+}
+
+.bookmark-icon {
+    background: none;
+    position: relative;
+    width: 22px;
+    height: 22px;
+    filter: invert(90%);
+    cursor: pointer;
+    display: inline-block;
+}
+.login-btn{
+    margin-right: 1rem;
+    margin-bottom: 1rem;
+}
