@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import './Authpage.css';
-import { auth } from './firebase'; 
-import { useNavigate } from "react-router-dom";
 import { auth } from '../firebase'; 
+import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 
 import {
