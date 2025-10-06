@@ -13,6 +13,7 @@ cred = credentials.Certificate(key_path)
 firebase_admin.initialize_app(cred)
 
 app = Flask(__name__)
+app.config["GOOGLE_MAPS_API_KEY"] = os.getenv("GOOGLE_MAPS_API_KEY")
 CORS(app)  # enable CORS for all routes
 app.register_blueprint(external_bp, url_prefix="/api") #register blueprint of external api
 
