@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify, current_app
 import requests
+import time
 
 external_bp = Blueprint("external_bp", __name__)
 
@@ -7,9 +8,14 @@ BASE_DATAGOV_API = "https://data.gov.sg/api/action/datastore_search"
 
 DATASET_IDS = {
     "acra": "d_0c0d478485f7df314fb24da866e9c1cd",
-    "bess": "cec21148-68fe-4be9-90ae-2118ae68c3c9",
-    "bites": "82d7eb42-79d9-4f4b-8971-70f8f78e1b61"
+    "bess": "d_c52d871176ed7c3f4991fbc29fbb0512"
 }
+
+# ------------------------
+# In-memory cache for geocoding
+# ------------------------
+GEOCODE_CACHE = {}
+CACHE_TTL = 24 * 60 * 60  # 24 hours
 
 def fetch_dataset(dataset_id, limit=10, filters=None):
     params = {"resource_id": dataset_id, "limit": limit}
@@ -23,51 +29,102 @@ def fetch_dataset(dataset_id, limit=10, filters=None):
     except Exception as e:
         return {"error": str(e)}
 
+# ------------------------
+# Google Maps Geocode
+# ------------------------
 @external_bp.route("/maps/geocode", methods=["GET"])
 def geocode_address():
     address = request.args.get("address")
     if not address:
         return jsonify({"error": "address param required"}), 400
 
-    url = "https://maps.googleapis.com/maps/api/geocode/json"
-    params = {
-        "address": address,
-        "key": current_app.config["GOOGLE_MAPS_API_KEY"]
-    }
-    try:
-        resp = requests.get(url, params=params, timeout=10)
-        resp.raise_for_status()
-        return jsonify(resp.json())
-    except requests.RequestException as e:
-        return jsonify({"error": str(e)}), 500
+    # Check cache first
+    cached = GEOCODE_CACHE.get(address)
+    if cached and (time.time() - cached["timestamp"] < CACHE_TTL):
+        loc = cached
+    else:
+        url = "https://maps.googleapis.com/maps/api/geocode/json"
+        params = {"address": address, "key": current_app.config["GOOGLE_MAPS_API_KEY"]}
+        try:
+            resp = requests.get(url, params=params, timeout=10)
+            resp.raise_for_status()
+            geo_data = resp.json()
+            if geo_data.get("results"):
+                loc = geo_data["results"][0]["geometry"]["location"]
+                loc["timestamp"] = time.time()
+                GEOCODE_CACHE[address] = loc
+            else:
+                return jsonify({"error": "no results found"}), 404
+        except requests.RequestException as e:
+            return jsonify({"error": str(e)}), 500
 
-@external_bp.route("/govsg/air-temperature", methods=["GET"])
-def gov_air_temperature():
+    return jsonify(loc)
+
+# ------------------------
+# Weather
+# ------------------------
+@external_bp.route("/govsg/weather-2h", methods=["GET"])
+def gov_weather_2h():
+    """Fetch the 2-hour weather forecast from Data.gov.sg"""
     try:
-        resp = requests.get("https://api.data.gov.sg/v1/environment/air-temperature", timeout=10)
+        resp = requests.get("https://api.data.gov.sg/v1/environment/2-hour-weather-forecast", timeout=10)
         resp.raise_for_status()
         return jsonify(resp.json())
     except requests.RequestException as e:
         return jsonify({"error": str(e)})
 
-@external_bp.route("/govsg/acra", methods=["GET"])
-def get_acra_businesses():
+# ------------------------
+# ACRA businesses with geocoding
+# ------------------------
+@external_bp.route("/govsg/acra-geocoded", methods=["GET"])
+def get_acra_businesses_geocoded():
     limit = int(request.args.get("limit", 5))
-    data = fetch_dataset(DATASET_IDS["acra"], limit=limit)
-    return jsonify(data)
+    businesses = fetch_dataset(DATASET_IDS["acra"], limit=limit)
 
+    geocoded = []
+    for item in businesses.get("result", {}).get("records", []):
+        address = item.get("registered_address")
+        if not address:
+            continue
+
+        # Use the geocode cache / API
+        cached = GEOCODE_CACHE.get(address)
+        if cached and (time.time() - cached["timestamp"] < CACHE_TTL):
+            loc = cached
+        else:
+            geocode_url = "https://maps.googleapis.com/maps/api/geocode/json"
+            params = {"address": address, "key": current_app.config["GOOGLE_MAPS_API_KEY"]}
+            try:
+                resp = requests.get(geocode_url, params=params, timeout=5)
+                resp.raise_for_status()
+                geo_data = resp.json()
+                if geo_data.get("results"):
+                    loc = geo_data["results"][0]["geometry"]["location"]
+                    loc["timestamp"] = time.time()
+                    GEOCODE_CACHE[address] = loc
+                else:
+                    continue
+            except requests.RequestException:
+                continue
+
+        item["lat"] = loc["lat"]
+        item["lng"] = loc["lng"]
+        geocoded.append(item)
+
+    return jsonify({"businesses": geocoded})
+
+# ------------------------
+# Business Expectations
+# ------------------------
 @external_bp.route("/govsg/business-expectations", methods=["GET"])
 def get_business_expectations():
     limit = int(request.args.get("limit", 10))
     data = fetch_dataset(DATASET_IDS["bess"], limit=limit)
     return jsonify(data)
 
-@external_bp.route("/govsg/bites", methods=["GET"])
-def get_bites_insights():
-    limit = int(request.args.get("limit", 5))
-    data = fetch_dataset(DATASET_IDS["bites"], limit=limit)
-    return jsonify(data)
-
+# ------------------------
+# Health check
+# ------------------------
 @external_bp.route("/ping", methods=["GET"])
 def ping():
     return jsonify({"status": "ok", "message": "External API Controller is alive"})
