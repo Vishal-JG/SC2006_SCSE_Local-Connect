@@ -16,7 +16,7 @@ app = Flask(__name__)
 app.config["GOOGLE_MAPS_API_KEY"] = os.getenv("GOOGLE_MAPS_API_KEY")
 CORS(app)  # enable CORS for all routes
 app.register_blueprint(external_bp, url_prefix="/api") #register blueprint of external api
-
+                       
 @app.route('/api/login', methods=['POST'])
 def api_login():
     token = request.headers.get('Authorization', '').split('Bearer ')[-1]
