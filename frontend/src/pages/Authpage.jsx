@@ -12,73 +12,94 @@ import {
 
 export default function AuthPage() {
   const [isLogin, setIsLogin] = useState(true);
+
+  // Login form states
   const [loginEmail, setLoginEmail] = useState(''); 
   const [loginPassword, setLoginPassword] = useState('');
+
+  // Signup form states
   const [signUpFirstName, setSignUpFirstName] = useState('');
   const [signUpLastName, setSignUpLastName] = useState('');
   const [signUpEmail, setSignUpEmail] = useState('');
   const [signUpPassword, setSignUpPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [message, setMessage] = useState('');
+  const [signUpRole, setSignUpRole] = useState('consumer'); // role: consumer or provider
 
+  // Provider-specific info
+  const [businessName, setBusinessName] = useState('');
+  const [businessDescription, setBusinessDescription] = useState('');
+
+  const [message, setMessage] = useState('');
   const navigate = useNavigate();
   const clearMessage = () => setMessage('');
 
- const handleLogin = async (e) => {
-  e.preventDefault();
-  clearMessage();
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    clearMessage();
 
-  try {
-    const userCredential = await signInWithEmailAndPassword(auth, loginEmail, loginPassword);
-    // Get Firebase ID token for the user
-    const idToken = await userCredential.user.getIdToken();
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, loginEmail, loginPassword);
+      const idToken = await userCredential.user.getIdToken();
 
-    // Notify backend of login with token for verification and logging
-    await axios.post('http://localhost:5000/api/login', {}, {
-      headers: { Authorization: `Bearer ${idToken}` }
-    });
+      await axios.post('http://localhost:5000/api/login', {}, {
+        headers: { Authorization: `Bearer ${idToken}` }
+      });
 
-    setMessage(`Login successful! Welcome, ${userCredential.user.email}`);
-  } catch (error) {
-    setMessage(`Error: ${error.message}`);
-  }
-};
+      setMessage(`Login successful! Welcome, ${userCredential.user.email}`);
+      navigate('/MainUI');
+    } catch (error) {
+      setMessage(`Error: ${error.message}`);
+    }
+  };
 
+  const handleSignUp = async (e) => {
+    e.preventDefault();
+    clearMessage();
 
-const handleSignUp = async (e) => {
-  e.preventDefault();
-  clearMessage();
+    if (signUpPassword !== confirmPassword) {
+      setMessage("Passwords do not match");
+      return;
+    }
 
-  if (signUpPassword !== confirmPassword) {
-    setMessage("Passwords do not match");
-    return;
-  }
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        signUpEmail,
+        signUpPassword
+      );
 
-  try {
-    const userCredential = await createUserWithEmailAndPassword(
-      auth,
-      signUpEmail,
-      signUpPassword
-    );
+      await updateProfile(userCredential.user, {
+        displayName: `${signUpFirstName} ${signUpLastName}`,
+      });
 
-    await updateProfile(userCredential.user, {
-      displayName: `${signUpFirstName} ${signUpLastName}`,
-    });
+      const idToken = await userCredential.user.getIdToken();
 
-    // Get Firebase ID token after signup
-    const idToken = await userCredential.user.getIdToken();
+      // Compose user data payload
+      const userData = {
+        uid: userCredential.user.uid,
+        email: signUpEmail,
+        displayName: `${signUpFirstName} ${signUpLastName}`,
+        firstName: signUpFirstName,
+        lastName: signUpLastName,
+        role: signUpRole,
+      };
 
-    // Notify backend of signup event
-    await axios.post('http://localhost:5000/api/signup', {}, {
-      headers: { Authorization: `Bearer ${idToken}` }
-    });
+      if (signUpRole === 'provider') {
+        userData.businessName = businessName;
+        userData.businessDescription = businessDescription;
+      }
 
-    setMessage("Account created successfully!");
-  } catch (error) {
-    setMessage(`Error: ${error.message}`);
-  }
-};
+      // Send user info to backend for database storage
+      await axios.post('http://localhost:5000/api/users', userData, {
+        headers: { Authorization: `Bearer ${idToken}` }
+      });
 
+      setMessage("Account created successfully!");
+      navigate('/MainUI');
+    } catch (error) {
+      setMessage(`Error: ${error.message}`);
+    }
+  };
 
   return (
     <div className="container">
@@ -133,6 +154,25 @@ const handleSignUp = async (e) => {
           <form onSubmit={handleSignUp} className="form">
             <h2>Create Account</h2>
 
+            <label>
+              <input
+                type="radio"
+                value="consumer"
+                checked={signUpRole === 'consumer'}
+                onChange={() => setSignUpRole('consumer')}
+              />
+              Consumer
+            </label>
+            <label>
+              <input
+                type="radio"
+                value="provider"
+                checked={signUpRole === 'provider'}
+                onChange={() => setSignUpRole('provider')}
+              />
+              Provider
+            </label>
+
             <label htmlFor="firstName">First Name:</label>
             <input
               type="text"
@@ -177,6 +217,27 @@ const handleSignUp = async (e) => {
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
             />
+
+            {signUpRole === 'provider' && (
+              <>
+                <label htmlFor="businessName">Business Name:</label>
+                <input
+                  type="text"
+                  id="businessName"
+                  value={businessName}
+                  onChange={(e) => setBusinessName(e.target.value)}
+                  required
+                />
+
+                <label htmlFor="businessDescription">Business Description:</label>
+                <textarea
+                  id="businessDescription"
+                  value={businessDescription}
+                  onChange={(e) => setBusinessDescription(e.target.value)}
+                  required
+                />
+              </>
+            )}
 
             <button type="submit">Create Account</button>
             <p className="message">{message}</p>
