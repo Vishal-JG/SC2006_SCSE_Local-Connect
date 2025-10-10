@@ -2,7 +2,7 @@ import firebase_admin
 from firebase_admin import credentials, auth
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from controllers.external_api_controller import external_bp #import external api
+from .controllers.external_api_controller import external_bp #import external api
 import os
 from dotenv import load_dotenv
 load_dotenv()

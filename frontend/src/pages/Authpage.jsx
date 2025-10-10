@@ -21,6 +21,7 @@ export default function AuthPage() {
   const [signUpFirstName, setSignUpFirstName] = useState('');
   const [signUpLastName, setSignUpLastName] = useState('');
   const [signUpEmail, setSignUpEmail] = useState('');
+  const [signUpPhone, setSignUpPhone] = useState(''); // NEW: phone state
   const [signUpPassword, setSignUpPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [signUpRole, setSignUpRole] = useState('consumer'); // role: consumer or provider
@@ -82,6 +83,7 @@ export default function AuthPage() {
         firstName: signUpFirstName,
         lastName: signUpLastName,
         role: signUpRole,
+        phone: signUpPhone, 
       };
 
       if (signUpRole === 'provider') {
@@ -200,6 +202,21 @@ export default function AuthPage() {
               required
             />
 
+            <label htmlFor="signUpPhone">Phone Number:</label>
+            <input
+              type="tel"
+              id="signUpPhone"
+              value={signUpPhone}
+              pattern="^\d{8}$"
+              minLength={8}
+              maxLength={8}
+              inputMode="numeric"
+              onChange={(e) => {
+                const onlyNums = e.target.value.replace(/[^0-9]/g, "");
+                setSignUpPhone(onlyNums);
+              }}
+              required
+            />
             <label htmlFor="signUpPassword">Password:</label>
             <input
               type="password"
