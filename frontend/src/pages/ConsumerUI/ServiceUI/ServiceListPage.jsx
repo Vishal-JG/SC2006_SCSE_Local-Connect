@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "./ServiceListPage.css";
 import SearchBar from "../../../components/SearchBar";
 import BackButton from "../../../components/BackButton";
@@ -39,11 +40,11 @@ const dummyServices = {
 };
 
 const ServiceListPage = () => {
-  const { type } = useParams();
-  const normalizedType = type.toLowerCase().replace(/\s+/g, '');
-  const services = dummyServices[normalizedType] || [];
-  const [search, setSearch] = useState("");
-
+  const { type } = useParams()
+  const normalizedType = type.toLowerCase().replace(/\s+/g, '')
+  const services = dummyServices[normalizedType] || []
+  const [search, setSearch] = useState("")
+  const navigate = useNavigate()
   // Filter services based on search input (case-insensitive)
   const filteredServices = services.filter((service) =>
     service.name.toLowerCase().includes(search.toLowerCase())
@@ -82,7 +83,9 @@ const ServiceListPage = () => {
                     </span>{" "}
                     {service.rating}
                     </div>
-                    <button className="service-card-btn">View details</button>
+                    <button className="service-card-btn" onClick={() => navigate(`/service/${type}/${service.id}`)}>
+                      View details
+                    </button>
                 </div>
                 </div>
             ))

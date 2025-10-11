@@ -1,5 +1,6 @@
 html, body {
     background-image: url("./assets/white-background.jpg");
+    background: linear-gradient(110deg, #3a186b 40%, #383593 100%);
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;

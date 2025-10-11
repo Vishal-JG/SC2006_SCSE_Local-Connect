@@ -9,6 +9,7 @@ import ServiceListPage from "./pages/ConsumerUI/ServiceUI/ServiceListPage";
 import BookmarkUI from "./pages/ConsumerUI/BookmarkUI/BookmarkUI"
 import MapUI from "./pages/ConsumerUI/MapUI/MapUI"
 import { AuthProvider } from "./AuthContext";
+import ServiceDetailPage from "./pages/ConsumerUI/ServiceUI/ServiceDetailPage";
 
 export default function App() {
   return (
@@ -23,7 +24,8 @@ export default function App() {
           <Route path="/service/:type" element={<ServiceListPage />} />
           <Route path="/login" element={<Authpage />} />
           <Route path="/bookmark" element={<BookmarkUI />} />
-          <Route path="/service/:type/map" element={<MapUI />} />
+          <Route path="/service/:type/:id/map" element={<MapUI />} />
+          <Route path="/service/:type/:id" element={<ServiceDetailPage />} />
         </Routes>
       </AuthProvider>
     </div>
