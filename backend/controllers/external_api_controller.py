@@ -1,13 +1,14 @@
 from flask import Blueprint, request, jsonify, current_app
 import requests
 import time
+import json
 
 external_bp = Blueprint("external_bp", __name__)
 
 BASE_DATAGOV_API = "https://data.gov.sg/api/action/datastore_search"
 
 DATASET_IDS = {
-    "acra": "d_0c0d478485f7df314fb24da866e9c1cd",
+    "acra": "d_3f960c10fed6145404ca7b821f263b87",
     "bess": "d_c52d871176ed7c3f4991fbc29fbb0512"
 }
 
@@ -80,12 +81,16 @@ def gov_weather_2h():
 def get_acra_businesses_geocoded():
     limit = int(request.args.get("limit", 5))
     businesses = fetch_dataset(DATASET_IDS["acra"], limit=limit)
+    print(json.dumps(businesses, indent=2))  # debug: see raw dataset
 
     geocoded = []
     for item in businesses.get("result", {}).get("records", []):
-        address = item.get("registered_address")
-        if not address:
+        street = item.get("reg_street_name")
+        postal = item.get("reg_postal_code")
+        if not street or not postal:
             continue
+
+        address = f"{street}, Singapore {postal}"
 
         # Use the geocode cache / API
         cached = GEOCODE_CACHE.get(address)
@@ -109,7 +114,15 @@ def get_acra_businesses_geocoded():
 
         item["lat"] = loc["lat"]
         item["lng"] = loc["lng"]
-        geocoded.append(item)
+        geocoded.append({
+            "uen": item.get("uen"),
+            "entity_name": item.get("entity_name"),
+            "entity_type_desc": item.get("entity_type_desc"),
+            "uen_status_desc": item.get("uen_status_desc"),
+            "address": address,
+            "lat": item["lat"],
+            "lng": item["lng"]
+        })
 
     return jsonify({"businesses": geocoded})
 
