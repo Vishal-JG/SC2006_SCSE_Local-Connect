@@ -5,6 +5,7 @@ from flask_cors import CORS
 from controllers.external_api_controller import external_bp #import external api
 from controllers.review_controller import review_bp
 from controllers.admin_controller import admin_bp
+from controllers.chatbot_controller import chatbot_bp
 import os
 
 from db import init_app #import db initializer
@@ -25,6 +26,7 @@ CORS(app)  # enable CORS for all routes
 app.register_blueprint(external_bp, url_prefix="/api") #register blueprint of external api
 app.register_blueprint(review_bp, url_prefix="/api")
 app.register_blueprint(admin_bp, url_prefix="/api")
+app.register_blueprint(chatbot_bp, url_prefix="/api")
 
 @app.route('/api/login', methods=['POST'])
 def api_login():
