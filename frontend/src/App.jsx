@@ -1,5 +1,5 @@
 import React from "react";
-import Authpage from "./Authpage";
+import Authpage from "./pages/Authpage";
 import Navbar from "./components/navBar";
 import { BrowserRouter, Route, Routes } from "react-router-dom"
 import "./App.css"

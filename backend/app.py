@@ -2,8 +2,16 @@ import firebase_admin
 from firebase_admin import credentials, auth
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+from controllers.external_api_controller import external_bp #import external api
+from controllers.review_controller import review_bp
+from controllers.admin_controller import admin_bp
+from controllers.chatbot_controller import chatbot_bp
 import os
+
+from db import init_app #import db initializer
+
 from dotenv import load_dotenv
+
 load_dotenv()
 
 key_path = os.getenv('GOOGLE_APPLICATION_CREDENTIALS')
@@ -12,7 +20,13 @@ cred = credentials.Certificate(key_path)
 firebase_admin.initialize_app(cred)
 
 app = Flask(__name__)
+init_app(app)
+app.config["GOOGLE_MAPS_API_KEY"] = os.getenv("GOOGLE_MAPS_API_KEY")
 CORS(app)  # enable CORS for all routes
+app.register_blueprint(external_bp, url_prefix="/api") #register blueprint of external api
+app.register_blueprint(review_bp, url_prefix="/api")
+app.register_blueprint(admin_bp, url_prefix="/api")
+app.register_blueprint(chatbot_bp, url_prefix="/api")
 
 @app.route('/api/login', methods=['POST'])
 def api_login():
