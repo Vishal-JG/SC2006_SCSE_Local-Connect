@@ -1,0 +1,158 @@
+.service-detail-page {
+  font-family: 'Inter', sans-serif;
+  /* background: linear-gradient(110deg, #3a186b 40%, #383593 100%); */
+  min-height: 100vh;
+  color: #f5f6fa;
+  padding-bottom: 40px;
+
+}
+
+.service-banner {
+  width: 100%;
+  height: 230px;
+  background-size: cover;
+  background-position: center;
+  border-top-left-radius: 18px;
+  border-top-right-radius: 18px;
+}
+
+.service-detail-content {
+  background: rgba(94, 94, 154, 0.97);
+  border-radius: 16px;
+  height: 3.5vw;
+  max-width: 700px;
+  margin: 1.5vw 0 0 0;
+  padding: 36px 32px;
+  box-shadow: 0 4px 24px rgba(30, 30, 90, 0.22);
+  position: relative;
+}
+
+.title-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.service-title-pill {
+  color: #fff;
+  font-weight: 600;
+  border-radius: 8px;
+  margin: 0 0 2.4vw 0;
+  padding: 0;
+  font-size: 1.18rem;
+  letter-spacing: 0.02em;
+  box-shadow: 0 1px 8px rgba(50, 50, 120, 0.10);
+}
+
+.service-rating {
+  background: #28244e;
+  color: #ffe57f;
+  font-weight: 600;
+  border-radius: 7px;
+  padding: 6px 10px;
+  font-size: 0.99rem;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin: 0 0 2vw 0;
+}
+
+.bookmark-btn {
+  background: transparent;
+  border: none;
+  font-size: 1.38em;
+  color: #fff;
+  cursor: pointer;
+  margin: 0 0 1.6vw 0;
+  padding: 0;
+}
+
+.bookmark-btn img {
+  width: 24px;
+  padding: 0;
+  height: 24px;
+}
+
+.divider {
+  border-bottom: 1.5px solid #655cab;
+  margin: 22px 0 9px 0;
+}
+
+h3 {
+  margin-top: 0;
+  margin-left: 1vw;
+  margin-bottom: 12px;
+  font-weight: 600;
+  font-size: 1.3rem;
+  color: #ddddee;
+}
+
+.service-desc {
+  margin: 0 0 24px 1vw;
+  font-size: 1.05em;
+  color: #ececf8;
+}
+
+.service-price {
+  margin: 18px 0 36px 1vw;
+  color: #e0e8ff;
+  font-size: 1.09em;
+  font-weight: 600;
+}
+
+.actions-row {
+  display: flex;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+.location-btn,
+.info-btn {
+  background: #dfdfeb;
+  color: #232445;
+  border: none;
+  border-radius: 8px;
+  padding: 9px 24px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.location-btn:hover,
+.info-btn:hover {
+  background-color: #b0b3c5;
+}
+
+.info-btn {
+  background-color: #fffeff;
+  color: #28244e;
+}
+
+@media (max-width: 640px) {
+  .service-detail-content {
+    padding: 24px 16px;
+    margin-top: -40px;
+    max-width: 96vw;
+  }
+  .service-banner {
+    height: 140px;
+    border-radius: 0;
+  }
+  .actions-row {
+    flex-direction: column;
+    gap: 12px;
+  }
+  .service-title-pill {
+    font-size: 1rem;
+    padding: 6px 14px;
+  }
+  .service-rating {
+    font-size: 0.9rem;
+    padding: 5px 8px;
+  }
+  .bookmark-btn img {
+    width: 20px;
+    height: 20px;
+  }
+}
