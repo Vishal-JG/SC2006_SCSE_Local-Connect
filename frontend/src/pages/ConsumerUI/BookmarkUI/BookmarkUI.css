@@ -1,0 +1,67 @@
+.bookmark-container {
+  max-width: 900px;
+  margin: 3rem auto;
+  padding: 2rem 2.5rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #2e3a59;
+}
+
+.bookmark-container h1 {
+  text-align: center;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  color: #114a8b;
+}
+
+.bookmark-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.9rem;
+}
+
+.bookmark-card {
+  background: #fff;
+  box-shadow: 0 3px 15px rgba(18, 69, 122, 0.07);
+  border-radius: 16px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: box-shadow 0.3s ease;
+}
+
+.bookmark-card:hover {
+  box-shadow: 0 5px 24px rgba(18, 69, 122, 0.2);
+}
+
+.bookmark-image {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  border-bottom: 1px solid #e1eaff;
+}
+
+.bookmark-details {
+  padding: 1.4rem 1.3rem;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.bookmark-details h3 {
+  margin-top: 0;
+  font-size: 1.22rem;
+  color: #144a90;
+}
+
+.bookmark-details p {
+  font-size: 0.95rem;
+  margin: 0.45rem 0;
+  color: #536680;
+}
+
+.bookmark-price {
+  font-weight: 700;
+  color: #2979f7;
+  font-size: 1rem;
+}
