@@ -8,9 +8,9 @@ from auth import login_required, get_current_user
 import traceback
 
 # Create a Blueprint for booking routes
-booking_bp = Blueprint('booking', __name__, url_prefix='/api/bookings')
+booking_bp = Blueprint('booking', __name__)
 
-@booking_bp.route('', methods=['POST'])
+@booking_bp.route('/bookings', methods=['POST'])
 @login_required
 def create_booking():
     """
@@ -69,7 +69,7 @@ def create_booking():
         }), 500
 
 
-@booking_bp.route('', methods=['GET'])
+@booking_bp.route('/bookings', methods=['GET'])
 @login_required
 def get_user_bookings():
     """
@@ -118,7 +118,7 @@ def get_user_bookings():
         }), 500
 
 
-@booking_bp.route('/<int:booking_id>', methods=['GET'])
+@booking_bp.route('/bookings/<int:booking_id>', methods=['GET'])
 @login_required
 def get_booking_details(booking_id):
     """
@@ -171,7 +171,7 @@ def get_booking_details(booking_id):
         }), 500
 
 
-@booking_bp.route('/<int:booking_id>/status', methods=['PUT'])
+@booking_bp.route('/bookings/<int:booking_id>/status', methods=['PUT'])
 @login_required
 def update_booking_status(booking_id):
     """
@@ -268,7 +268,7 @@ def update_booking_status(booking_id):
         }), 500
 
 
-@booking_bp.route('/<int:booking_id>', methods=['DELETE'])
+@booking_bp.route('/bookings/<int:booking_id>', methods=['DELETE'])
 @login_required
 def delete_booking(booking_id):
     """

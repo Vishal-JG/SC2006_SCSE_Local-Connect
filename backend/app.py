@@ -32,7 +32,7 @@ app.register_blueprint(admin_bp, url_prefix="/api")
 app.register_blueprint(chatbot_bp, url_prefix="/api")
 app.register_blueprint(service_bp, url_prefix="/api")
 app.register_blueprint(bookmark_bp, url_prefix="/api")
-app.register_blueprint(booking_bp)
+app.register_blueprint(booking_bp, url_prefix="/api")
 
 @app.route('/api/login', methods=['POST'])
 def api_login():
