@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, current_app
 from db import get_db
 
 review_bp = Blueprint("review_bp", __name__)
@@ -9,6 +9,7 @@ review_bp = Blueprint("review_bp", __name__)
 @review_bp.route("/services/<int:listing_id>/reviews", methods=["GET"])
 def get_reviews(listing_id):
     db = get_db()
+    print("Current config keys:", current_app.config.keys())
     reviews = db.execute("""
         SELECT r.review_id, r.rating, r.comment, r.created_at, u.display_name AS reviewer
         FROM Reviews r

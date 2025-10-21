@@ -23,6 +23,9 @@ cred = credentials.Certificate(key_path)
 firebase_admin.initialize_app(cred)
 
 app = Flask(__name__)
+# Set DATABASE config first
+app.config['DATABASE'] = os.path.join(app.instance_path, 'localconnectusers.sqlite')
+os.makedirs(app.instance_path, exist_ok=True)
 init_app(app)
 app.config["GOOGLE_MAPS_API_KEY"] = os.getenv("GOOGLE_MAPS_API_KEY")
 CORS(app)  # enable CORS for all routes
