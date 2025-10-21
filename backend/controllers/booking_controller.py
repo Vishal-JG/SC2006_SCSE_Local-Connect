@@ -2,16 +2,46 @@
 Booking Controller
 Handles all booking-related API endpoints and logic.
 """
-from flask import Blueprint, request, jsonify, g, current_app
+from flask import Blueprint, request, jsonify, current_app
 from models.booking import Booking
-from auth import login_required, get_current_user
+from models.user import User
+import firebase_admin
 import traceback
 
 # Create a Blueprint for booking routes
 booking_bp = Blueprint('booking', __name__)
 
+
+def verify_token():
+    """
+    Extract and verify Firebase token from Authorization header.
+    
+    Returns:
+        tuple: (user_id, error_response, status_code)
+    """
+    auth_header = request.headers.get('Authorization')
+    if not auth_header or not auth_header.startswith('Bearer '):
+        return None, jsonify({'success': False, 'error': 'Authorization header missing'}), 401
+    
+    token = auth_header.split('Bearer ')[1]
+    try:
+        decoded_token = firebase_admin.auth.verify_id_token(token)
+        return decoded_token['uid'], None, None
+    except Exception as e:
+        return None, jsonify({'success': False, 'error': f'Invalid token: {str(e)}'}), 401
+
+
+def get_user_role(user_id):
+    """
+    Get the role of a user from the database.
+    
+    Returns:
+        str: The user's role (admin, provider, customer)
+    """
+    user = User.get_by_id(user_id)
+    return user.role if user else None
+
 @booking_bp.route('/bookings', methods=['POST'])
-@login_required
 def create_booking():
     """
     Create a new booking.
@@ -25,9 +55,15 @@ def create_booking():
     Returns:
         201: Booking created successfully
         400: Bad request (invalid parameters)
+        401: Unauthorized
         500: Server error
     """
     try:
+        # Verify authentication
+        user_id, error_response, status_code = verify_token()
+        if error_response:
+            return error_response, status_code
+        
         data = request.get_json()
         
         # Validate required fields
@@ -37,7 +73,6 @@ def create_booking():
                 'error': 'Missing required fields: listing_id, booking_date'
             }), 400
             
-        user_id = g.user['user_id']
         listing_id = data['listing_id']
         booking_date = data['booking_date']
         
@@ -70,7 +105,6 @@ def create_booking():
 
 
 @booking_bp.route('/bookings', methods=['GET'])
-@login_required
 def get_user_bookings():
     """
     Get bookings for the current user.
@@ -81,12 +115,17 @@ def get_user_bookings():
     
     Returns:
         200: List of bookings
+        401: Unauthorized
         500: Server error
     """
     try:
+        # Verify authentication
+        user_id, error_response, status_code = verify_token()
+        if error_response:
+            return error_response, status_code
+        
         status = request.args.get('status')
         role = request.args.get('role', 'customer')
-        user_id = g.user['user_id']
         
         if role == 'provider':
             # Get provider_id first
@@ -119,7 +158,6 @@ def get_user_bookings():
 
 
 @booking_bp.route('/bookings/<int:booking_id>', methods=['GET'])
-@login_required
 def get_booking_details(booking_id):
     """
     Get detailed information about a specific booking.
@@ -130,11 +168,17 @@ def get_booking_details(booking_id):
     
     Returns:
         200: Booking details
+        401: Unauthorized
         403: Not authorized to view this booking
         404: Booking not found
         500: Server error
     """
     try:
+        # Verify authentication
+        user_id, error_response, status_code = verify_token()
+        if error_response:
+            return error_response, status_code
+        
         # Get the booking with full details
         booking_details = Booking.get_with_details(booking_id)
         
@@ -145,8 +189,6 @@ def get_booking_details(booking_id):
             }), 404
             
         # Check authorization (must be either the customer or the service provider)
-        user_id = g.user['user_id']
-        
         # Get the provider's user_id from the booking details
         from models.provider import Provider
         provider = Provider.get_by_listing_id(booking_details['listing_id'])
@@ -172,7 +214,6 @@ def get_booking_details(booking_id):
 
 
 @booking_bp.route('/bookings/<int:booking_id>/status', methods=['PUT'])
-@login_required
 def update_booking_status(booking_id):
     """
     Update the status of a booking.
@@ -188,11 +229,17 @@ def update_booking_status(booking_id):
     Returns:
         200: Status updated successfully
         400: Bad request (invalid status)
+        401: Unauthorized
         403: Not authorized to update this booking
         404: Booking not found
         500: Server error
     """
     try:
+        # Verify authentication
+        user_id, error_response, status_code = verify_token()
+        if error_response:
+            return error_response, status_code
+        
         data = request.get_json()
         
         # Validate required fields
@@ -203,7 +250,6 @@ def update_booking_status(booking_id):
             }), 400
             
         new_status = data['status']
-        user_id = g.user['user_id']
         
         # Get the current booking
         booking = Booking.get_by_id(booking_id)
@@ -269,7 +315,6 @@ def update_booking_status(booking_id):
 
 
 @booking_bp.route('/bookings/<int:booking_id>', methods=['DELETE'])
-@login_required
 def delete_booking(booking_id):
     """
     Delete a booking.
@@ -280,11 +325,17 @@ def delete_booking(booking_id):
     
     Returns:
         200: Booking deleted successfully
+        401: Unauthorized
         403: Not authorized to delete this booking
         404: Booking not found or not eligible for deletion
         500: Server error
     """
     try:
+        # Verify authentication
+        user_id, error_response, status_code = verify_token()
+        if error_response:
+            return error_response, status_code
+        
         # Get the current booking
         booking = Booking.get_by_id(booking_id)
         
@@ -295,7 +346,6 @@ def delete_booking(booking_id):
             }), 404
             
         # Only the customer who created the booking can delete it
-        user_id = g.user['user_id']
         if booking.user_id != user_id:
             return jsonify({
                 'success': False,
