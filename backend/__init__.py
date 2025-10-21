@@ -1,27 +1,45 @@
-import firebase_admin
-from firebase_admin import credentials, auth
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import os
 from dotenv import load_dotenv
 from . import db
+from .db import get_db
 
 def create_app():
     load_dotenv()
     app = Flask(__name__)
     CORS(app)  # enable CORS for all routes
 
-    app.config['DATABASE'] = os.path.join(app.instance_path, 'localconnectusers.sqlite')
+    app.config.from_mapping(
+        DATABASE=os.path.join(app.instance_path, 'database.db')
+    )
     os.makedirs(app.instance_path, exist_ok=True)
-
     db.init_app(app)
-
-    base_dir = os.path.abspath(os.path.dirname(__file__))
-    key_path = os.path.join(base_dir, 'firebase-adminsdk.json')
-    print(f"Loading Firebase key from: {key_path}")
-    # key_path = os.getenv('GOOGLE_APPLICATION_CREDENTIALS')
-    cred = credentials.Certificate(key_path)
-    firebase_admin.initialize_app(cred)
+    
+    # Initialize Firebase admin if available and credentials present. Setting the
+    # environment variable SKIP_FIREBASE=1 will skip firebase initialization
+    # which is useful for running CLI commands locally without credentials.
+    skip_firebase = os.getenv('SKIP_FIREBASE', '') == '1'
+    if skip_firebase:
+        print('SKIP_FIREBASE is set; skipping Firebase initialization.')
+    else:
+        try:
+            import firebase_admin
+            from firebase_admin import credentials, auth
+            base_dir = os.path.abspath(os.path.dirname(__file__))
+            key_path = os.path.join(base_dir, 'firebase-adminsdk.json')
+            print(f"Attempting to load Firebase key from: {key_path}")
+            if os.path.exists(key_path):
+                try:
+                    cred = credentials.Certificate(key_path)
+                    firebase_admin.initialize_app(cred)
+                    print("Firebase initialized.")
+                except Exception as e:
+                    print(f"Warning: Firebase initialization failed: {e}")
+            else:
+                print("Firebase credentials file not found; skipping Firebase initialization.")
+        except ImportError:
+            print("firebase_admin package not installed; skipping Firebase initialization.")
 
     @app.route('/api/login', methods=['POST'])
     def api_login():
@@ -80,7 +98,6 @@ def create_app():
 
         if not all([email, first_name, last_name, role]):
             return jsonify({'error': 'Missing required user fields'}), 400
-
         db = get_db()
         try:
             # Insert user into Users table

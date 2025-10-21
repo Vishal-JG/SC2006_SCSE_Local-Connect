@@ -43,3 +43,5 @@ def init_app(app):
     # Register functions with Flask app
     app.teardown_appcontext(close_db)
     app.cli.add_command(init_db_command)
+    from seed import seed_db_command
+    app.cli.add_command(seed_db_command)

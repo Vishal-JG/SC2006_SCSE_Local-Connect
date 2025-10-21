@@ -2,6 +2,7 @@ import firebase_admin
 from firebase_admin import credentials, auth
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+from seed import seed_db_command
 from controllers.external_api_controller import external_bp #import external api
 from controllers.review_controller import review_bp
 from controllers.admin_controller import admin_bp
@@ -11,7 +12,7 @@ from controllers.bookmark_controller import bookmark_bp
 from controllers.booking_controller import booking_bp
 import os
 
-from db import init_app #import db initializer
+from db import init_app, init_db # import db initializer and init function
 
 from dotenv import load_dotenv
 
@@ -23,7 +24,16 @@ cred = credentials.Certificate(key_path)
 firebase_admin.initialize_app(cred)
 
 app = Flask(__name__)
+# ensure instance path and database config exist before initializing DB
+app.config['DATABASE'] = os.path.join(app.instance_path, 'localconnectusers.sqlite')
+os.makedirs(app.instance_path, exist_ok=True)
+
 init_app(app)
+
+with app.app_context():
+    # Ensure tables are created before seeding
+    init_db()
+    #seed_db_command()
 app.config["GOOGLE_MAPS_API_KEY"] = os.getenv("GOOGLE_MAPS_API_KEY")
 CORS(app)  # enable CORS for all routes
 app.register_blueprint(external_bp, url_prefix="/api") #register blueprint of external api
@@ -33,6 +43,9 @@ app.register_blueprint(chatbot_bp, url_prefix="/api")
 app.register_blueprint(service_bp, url_prefix="/api")
 app.register_blueprint(bookmark_bp, url_prefix="/api")
 app.register_blueprint(booking_bp, url_prefix="/api")
+@app.route('/')
+def index():
+    return jsonify({'message': 'Flask backend is running!'})
 
 @app.route('/api/login', methods=['POST'])
 def api_login():
