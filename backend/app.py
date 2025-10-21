@@ -8,6 +8,7 @@ from controllers.admin_controller import admin_bp
 from controllers.chatbot_controller import chatbot_bp
 from controllers.service_controller import service_bp
 from controllers.bookmark_controller import bookmark_bp
+from controllers.booking_controller import booking_bp
 import os
 
 from db import init_app #import db initializer
@@ -31,6 +32,7 @@ app.register_blueprint(admin_bp, url_prefix="/api")
 app.register_blueprint(chatbot_bp, url_prefix="/api")
 app.register_blueprint(service_bp, url_prefix="/api")
 app.register_blueprint(bookmark_bp, url_prefix="/api")
+app.register_blueprint(booking_bp)
 
 @app.route('/api/login', methods=['POST'])
 def api_login():
