@@ -3,8 +3,8 @@ Booking Controller
 Handles all booking-related API endpoints and logic.
 """
 from flask import Blueprint, request, jsonify, current_app
-from models.booking import Booking
-from models.user import User
+from backend.models.booking import Booking
+from backend.models.user import User
 import firebase_admin
 import traceback
 

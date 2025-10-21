@@ -1,4 +1,4 @@
-from db import get_db
+from backend.db import get_db
 from datetime import datetime
 
 
@@ -45,12 +45,12 @@ class Service:
         return Service(
             listing_id=row['listing_id'],
             provider_id=row['provider_id'],
-            category_id=row.get('category_id'),
+            category_id=row['category_id'],
             title=row['title'],
-            description=row.get('description'),
+            description=row['description'],
             price=row['price'],
-            status=row.get('status', 'pending'),
-            created_at=row.get('created_at')
+            status=row['status'],
+            created_at=row['created_at']
         )
 
     @staticmethod

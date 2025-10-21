@@ -1,5 +1,5 @@
-from db import get_db
-from models.user import User
+from backend.db import get_db
+from backend.models.user import User
 from datetime import datetime
 
 

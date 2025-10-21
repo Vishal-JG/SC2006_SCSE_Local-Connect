@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
-from db import get_db
-from models.service import Service
-from models.provider import Provider
+from backend.db import get_db
+from backend.models.service import Service
+from backend.models.provider import Provider
 import firebase_admin
 
 service_bp = Blueprint("service_bp", __name__)

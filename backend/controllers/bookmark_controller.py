@@ -6,8 +6,8 @@ Customers can bookmark/unbookmark services.
 from flask import Blueprint, request, jsonify
 import firebase_admin
 from firebase_admin import auth
-from models.bookmark import Bookmark
-from models.user import User
+from backend.models.bookmark import Bookmark
+from backend.models.user import User
 
 
 bookmark_bp = Blueprint('bookmark', __name__)

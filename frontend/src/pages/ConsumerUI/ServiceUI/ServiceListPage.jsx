@@ -4,6 +4,19 @@ import "./ServiceListPage.css";
 import SearchBar from "../../../components/SearchBar";
 import BackButton from "../../../components/BackButton";
 
+const categoryMap = {
+  "personalchef": 1,
+  "packagedelivery": 2,
+  "electricianservices": 3,
+  "homecleaning": 4,
+  "automechanic": 5,
+  "handymanrepairs": 6,
+  "beautysalon": 7,
+  "techsupport": 8,
+  "privatetutoring": 9,
+  "plumbingservices": 10
+};
+
 const ServiceListPage = () => {
   const { type } = useParams();
   const [services, setServices] = useState([]);
