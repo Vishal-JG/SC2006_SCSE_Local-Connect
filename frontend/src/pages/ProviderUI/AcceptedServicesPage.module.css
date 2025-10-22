@@ -1,0 +1,126 @@
+.acceptedServicesPage {
+  width: 100%;
+  min-height: 100vh;
+  background-color: #21005d;
+  color: #fff;
+  font-family: "Geist", sans-serif;
+  padding-bottom: 2rem;
+}
+
+/* Header */
+.pageHeader {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.5rem 2rem;
+}
+
+.pageHeader h2 {
+  font-size: 1.6rem;
+  font-weight: 500;
+  color: #fff;
+}
+
+/* Listings grid */
+.listingsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  padding: 2rem 5%;
+  justify-items: center;
+}
+
+/* Card */
+.listingCard {
+  background-color: #c7bfd6;
+  border-radius: 10px;
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.listingImage {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.listingInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.listingName {
+  font-weight: 500;
+  font-size: 1.2rem;
+  color: #21005d;
+  margin: 0;
+}
+
+/* Button group */
+.buttonGroup {
+  display: flex;
+  gap: 0.7rem;
+}
+
+/* Buttons */
+.viewButton,
+.completeButton {
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.2s ease;
+}
+
+/* View button */
+.viewButton {
+  border: 1px solid #000;
+  border-radius: 8px;
+  background-color: transparent;
+  cursor: pointer;
+  padding: 8px;
+  font-size: 14px;
+  color: #000;
+}
+
+.viewButton:hover {
+  background-color: #21005d;
+  color: #fff;
+}
+
+/* Complete button */
+.completeButton {
+  flex: 1;
+  border: 1px solid #21005d;
+  border-radius: 8px;
+  background-color: #21005d;
+  color: #fff;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.completeButton:hover {
+  background-color: #1e7e34;
+  border-color: #1c7430;
+}
+
+/* Responsive text */
+@media (max-width: 768px) {
+  .pageHeader h2 {
+    font-size: 1.3rem;
+  }
+
+  .listingName {
+    font-size: 1rem;
+  }
+}

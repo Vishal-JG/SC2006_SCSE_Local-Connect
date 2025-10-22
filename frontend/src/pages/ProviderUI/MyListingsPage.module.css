@@ -1,0 +1,126 @@
+.myListingsPage {
+  width: 100%;
+  min-height: 100vh;
+  background-color: #21005d;
+  color: #fff;
+  font-family: "Geist", sans-serif;
+  padding-bottom: 2rem;
+}
+
+/* Page Header: back button + title */
+.pageHeader {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.5rem 2rem;
+}
+
+.pageHeader h2 {
+  font-size: 1.6rem;
+  font-weight: 500;
+}
+
+/* Listing cards grid */
+.listingsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  padding: 2rem 5%;
+}
+
+/* Individual listing card */
+.listingCard {
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.listingCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+/* Listing image */
+.listingImage {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+}
+
+/* Info section below image */
+.listingInfo {
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Listing name */
+.listingName {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: #21005d;
+  margin: 0;
+}
+
+/* View/Edit button */
+.viewEditButton {
+  padding: 0.4rem 0.8rem;
+  border: 1px solid #21005d;
+  border-radius: 5px;
+  background: transparent;
+  color: #21005d;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.viewEditButton:hover {
+  background-color: #c7bfd6;
+  color: #21005d;
+}
+
+/* Add new service card */
+.addNewServiceCard {
+  background-color: #c7bfd6;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  height: 160px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.addNewServiceCard:hover {
+  transform: translateY(-5px);
+  background-color: #b6a9c8;
+}
+
+.addNewServiceCard img {
+  width: 35px;
+  height: 35px;
+}
+
+.addNewServiceCard p {
+  font-size: 1.1rem;
+  font-weight: 500;
+  margin: 0;
+  color: #21005d;
+}
+
+/* Responsive tweaks */
+@media (max-width: 768px) {
+  .pageHeader h2 {
+    font-size: 1.3rem;
+  }
+
+  .listingName, .addNewServiceCard p {
+    font-size: 1rem;
+  }
+}

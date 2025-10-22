@@ -1,0 +1,77 @@
+.providerDashboard {
+  width: 100%;
+  min-height: 100vh;
+  background-color: #21005d;
+  color: #fff;
+  font-family: "Geist", sans-serif;
+  padding-bottom: 2rem;
+}
+
+/* Title + Back button section */
+.dashboardHeader {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.5rem 2rem;
+}
+
+.dashboardHeader h2 {
+  font-size: 1.6rem;
+  font-weight: 500;
+}
+
+/* Main card grid */
+.dashboardButtons {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+  padding: 3rem 5%;
+  justify-items: center;
+}
+
+/* Card style */
+.card {
+  background-color: #c7bfd6;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  width: 100%;
+  max-width: 400px;
+  padding: 1.8rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  cursor: pointer;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  background-color: #b6a9c8;
+}
+
+/* Card icons */
+.card img {
+  width: 35px;
+  height: 35px;
+}
+
+/* Card text */
+.card p {
+  font-size: 1.2rem;
+  font-weight: 500;
+  margin: 0;
+  color: #21005d;
+}
+
+/* Responsive text sizes */
+@media (max-width: 768px) {
+  .dashboardHeader h2 {
+    font-size: 1.3rem;
+  }
+
+  .card p {
+    font-size: 1rem;
+  }
+}

@@ -1,0 +1,101 @@
+.analyticsPage {
+  width: 100%;
+  min-height: 100vh;
+  background-color: #21005d;
+  color: #fff;
+  font-family: "Geist", sans-serif;
+  padding-bottom: 2rem; /* remove full 2rem 3% padding */
+}
+
+/* Header */
+.pageHeader {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.5rem 2rem;
+}
+
+.pageHeader h2 {
+  font-size: 1.6rem;
+  font-weight: 500;
+  color: #fff;
+}
+
+/* Stats cards */
+.statsContainer {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+  padding: 0 2rem; /* add horizontal padding to match page margins */
+  box-sizing: border-box; /* ensure padding doesn’t break layout */
+}
+
+.statCard {
+  background-color: #c7bfd6;
+  color: #21005d;
+  padding: 1.5rem 2rem;
+  border-radius: 10px;
+  min-width: 180px;
+  text-align: center;
+  flex: 1;
+}
+
+.statLabel {
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.statValue {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+/* Completed services list */
+.completedServicesContainer {
+  margin-top: 2rem;
+}
+
+.completedServicesContainer h3 {
+  font-size: 1.4rem;
+  font-weight: 500;
+  margin-bottom: 1rem;
+  padding: 0 1.2rem;
+}
+
+.completedServicesList {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  padding: 0 2rem; /* same horizontal padding as stats */
+  box-sizing: border-box;
+}
+
+.completedServiceCard {
+  background-color: #c7bfd6;
+  border-radius: 10px;
+  padding: 1rem;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  color: #21005d; 
+}
+
+.serviceName {
+  font-weight: 600;
+  font-size: 1.1rem;
+  margin-bottom: 0.3rem;
+  color: #21005d; 
+}
+
+.customerName {
+  font-size: 0.95rem;
+  margin-bottom: 0.3rem;
+  color: #21005d; 
+}
+
+.rating {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #21005d;
+}
