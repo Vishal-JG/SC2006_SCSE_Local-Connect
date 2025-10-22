@@ -24,14 +24,11 @@ const ServiceListPage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/services")  // Flask endpoint from service_bp
+    fetch("http://localhost:5000/api/services")
       .then((response) => response.json())
       .then((data) => {
-        // Optional: filter by service category name
-        const normalizedType = type.toLowerCase().replace(/\s+/g, "");
-        const filteredData = data.filter((s) =>
-          s.title.toLowerCase().includes(normalizedType)
-        );
+        const catId = categoryMap[type.toLowerCase().replace(/\s+/g, "")];
+        const filteredData = data.filter((s) => s.category_id === catId);
         setServices(filteredData);
       })
       .catch((error) => console.error("Error fetching services:", error));
@@ -59,7 +56,7 @@ const ServiceListPage = () => {
             <div className="service-card" key={service.listing_id}>
               <img
                 className="service-card-img"
-                src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80"
+                src={service.image_url}
                 alt={service.title}
               />
               <div className="service-card-content">

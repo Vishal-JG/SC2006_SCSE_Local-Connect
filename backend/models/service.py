@@ -1,7 +1,6 @@
 from backend.db import get_db
 from datetime import datetime
 
-
 class Service:
     """Service model wrapper for the Listings table.
     
@@ -13,10 +12,15 @@ class Service:
       - description
       - price
       - status ('pending', 'approved', 'rejected')
+      - image_url (URL to service image)
+      - location
+      - lat
+      - long
       - created_at
     """
 
-    def __init__(self, listing_id, provider_id, title, price, category_id=None, description=None, status='pending', created_at=None):
+    def __init__(self, listing_id, provider_id, title, price, category_id=None, description=None,
+                 status='pending', image_url=None, location=None, latitude=None, longitude=None, created_at=None):
         self.listing_id = listing_id
         self.provider_id = provider_id
         self.category_id = category_id
@@ -24,18 +28,30 @@ class Service:
         self.description = description
         self.price = float(price)
         self.status = status
+        self.image_url = image_url
+        self.location = location
+        self.latitude = latitude
+        self.longitude = longitude
         self.created_at = created_at
 
     def to_dict(self):
         return {
-            'listing_id': self.listing_id,
-            'provider_id': self.provider_id,
-            'category_id': self.category_id,
-            'title': self.title,
-            'description': self.description,
-            'price': self.price,
-            'status': self.status,
-            'created_at': self.created_at.isoformat() if hasattr(self.created_at, 'isoformat') else self.created_at,
+            "listing_id": self.listing_id,
+            "provider_id": self.provider_id,
+            "category_id": self.category_id,
+            "title": self.title,
+            "description": self.description,
+            "price": self.price,
+            "status": self.status,
+            "image_url": self.image_url,
+            'location': self.location,
+            'latitude': self.latitude,
+            'longitude': self.longitude,
+            "created_at": (
+                self.created_at.isoformat()
+                if hasattr(self.created_at, "isoformat")
+                else self.created_at
+            ),
         }
 
     @staticmethod
@@ -43,30 +59,30 @@ class Service:
         if row is None:
             return None
         return Service(
-            listing_id=row['listing_id'],
-            provider_id=row['provider_id'],
-            category_id=row['category_id'],
-            title=row['title'],
-            description=row['description'],
-            price=row['price'],
-            status=row['status'],
-            created_at=row['created_at']
+            listing_id=row["listing_id"],
+            provider_id=row["provider_id"],
+            category_id=row["category_id"],
+            title=row["title"],
+            description=row["description"],
+            price=row["price"],
+            status=row["status"],
+            image_url=row["image_url"],
+            location=row['location'] if 'location' in row.keys() else None,
+            latitude=row['latitude'] if 'latitude' in row.keys() else None,
+            longitude=row['longitude'] if 'longitude' in row.keys() else None,
+            created_at=row["created_at"],
         )
 
     @staticmethod
-    def create(provider_id, title, price, category_id=None, description=None, status='pending'):
-        """Create a new service listing."""
-        if not title or price is None:
-            raise ValueError('title and price are required')
-        
+    def create(provider_id, title, price, category_id=None, description=None, image_url=None, location=None, latitude=None, longitude=None, status='pending'):
         db = get_db()
         db.execute(
-            """INSERT INTO Listings (provider_id, category_id, title, description, price, status, created_at)
-               VALUES (?, ?, ?, ?, ?, ?, datetime('now'))""",
-            (provider_id, category_id, title, description, float(price), status)
+            """INSERT INTO Listings 
+            (provider_id, category_id, title, description, price, status, image_url, location, latitude, longitude, created_at)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'))""",
+            (provider_id, category_id, title, description, float(price), status, image_url, location, latitude, longitude)
         )
         db.commit()
-        # Get the inserted row
         listing_id = db.execute("SELECT last_insert_rowid()").fetchone()[0]
         return Service.get_by_id(listing_id)
 
@@ -81,7 +97,10 @@ class Service:
     def get_by_provider(provider_id):
         """Get all services for a specific provider."""
         db = get_db()
-        rows = db.execute("SELECT * FROM Listings WHERE provider_id = ? ORDER BY created_at DESC", (provider_id,)).fetchall()
+        rows = db.execute(
+            "SELECT * FROM Listings WHERE provider_id = ? ORDER BY created_at DESC",
+            (provider_id,),
+        ).fetchall()
         return [Service.from_row(r) for r in rows]
 
     @staticmethod
@@ -89,22 +108,28 @@ class Service:
         """List all services, optionally filtered by status."""
         db = get_db()
         if status:
-            rows = db.execute("SELECT * FROM Listings WHERE status = ? ORDER BY created_at DESC", (status,)).fetchall()
+            rows = db.execute(
+                "SELECT * FROM Listings WHERE status = ? ORDER BY created_at DESC",
+                (status,),
+            ).fetchall()
         else:
-            rows = db.execute("SELECT * FROM Listings ORDER BY created_at DESC").fetchall()
+            rows = db.execute(
+                "SELECT * FROM Listings ORDER BY created_at DESC"
+            ).fetchall()
         return [Service.from_row(r) for r in rows]
 
     @staticmethod
-    def update(listing_id, title=None, description=None, price=None, category_id=None, status=None):
+    def update(listing_id, title=None, description=None, price=None, category_id=None,
+               status=None, image_url=None, location=None, latitude=None, longitude=None):
         """Update a service listing. Only updates provided fields."""
         db = get_db()
         service = Service.get_by_id(listing_id)
         if not service:
             return None
-        
-        # Build update query dynamically
+
         updates = []
         params = []
+
         if title is not None:
             updates.append("title = ?")
             params.append(title)
@@ -120,12 +145,23 @@ class Service:
         if status is not None:
             updates.append("status = ?")
             params.append(status)
-        
+        if image_url is not None:
+            updates.append("image_url = ?")
+            params.append(image_url)
+        if location is not None:
+            updates.append("location = ?")
+            params.append(location)
+        if latitude is not None:
+            updates.append("latitude = ?")
+            params.append(latitude)
+        if longitude is not None:
+            updates.append("longitude = ?")
+            params.append(longitude)
         if updates:
             params.append(listing_id)
             db.execute(f"UPDATE Listings SET {', '.join(updates)} WHERE listing_id = ?", params)
             db.commit()
-        
+
         return Service.get_by_id(listing_id)
 
     @staticmethod

@@ -54,11 +54,11 @@ def seed_db_command():
     DELETE FROM Categories;
     DELETE FROM Users;
     """)
-
+    
     # Seed Users
     db.executescript("""
     INSERT INTO Users (email, display_name, phone, role) VALUES
-    ('alice@example.com', 'Alice Tan', '91234567', 'customer'),
+    ('jesmondtay1914@gmail.com', 'Jesmond Tay', '91234567', 'customer'),
     ('ben@example.com', 'Ben Lim', '92345678', 'customer'),
     ('chefjason@example.com', 'Chef Jason', '93456789', 'provider'),
     ('movermax@example.com', 'Mover Max', '94567890', 'provider'),
@@ -105,17 +105,17 @@ def seed_db_command():
 
     # Seed Listings
     db.executescript("""
-    INSERT INTO Listings (provider_id, category_id, title, description, price, status) VALUES
-    (1, 1, 'Private Dinner for Two', 'Enjoy a gourmet 3-course meal.', 150.00, 'approved'),
-    (2, 2, 'Standard Package Delivery', 'Fast and affordable delivery.', 25.00, 'approved'),
-    (3, 3, 'Electrical Troubleshooting', 'Fix short circuits or faulty switches.', 60.00, 'approved'),
-    (4, 4, 'Home Deep Cleaning', 'Thorough cleaning for kitchens and bathrooms.', 120.00, 'approved'),
-    (5, 5, 'Car Engine Tune-Up', 'Comprehensive check and tune-up.', 180.00, 'approved'),
-    (6, 6, 'Furniture Assembly & Repairs', 'Fix or assemble furniture.', 70.00, 'approved'),
-    (7, 7, 'Hair Styling & Treatment', 'Professional salon services.', 90.00, 'approved'),
-    (8, 8, 'Computer & Network Support', 'On-site troubleshooting.', 80.00, 'approved'),
-    (9, 9, 'Math & English Tutoring', '1-hour personalized lessons.', 50.00, 'approved'),
-    (10, 10, 'Emergency Plumbing', 'Quick response for pipe leaks.', 100.00, 'approved');
+    INSERT INTO Listings (provider_id, category_id, title, description, price, status, image_url, location, latitude, longitude) VALUES
+    (1, 1, 'Private Dinner for Two', 'Enjoy a gourmet 3-course meal prepared in your home.', 150.00, 'approved', 'https://images.unsplash.com/photo-1551218808-94e220e084d2?auto=format&fit=crop&w=400&q=80', 'Orchard Road', 1.3048, 103.8318),
+    (2, 2, 'Standard Package Delivery', 'Fast and affordable delivery service islandwide.', 25.00, 'approved', 'https://images.unsplash.com/photo-1612831455540-5efb7b8f7a3f?auto=format&fit=crop&w=400&q=80', 'Jurong East', 1.3331, 103.7436),
+    (3, 3, 'Electrical Troubleshooting', 'Fix short circuits, faulty switches, or lighting issues.', 60.00, 'approved', 'https://images.unsplash.com/photo-1581090700227-5f9d8e0f8b8f?auto=format&fit=crop&w=400&q=80', 'Clementi', 1.3151, 103.7640),
+    (4, 4, 'Home Deep Cleaning', 'Thorough cleaning for kitchens, bathrooms, and floors.', 120.00, 'approved', 'https://images.unsplash.com/photo-1581579186485-90577b0f5e7a?auto=format&fit=crop&w=400&q=80', NULL, NULL, NULL),
+    (5, 5, 'Car Engine Tune-Up', 'Comprehensive check and tune-up for smooth performance.', 180.00, 'approved', 'https://images.unsplash.com/photo-1581092339885-07f0c4d44d27?auto=format&fit=crop&w=400&q=80', 'Woodlands', 1.4360, 103.7865),
+    (6, 6, 'Furniture Assembly & Repairs', 'Expert handyman to fix or assemble furniture at home.', 70.00, 'approved', 'https://images.unsplash.com/photo-1596495577886-d920f4e5f013?auto=format&fit=crop&w=400&q=80', NULL, NULL, NULL),
+    (7, 7, 'Hair Styling & Treatment', 'Professional salon services for all hair types.', 90.00, 'approved', 'https://images.unsplash.com/photo-1588776814546-b1b1d8b62239?auto=format&fit=crop&w=400&q=80', 'Hougang', 1.3721, 103.8922),
+    (8, 8, 'Computer & Network Support', 'On-site troubleshooting for software and network issues.', 80.00, 'approved', 'https://images.unsplash.com/photo-1555529771-0f0f7f3a9b0a?auto=format&fit=crop&w=400&q=80', NULL, NULL, NULL),
+    (9, 9, 'Math & English Tutoring', '1-hour personalized lessons for primary students.', 50.00, 'approved', 'https://images.unsplash.com/photo-1573497491208-6b1acb260507?auto=format&fit=crop&w=400&q=80', NULL, NULL, NULL),
+    (10, 10, 'Emergency Plumbing', 'Quick response for pipe leaks and clogged drains.', 100.00, 'approved', 'https://images.unsplash.com/photo-1588776814512-7d1f5e7f3b55?auto=format&fit=crop&w=400&q=80', 'Marina Bay Sands', 1.2834, 103.8607);
     """)
 
     # Seed Bookings

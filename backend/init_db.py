@@ -1,7 +1,7 @@
 import sqlite3
 
 def init_db():
-    db_path = 'database.db'  # change path if needed
+    db_path = 'database.db'  
     conn = sqlite3.connect(db_path)
     with open('schema.sql', 'r') as f:
         schema_sql = f.read()

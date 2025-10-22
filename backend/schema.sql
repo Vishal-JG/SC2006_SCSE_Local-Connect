@@ -40,6 +40,10 @@ CREATE TABLE Listings (
     description TEXT,
     price REAL NOT NULL,
     status TEXT CHECK(status IN ('pending', 'approved', 'rejected')) DEFAULT 'pending',
+    image_url TEXT,
+    location TEXT,
+    latitude REAL,
+    longitude REAL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (provider_id) REFERENCES Providers(provider_id),
     FOREIGN KEY (category_id) REFERENCES Categories(category_id)
