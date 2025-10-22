@@ -12,6 +12,9 @@ import BookmarkUI from "./pages/ConsumerUI/BookmarkUI/BookmarkUI"
 import MapUI from "./pages/ConsumerUI/MapUI/MapUI"
 import { AuthProvider } from "./AuthContext";
 import ServiceDetailPage from "./pages/ConsumerUI/ServiceUI/ServiceDetailPage";
+import ProfileUI from "./pages/ConsumerUI/ProfileUI/ProfileUI";
+import AboutUI from "./pages/ConsumerUI/AboutUI/AboutUI";
+import ContactUI from "./pages/ConsumerUI/ContactUI/ContactUI";
 
 // Provider UI pages
 import ProviderDashboard from "./pages/ProviderUI/ProviderDashboard";
@@ -40,6 +43,10 @@ export default function App() {
           <Route path="/bookmark" element={<BookmarkUI />} />
           <Route path="/service/:type/:id/map" element={<MapUI />} />
           <Route path="/service/:type/:id" element={<ServiceDetailPage />} />
+          <Route path="/profile" element={<ProfileUI />} />
+          <Route path="/about" element={<AboutUI />} />
+          <Route path="/contact" element={<ContactUI />} />
+
           {/* Provider routes */}
           <Route path="/ProviderUI/ProviderDashboard" element={<ProviderDashboard />} />
           <Route path="/ProviderUI/MyListingsPage" element={<MyListingsPage />} />

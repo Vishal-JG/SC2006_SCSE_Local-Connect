@@ -1,0 +1,26 @@
+.about-container {
+  max-width: 720px;
+  margin: 4rem auto;
+  padding: 2.2rem 2.5rem;
+  background: #f7f9fc;
+  border-radius: 20px;
+  box-shadow: 0 3px 22px rgba(30, 60, 120, 0.1);
+  color: #1a2d45;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  line-height: 1.65;
+  letter-spacing: 0.01em;
+}
+
+.about-container h1 {
+  font-weight: 700;
+  font-size: 2.1rem;
+  margin-bottom: 1.25rem;
+  color: #123366;
+  letter-spacing: 0.04em;
+}
+
+.about-container p {
+  font-size: 1.1rem;
+  margin-bottom: 1.4rem;
+  color: #34495e;
+}

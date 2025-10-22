@@ -1,0 +1,61 @@
+.contactus-container {
+  max-width: 600px;
+  margin: 5rem auto;
+  padding: 2rem 2.5rem;
+  background: #f5f9fc;
+  border-radius: 18px;
+  box-shadow: 0 3px 26px rgba(27, 62, 111, 0.12);
+  color: #153257;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  text-align: center;
+}
+
+.contactus-container h1 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.contactus-container p {
+  font-size: 1.15rem;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+  color: #2d4a7c;
+}
+
+.contact-options {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.contact-btn {
+  display: inline-block;
+  padding: 0.9rem 2.3rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: white;
+  border-radius: 10px;
+  transition: background-color 0.3s ease;
+  text-decoration: none;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.12);
+  min-width: 170px;
+}
+
+.contact-btn.telegram {
+  background-color: #0088cc;
+}
+
+.contact-btn.telegram:hover {
+  background-color: #0077b6;
+}
+
+.contact-btn.email {
+  background-color: #3a86ff;
+}
+
+.contact-btn.email:hover {
+  background-color: #0f52ba;
+}

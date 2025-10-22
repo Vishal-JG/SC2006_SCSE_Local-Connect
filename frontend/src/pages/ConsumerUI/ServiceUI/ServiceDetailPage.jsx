@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import bookmark from '../../../assets/bookmark.png'
 import './ServiceDetailPage.css'
 import BackButton from '../../../components/BackButton';
@@ -32,7 +32,12 @@ const ServiceDetailPage = () => {
     const normalizedType = type.toLowerCase().replace(/\s+/g, '');
     console.log(id)
     const service = (dummyServiceData[normalizedType] && dummyServiceData[normalizedType].find((svc) => svc.id === id)) || null
+    const navigate = useNavigate()
     // const [service, setService] = useState(null)
+
+    const handleOnClick = ()=> {
+        navigate("map")
+    }
     
     //*Change Needed*//
     // useEffect(() => {
@@ -73,7 +78,7 @@ const ServiceDetailPage = () => {
             </div>
 
             <div className='actions-row'>
-                <button className='location-btn'>📍 Location</button>
+                <button onClick={handleOnClick} className='location-btn'>📍 Location</button>
                 <button className="info-btn">More info →</button>
             </div>
         </div>

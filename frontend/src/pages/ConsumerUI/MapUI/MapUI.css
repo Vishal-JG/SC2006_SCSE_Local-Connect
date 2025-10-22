@@ -1,0 +1,87 @@
+.mapui-container {
+  max-width: 750px;
+  margin: 3.5rem auto;
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 2px 24px rgba(25, 72, 127, 0.13);
+  padding: 2.5rem 2rem 1.4rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.mapui-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  align-items: flex-start;
+}
+
+.mapui-header h2 {
+  color: #19457b;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.2rem;
+}
+
+.mapui-status {
+  color: #1371e7;
+  font-size: 0.98rem;
+  letter-spacing: 0.01em;
+}
+
+.mapui-info {
+  background: #f6fafd;
+  border-radius: 12px;
+  padding: 0.9rem 1.3rem;
+  font-size: 1.05rem;
+  margin-bottom: 0.7rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.mapui-frame {
+  width: 100%;
+  position: relative;
+  min-height: 480px;
+  border-radius: 18px;
+  overflow: hidden;
+}
+
+.mapui-loader {
+  position: absolute;
+  left: 0; right: 0;
+  top: 0; bottom: 0;
+  background: rgba(255,255,255,0.69);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #19457b;
+  font-size: 1.17rem;
+  font-weight: 600;
+  border-radius: 18px;
+}
+
+.mapui-hint {
+  color: #708bb5;
+  font-size: 1.01rem;
+  margin-top: 0.4rem;
+  text-align: left;
+}
+
+.recenter-btn {
+  margin-top: 10px;
+  background: #237df7;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.5em 1.2em;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.recenter-btn:hover {
+  background: #1455b6;
+}
