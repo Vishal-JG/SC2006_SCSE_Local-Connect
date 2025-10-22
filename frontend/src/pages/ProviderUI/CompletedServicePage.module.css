@@ -1,0 +1,43 @@
+.page {
+  width: 100%;
+  min-height: 100vh;
+  background-color: #21005d;
+  color: #fff;
+  font-family: "Geist", sans-serif;
+  padding: 2rem 3%;
+}
+
+/* Header */
+.header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.title {
+  font-size: 1.8rem;
+  font-weight: 500;
+}
+
+/* Detail card */
+.detailCard {
+  background-color: #c7bfd6;
+  color: #21005d;
+  border-radius: 12px;
+  padding: 2rem;
+  max-width: 600px;
+  margin-top: 1rem;
+}
+
+.label {
+  font-size: 0.95rem;
+  font-weight: 500;
+  margin-top: 1rem;
+}
+
+.value {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-top: 0.2rem;
+}

@@ -1,0 +1,74 @@
+.servicesInProgressPage {
+  width: 100%;
+  min-height: 100vh;
+  background-color: #21005d;
+  color: #fff;
+  font-family: "Geist", sans-serif;
+  padding-bottom: 2rem;
+}
+
+/* Header section with back button */
+.pageHeader {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.5rem 2rem;
+}
+
+.pageHeader h2 {
+  font-size: 1.6rem;
+  font-weight: 500;
+  color: #fff;
+}
+
+/* Cards wrapper */
+.cardsWrapper {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+  margin-top: 4rem;
+}
+
+/* Individual cards */
+.card {
+  background-color: #c7bfd6;
+  border-radius: 10px;
+  width: 300px;
+  height: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  background-color: #b6a9c8;
+}
+
+.cardTitle {
+  font-weight: 600;
+  color: #21005d;
+  margin: 0.3rem 0;
+  font-size: 1.2rem;
+  text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .pageHeader h2 {
+    font-size: 1.3rem;
+  }
+
+  .card {
+    width: 90%;
+    height: 150px;
+  }
+
+  .cardTitle {
+    font-size: 1rem;
+  }
+}

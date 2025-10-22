@@ -1,0 +1,143 @@
+.pendingServicesPage {
+  width: 100%;
+  min-height: 100vh;
+  background-color: #21005d;
+  font-family: Geist;
+  color: #fff; 
+  padding-bottom: 2rem;
+}
+
+.pageHeader {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.5rem 2rem;
+}
+
+.pageHeader h2 {
+  font-size: 1.6rem;
+  font-weight: 500;
+  color: #fff;
+}
+
+/* Grid for service cards */
+.servicesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  padding: 2rem 5%;
+  justify-items: center;
+}
+
+.serviceCard {
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 10px;
+  display: flex;
+  overflow: hidden;
+  height: 160px;
+}
+
+.serviceImage {
+  width: 150px;
+  object-fit: cover;
+}
+
+.serviceInfo {
+  flex: 1;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.serviceName {
+  color: #21005d;
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.viewEditButton {
+  border: 1px solid #000;
+  border-radius: 8px;
+  background-color: transparent;
+  cursor: pointer;
+  padding: 8px;
+  font-size: 14px;
+  color: #000;
+}
+
+.serviceCard {
+  background-color: #fff;
+  border-radius: 12px;
+  display: flex;
+  overflow: hidden;
+  height: 160px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  transition: transform 0.2s ease-in-out;
+}
+ 
+.serviceCard:hover {
+  transform: translateY(-3px);
+}
+
+.serviceImage {
+  width: 150px;
+  object-fit: cover;
+}
+
+.serviceInfo {
+  flex: 1;
+  padding: 15px 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.serviceName {
+  color: #21005d;
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 15px;
+}
+
+/* Button group */
+.buttonGroup {
+  display: flex;
+  gap: 12px;
+}
+
+/* View Button */
+.viewButton {
+  flex: 1;
+  padding: 8px 0;
+  border: 1px solid #21005d;
+  border-radius: 8px;
+  background-color: #fff;
+  color: #21005d;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.viewButton:hover {
+  background-color: #21005d;
+  color: #fff;
+}
+
+/* Accept Button */
+.acceptButton {
+  flex: 1;
+  padding: 8px 0;
+  border: 1px solid #21005d;
+  border-radius: 8px;
+  background-color: #21005d;
+  color: #fff;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.acceptButton:hover {
+  background-color: #1e7e34;
+  border-color: #1c7430;
+}
