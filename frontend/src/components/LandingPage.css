@@ -1,0 +1,338 @@
+/* Import Leaflet CSS */
+@import "leaflet/dist/leaflet.css";
+
+/* Global styles that apply to all pages */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Poppins", sans-serif;
+  background: #f9f9f9;
+  color: #333;
+  line-height: 1.6;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+/* ==============================
+   Landing page scoped styles
+   Only apply when inside the landing page root container
+============================== */
+.landing-root html,
+.landing-root body {
+  background-image: url("../assets/white-background.jpg");
+  background: linear-gradient(110deg, #3a186b 40%, #383593 100%);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed; 
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+}
+
+.landing-root .hero-bg {
+  background: linear-gradient(135deg, #488cfb 0%, #21c6b7 100%);
+  color: white;
+  padding: 5rem 1rem 6rem;
+  text-align: center;
+  width: 100%;
+  min-height: 420px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.landing-root .hero-content {
+  max-width: 750px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.landing-root .hero-title {
+  font-size: 3.2rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  line-height: 1.15;
+}
+
+.landing-root .hero-subtitle {
+  font-size: 1.2rem;
+  font-weight: 500;
+  margin-bottom: 2.3rem;
+  max-width: 480px;
+}
+
+.landing-root section {
+  padding: 4rem 1rem;
+  width: 100%;
+}
+
+.landing-root section:not(.hero-bg) {
+  background: #fff;
+}
+
+.landing-root .page-container {
+  width: 100%;
+  margin: 0;
+  padding: 0 1.5rem;
+}
+
+.landing-root h2 {
+  font-weight: 800;
+  text-align: center;
+  margin-bottom: 0.5rem;
+  color: #222263;
+}
+
+.landing-root .section-description {
+  max-width: 600px;
+  margin: 0 auto 3rem auto;
+  color: #455;
+  font-weight: 500;
+  font-size: 1.1rem;
+  text-align: center;
+}
+
+.landing-root .services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  justify-items: center;
+}
+
+.landing-root .service-card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 8px 22px rgba(0, 30, 85, 0.15);
+  transition: transform 0.3s, box-shadow 0.3s;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2.2rem 1.2rem 1.6rem;
+  text-align: center;
+  max-width: 340px;
+  width: 100%;
+}
+
+.landing-root .service-card:hover,
+.landing-root .service-card:focus {
+  transform: translateY(-4px) scale(1.025);
+  box-shadow: 0 16px 38px rgba(0, 60, 60, 0.15);
+  outline: none;
+}
+
+.landing-root .service-icon-container {
+  border-radius: 50%;
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+  background-color: #e0ebf8;
+}
+
+.landing-root .primary-bg-opacity {
+  background: rgba(59, 130, 246, 0.11);
+}
+
+.landing-root .secondary-bg-opacity {
+  background: rgba(16, 185, 129, 0.12);
+}
+
+.landing-root .emoji-icon {
+  font-size: 1.7em;
+}
+
+.landing-root .service-card h3 {
+  font-weight: 700;
+  margin-bottom: 0.3rem;
+  font-size: 1.14rem;
+  color: #2b2b44;
+}
+
+.landing-root .service-card p {
+  font-size: 1rem;
+  color: #5f5f76;
+}
+
+.landing-root .cta-container {
+  margin-top: 2.5rem;
+  text-align: center;
+}
+
+.landing-root .cta-button-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(90deg, #3b82f6 80%, #10b981 100%);
+  color: #fff;
+  padding: 1.05rem 2.65rem;
+  font-weight: 800;
+  font-size: 1.17rem;
+  border-radius: 42px;
+  box-shadow: 0 8px 22px rgba(37, 99, 235, 0.13);
+  border: none;
+  transition: background 0.24s, box-shadow 0.18s;
+  cursor: pointer;
+  gap: 0.8rem;
+  min-width: 220px;
+}
+
+.landing-root .cta-button-primary:hover,
+.landing-root .cta-button-primary:focus {
+  background: linear-gradient(90deg, #2563eb 70%, #059669 100%);
+  box-shadow: 0 16px 38px rgba(59, 130, 246, 0.27);
+  outline: none;
+}
+
+.landing-root .cta-container span[aria-hidden="true"] {
+  padding-left: 0.45em;
+  font-size: 1.25em;
+  line-height: 1;
+  display: inline;
+}
+
+.landing-root .how-it-works {
+  background-color: #f3f4f6;
+  text-align: center;
+  padding: 4rem 1rem;
+}
+
+.landing-root .how-it-works-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 2.5rem;
+  max-width: 980px;
+  margin: 0 auto;
+}
+
+.landing-root .how-step {
+  background: #fff;
+  border-radius: 13px;
+  box-shadow: 0 2px 18px rgba(0, 0, 0, 0.05);
+  padding: 2rem 1.2rem;
+}
+
+.landing-root .how-step-circle {
+  background-color: #2563eb;
+  color: white;
+  border-radius: 9999px;
+  width: 46px;
+  height: 46px;
+  font-size: 1.19rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1rem auto;
+}
+
+.landing-root .testimonials-section {
+  margin: 0;
+  padding: 0 1.2rem;
+  text-align: center;
+  background: #fff;
+}
+
+.landing-root .testimonials-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+}
+
+.landing-root .testimonial-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 2rem 1.2rem;
+  box-shadow: 0 8px 26px rgba(71, 0, 78, 0.11);
+  text-align: left;
+}
+
+.landing-root .testimonial-profile {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.2rem;
+}
+
+.landing-root .testimonial-profile img {
+  width: 48px;
+  height: 48px;
+  border-radius: 9999px;
+  object-fit: cover;
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.14);
+}
+
+.landing-root .testimonial-card h4 {
+  font-weight: 700;
+  font-size: 1.12rem;
+  color: #111827;
+  margin-bottom: 0.3em;
+}
+
+.landing-root .testimonial-stars {
+  color: #fbbf24;
+  font-size: 1.09em;
+  letter-spacing: 0.08em;
+  display: flex;
+}
+
+.landing-root .testimonial-card p {
+  color: #4b5563;
+  font-size: 1rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Responsive media queries */
+@media (max-width: 900px) {
+  .landing-root .hero-title {
+    font-size: 2.3rem;
+  }
+  .landing-root .hero-content {
+    max-width: 95vw;
+    padding: 0 1rem;
+  }
+  .landing-root h2 {
+    font-size: 1.7rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .landing-root .hero-content,
+  .landing-root .page-container {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+  .landing-root .testimonials-section {
+    padding: 0 0.5rem;
+  }
+}
+
+/* Keyframe animation */
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}

@@ -85,3 +85,125 @@
 .recenter-btn:hover {
   background: #1455b6;
 }
+
+.carpark-toggle {
+  position: absolute;
+  top: 120px;
+  right: 40px;
+  z-index: 999;
+  background: rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #333;
+  border-radius: 30px;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+}
+
+.carpark-toggle.active {
+  background: rgba(51, 122, 255, 0.7);
+  color: white;
+}
+
+.carpark-popup {
+  position: absolute;
+  bottom: 30px;
+  right: 30px;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(4px);
+  border-radius: 15px;
+  padding: 15px 25px;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.2);
+}
+.mapui-frame {
+  position: relative;
+  border-radius: 18px;
+  overflow: hidden;
+}
+
+.carpark-toggle.side {
+  position: absolute;
+  top: 20px;          
+  right: 20px;      
+  z-index: 1100;
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid #667eea;
+  border-radius: 25px;
+  padding: 10px 18px;
+  font-weight: 600;
+  color: #222;
+  box-shadow: 0 2px 12px rgba(0, 110, 255, 0.15);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.carpark-toggle.side:hover {
+  background: rgba(102, 126, 234, 0.1);
+}
+
+.carpark-toggle.side.active {
+  background: #667eea;
+  color: #fff;
+  border-color: #667eea;
+}
+.leaflet-container {
+  z-index: 1;
+}
+.fixed {
+  z-index: 9999 !important;
+}
+.booking-overlay {
+  z-index: 9999 !important;
+  position: fixed;
+  inset: 0;
+}
+.back-btn {
+  height: 40px;
+  background-color: #2563eb; /* Blue */
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: background-color 0.3s ease;
+}
+
+.book-btn {
+  height: 40px;
+  background-color: #2563eb; /* Blue */
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  transition: background-color 0.3s ease;
+}
+
+.back-btn:hover {
+  background-color: #1e40af; /* Darker blue on hover */
+}
+
+.bg-indigo-600 {
+  background-color: #2563eb !important;
+}
+
+.bg-indigo-600:hover {
+  background-color: #1e40af !important;
+}

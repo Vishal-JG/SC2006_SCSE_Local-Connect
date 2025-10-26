@@ -33,8 +33,8 @@ with app.app_context():
     # Ensure tables are created before seeding
     init_db()
     app.cli.add_command(seed_db_command)
-app.config["GOOGLE_MAPS_API_KEY"] = os.getenv("GOOGLE_MAPS_API_KEY")
-CORS(app)  # enable CORS for all routes
+app.config["GOOGLE_MAPS_API_KEY"] = os.getenv("GOOGLE_MAPS_API_KEY")  
+CORS(app, supports_credentials=True)
 app.register_blueprint(external_bp, url_prefix="/api") #register blueprint of external api
 app.register_blueprint(review_bp, url_prefix="/api")
 app.register_blueprint(admin_bp, url_prefix="/api")
@@ -46,51 +46,45 @@ app.register_blueprint(booking_bp, url_prefix="/api")
 def index():
     return jsonify({'message': 'Flask backend is running!'})
 
+def create_user_if_not_exists(firebase_uid, email, display_name):
+    db = get_db()
+    user = db.execute("SELECT * FROM Users WHERE user_id = ?", (firebase_uid,)).fetchone()
+    if not user:
+        db.execute(
+            "INSERT INTO Users (user_id, email, display_name, role) VALUES (?, ?, ?, ?)",
+            (firebase_uid, email, display_name, 'customer')
+        )
+        db.commit()
+        user = db.execute("SELECT * FROM Users WHERE user_id = ?", (firebase_uid,)).fetchone()
+    return user
+
 @app.route('/api/login', methods=['POST'])
 def api_login():
     token = request.headers.get('Authorization', '').split('Bearer ')[-1]
     if not token:
         return jsonify({'error': 'Missing Authorization token'}), 401
-
     try:
-        # Verify Firebase token
         decoded_token = auth.verify_id_token(token)
+        firebase_uid = decoded_token.get('uid')
         email = decoded_token.get('email')
         display_name = decoded_token.get('name', 'Unnamed User')
-        firebase_uid = decoded_token.get('uid')
+        if not firebase_uid or not email:
+            return jsonify({'error': 'Invalid Firebase token'}), 400
 
-        if not email:
-            return jsonify({'error': 'Email missing from Firebase token'}), 400
-
-        print(f"User logged in via Firebase: {email} ({firebase_uid})")
-
-        # Check if user exists
-        conn = get_db()
-        cursor = conn.execute("SELECT * FROM Users WHERE email = ?", (email,))
-        user = cursor.fetchone()
-
+        user = create_user_if_not_exists(firebase_uid, email, display_name)
         if not user:
-            # Create new user if not found
-            conn.execute(
-                """
-                INSERT INTO Users (email, display_name, role)
-                VALUES (?, ?, ?)
-                """,
-                (email, display_name, 'customer'),
-            )
-            conn.commit()
-            print(f"Created new user record for {email}")
+            return jsonify({'error': 'Failed to create or find user'}), 500
 
+        # Return successful login response after user creation/fetch
         return jsonify({
             'success': True,
-            'message': 'Login successful',
             'email': email,
             'display_name': display_name
         }), 200
 
     except Exception as e:
-        print("Login error:", str(e))
         return jsonify({'success': False, 'error': str(e)}), 401
+
     
 @app.route('/api/logout', methods=['POST'])
 def api_logout():

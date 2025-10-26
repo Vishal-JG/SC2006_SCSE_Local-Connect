@@ -55,15 +55,16 @@ class Booking:
         """Create Booking instance from database row."""
         if row is None:
             return None
+        # Use bracket-access, not .get()
         return Booking(
             booking_id=row['booking_id'],
             listing_id=row['listing_id'],
             user_id=row['user_id'],
             booking_date=row['booking_date'],
-            status=row.get('status', Booking.STATUS_PENDING),
-            created_at=row.get('created_at')
+            status=row['status'] if 'status' in row.keys() else Booking.STATUS_PENDING,
+            created_at=row['created_at'] if 'created_at' in row.keys() else None
         )
-    
+        
     @staticmethod
     def create(user_id, listing_id, booking_date):
         """

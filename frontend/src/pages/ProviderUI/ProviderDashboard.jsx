@@ -4,7 +4,7 @@ import styles from './ProviderDashboard.module.css';
 
 // Importing reusable components
 import BackButton from '../../components/BackButton';
-import Header from '../../components/header';
+import Header from '../../components/LandingPage';
 
 // Import assets
 import addServiceIcon from '../../assets/material-symbols_add-ad-outline.svg';

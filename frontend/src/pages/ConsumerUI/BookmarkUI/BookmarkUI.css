@@ -1,81 +1,69 @@
 .bookmark-container {
   max-width: 900px;
-  margin: 3rem auto;
-  padding: 2rem 2.5rem;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  color: #2e3a59;
+  margin: 50px auto;
+  padding: 0 20px;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
 }
 
-.bookmark-container h1 {
+.notification.error {
+  background-color: #f8d7da;
+  color: #721c24;
+  padding: 14px 20px;
+  border-radius: 8px;
   text-align: center;
-  font-weight: 700;
-  margin-bottom: 2rem;
-  color: #114a8b;
+  margin-bottom: 20px;
+  font-weight: 600;
 }
 
 .bookmark-list {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 1.9rem;
+  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+  gap: 26px;
 }
 
 .bookmark-card {
-  background: #fff;
-  box-shadow: 0 3px 15px rgba(18, 69, 122, 0.07);
-  border-radius: 16px;
+  background-color: white;
+  border-radius: 15px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.07);
+  cursor: pointer;
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  transition: box-shadow 0.3s ease;
+  transition: transform 0.2s ease;
 }
 
-.bookmark-card:hover {
-  box-shadow: 0 5px 24px rgba(18, 69, 122, 0.2);
+.bookmark-card:hover,
+.bookmark-card:focus {
+  transform: translateY(-6px) scale(1.02);
+  outline: none;
 }
 
 .bookmark-image {
   width: 100%;
   height: 160px;
   object-fit: cover;
-  border-bottom: 1px solid #e1eaff;
+  aspect-ratio: 4/3;
 }
 
 .bookmark-details {
-  padding: 1.4rem 1.3rem;
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  padding: 20px 18px 26px 18px;
 }
 
 .bookmark-details h3 {
-  margin-top: 0;
-  font-size: 1.22rem;
-  color: #144a90;
+  font-weight: 700;
+  margin: 0 0 12px 0;
+  font-size: 1.2rem;
 }
 
 .bookmark-details p {
-  font-size: 0.95rem;
-  margin: 0.45rem 0;
-  color: #536680;
+  font-size: 1rem;
+  color: #666666;
+  margin: 0 0 8px 0;
 }
 
 .bookmark-price {
   font-weight: 700;
-  color: #2979f7;
-  font-size: 1rem;
-}
-
-.notification {
-  padding: 12px;
-  margin-bottom: 16px;
-  border-radius: 5px;
-  text-align: center;
-  font-weight: bold;
-}
-
-.notification.error {
-  background-color: #f8d7da;
-  color: #721c24;
-  border: 1px solid #f5c6cb;
+  color: #2276b6;
+  font-size: 1.1rem;
 }

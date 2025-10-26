@@ -31,11 +31,11 @@ class Provider:
         if row is None:
             return None
         return Provider(
-            provider_id=row['provider_id'],
-            user_id=row['user_id'],
-            business_name=row.get('business_name'),
-            description=row.get('description'),
-            approved=row.get('approved')
+            provider_id = row['provider_id'],
+            user_id = row['user_id'],
+            business_name = row['business_name'] if 'business_name' in row.keys() else None,
+            description = row['description'] if 'description' in row.keys() else None,
+            approved = row['approved'] if 'approved' in row.keys() else None,
         )
 
     @staticmethod

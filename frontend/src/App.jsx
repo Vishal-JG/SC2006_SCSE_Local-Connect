@@ -15,6 +15,7 @@ import ServiceDetailPage from "./pages/ConsumerUI/ServiceUI/ServiceDetailPage";
 import ProfileUI from "./pages/ConsumerUI/ProfileUI/ProfileUI";
 import AboutUI from "./pages/ConsumerUI/AboutUI/AboutUI";
 import ContactUI from "./pages/ConsumerUI/ContactUI/ContactUI";
+import BookingUI from "./pages/ConsumerUI/BookingUI/BookingPage";
 
 // Provider UI pages
 import ProviderDashboard from "./pages/ProviderUI/ProviderDashboard";
@@ -46,7 +47,8 @@ export default function App() {
           <Route path="/profile" element={<ProfileUI />} />
           <Route path="/about" element={<AboutUI />} />
           <Route path="/contact" element={<ContactUI />} />
-
+          <Route path="/booking" element={<BookingUI />} />
+          
           {/* Provider routes */}
           <Route path="/ProviderUI/ProviderDashboard" element={<ProviderDashboard />} />
           <Route path="/ProviderUI/MyListingsPage" element={<MyListingsPage />} />

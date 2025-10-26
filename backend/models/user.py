@@ -39,10 +39,10 @@ class User:
         return User(
             user_id=row['user_id'],
             email=row['email'],
-            display_name=row.get('display_name'),
-            phone=row.get('phone'),
-            role=row.get('role'),
-            created_at=row.get('created_at')
+            display_name=row['display_name'] if 'display_name' in row.keys() else None,
+            phone=row['phone'] if 'phone' in row.keys() else None,
+            role=row['role'] if 'role' in row.keys() else None,
+            created_at=row['created_at'] if 'created_at' in row.keys() else None
         )
 
     @staticmethod
