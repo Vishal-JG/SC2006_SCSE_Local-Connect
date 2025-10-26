@@ -20,6 +20,7 @@ def verify_token():
         tuple: (user_id, error_response, status_code)
     """
     auth_header = request.headers.get('Authorization')
+    print("verify_token() Authorization header:", auth_header)
     if not auth_header or not auth_header.startswith('Bearer '):
         return None, jsonify({'success': False, 'error': 'Authorization header missing'}), 401
     
@@ -38,12 +39,23 @@ def get_user_role(user_id):
     Returns:
         str: The user's role (admin, provider, customer)
     """
+    
+    #Debug
+    print(f"Looking up user with id: {user_id}")
+    user = User.get_by_id(user_id)
+    print(f"DB query returned: {user}")
+
+    if not user:
+        raise ValueError("User not found")
     user = User.get_by_id(user_id)
     return user.role if user else None
 
 @booking_bp.route('/bookings', methods=['POST'])
 #@login_required
 def create_booking():
+    print("=== HEADERS RECEIVED ===")
+    for k, v in request.headers:
+        print(f"{k}: {v}")
     """
     Create a new booking.
     

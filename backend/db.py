@@ -58,20 +58,19 @@ def seed_db_command():
     
     # Seed Users
     db.executescript("""
-    INSERT INTO Users (email, display_name, phone, role) VALUES
-    ('jesmondtay1914@gmail.com', 'Jesmond Tay', '91234567', 'customer'),
-    ('ben@example.com', 'Ben Lim', '92345678', 'customer'),
-    ('chefjason@example.com', 'Chef Jason', '93456789', 'provider'),
-    ('movermax@example.com', 'Mover Max', '94567890', 'provider'),
-    ('sparkz@example.com', 'Sparkz Electrical', '95678901', 'provider'),
-    ('cleanqueen@example.com', 'Clean Queen', '96789012', 'provider'),
-    ('autopro@example.com', 'AutoPro SG', '97890123', 'provider'),
-    ('fixitbob@example.com', 'Fix-It Bob', '98901234', 'provider'),
-    ('glamsalon@example.com', 'Glam Salon', '99012345', 'provider'),
-    ('techgenius@example.com', 'Tech Genius', '90123456', 'provider'),
-    ('tutoramy@example.com', 'Tutor Amy', '91122334', 'provider'),
-    ('pipeworks@example.com', 'PipeWorks Plumbing', '92233445', 'provider'),
-    ('admin@example.com', 'Admin User', '90001111', 'admin');
+    INSERT INTO Users (user_id, email, display_name, phone, role) VALUES
+    ('uid2', 'ben@example.com', 'Ben Lim', '92345678', 'customer'),
+    ('uid3', 'chefjason@example.com', 'Chef Jason', '93456789', 'provider'),
+    ('uid4', 'movermax@example.com', 'Mover Max', '94567890', 'provider'),
+    ('uid5', 'sparkz@example.com', 'Sparkz Electrical', '95678901', 'provider'),
+    ('uid6', 'cleanqueen@example.com', 'Clean Queen', '96789012', 'provider'),
+    ('uid7', 'autopro@example.com', 'AutoPro SG', '97890123', 'provider'),
+    ('uid8', 'fixitbob@example.com', 'Fix-It Bob', '98901234', 'provider'),
+    ('uid9', 'glamsalon@example.com', 'Glam Salon', '99012345', 'provider'),
+    ('uid10', 'techgenius@example.com', 'Tech Genius', '90123456', 'provider'),
+    ('uid11', 'tutoramy@example.com', 'Tutor Amy', '91122334', 'provider'),
+    ('uid12', 'pipeworks@example.com', 'PipeWorks Plumbing', '92233445', 'provider'),
+    ('adminuid', 'admin@example.com', 'Admin User', '90001111', 'admin');
     """)
 
     # Seed Providers (user_id references Users)
@@ -107,16 +106,47 @@ def seed_db_command():
     # Seed Listings
     db.executescript("""
     INSERT INTO Listings (provider_id, category_id, title, description, price, status, image_url, location, latitude, longitude) VALUES
-    (1, 1, 'Private Dinner for Two', 'Enjoy a gourmet 3-course meal prepared in your home.', 150.00, 'approved', 'https://images.unsplash.com/photo-1551218808-94e220e084d2?auto=format&fit=crop&w=400&q=80', 'Orchard Road', 1.3048, 103.8318),
-    (2, 2, 'Standard Package Delivery', 'Fast and affordable delivery service islandwide.', 25.00, 'approved', 'https://images.unsplash.com/photo-1612831455540-5efb7b8f7a3f?auto=format&fit=crop&w=400&q=80', 'Jurong East', 1.3331, 103.7436),
-    (3, 3, 'Electrical Troubleshooting', 'Fix short circuits, faulty switches, or lighting issues.', 60.00, 'approved', 'https://images.unsplash.com/photo-1581090700227-5f9d8e0f8b8f?auto=format&fit=crop&w=400&q=80', 'Clementi', 1.3151, 103.7640),
-    (4, 4, 'Home Deep Cleaning', 'Thorough cleaning for kitchens, bathrooms, and floors.', 120.00, 'approved', 'https://images.unsplash.com/photo-1581579186485-90577b0f5e7a?auto=format&fit=crop&w=400&q=80', NULL, NULL, NULL),
-    (5, 5, 'Car Engine Tune-Up', 'Comprehensive check and tune-up for smooth performance.', 180.00, 'approved', 'https://images.unsplash.com/photo-1581092339885-07f0c4d44d27?auto=format&fit=crop&w=400&q=80', 'Woodlands', 1.4360, 103.7865),
-    (6, 6, 'Furniture Assembly & Repairs', 'Expert handyman to fix or assemble furniture at home.', 70.00, 'approved', 'https://images.unsplash.com/photo-1596495577886-d920f4e5f013?auto=format&fit=crop&w=400&q=80', NULL, NULL, NULL),
-    (7, 7, 'Hair Styling & Treatment', 'Professional salon services for all hair types.', 90.00, 'approved', 'https://images.unsplash.com/photo-1588776814546-b1b1d8b62239?auto=format&fit=crop&w=400&q=80', 'Hougang', 1.3721, 103.8922),
-    (8, 8, 'Computer & Network Support', 'On-site troubleshooting for software and network issues.', 80.00, 'approved', 'https://images.unsplash.com/photo-1555529771-0f0f7f3a9b0a?auto=format&fit=crop&w=400&q=80', NULL, NULL, NULL),
-    (9, 9, 'Math & English Tutoring', '1-hour personalized lessons for primary students.', 50.00, 'approved', 'https://images.unsplash.com/photo-1573497491208-6b1acb260507?auto=format&fit=crop&w=400&q=80', NULL, NULL, NULL),
-    (10, 10, 'Emergency Plumbing', 'Quick response for pipe leaks and clogged drains.', 100.00, 'approved', 'https://images.unsplash.com/photo-1588776814512-7d1f5e7f3b55?auto=format&fit=crop&w=400&q=80', 'Marina Bay Sands', 1.2834, 103.8607);
+    (1, 1, 'Private Chef Experience', 'Enjoy premium dining at home.', 120.00, 'approved', 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=400&q=80', 'Orchard Road', 1.3048, 103.8318),
+    (2, 2, 'Parcel Delivery', 'Quick parcel deliveries anywhere in the city.', 20.00, 'approved', 'https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?auto=format&fit=crop&w=400&q=80', 'Jurong East', 1.3331, 103.7436),
+    (3, 3, 'Expert Plumbing', 'Pipeline and drain fixes.', 60.00, 'approved', 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80', 'Clementi', 1.3151, 103.7640),
+    (4, 4, 'Home Cleaning', 'Detailed cleaning for all rooms.', 110.00, 'approved', 'https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=400&q=80', NULL, NULL, NULL),
+    (5, 5, 'General Auto Repair', 'Vehicle engine and diagnostics.', 180.00, 'approved', 'https://images.unsplash.com/photo-1645445522156-9ac06bc7a767?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1170', 'Woodlands', 1.4360, 103.7865),
+    (6, 6, 'Handyman Service', 'Furniture assembly and minor repairs.', 70.00, 'approved', 'https://images.unsplash.com/photo-1520880867055-1e30d1cb001c?auto=format&fit=crop&w=400&q=80', NULL, NULL, NULL),
+    (7, 7, 'Salon at Home', 'Professional hair styling and treatment.', 85.00, 'approved', 'https://images.unsplash.com/photo-1511367461989-f85a21fda167?auto=format&fit=crop&w=400&q=80', 'Hougang', 1.3721, 103.8922),
+    (8, 8, 'Computer Repair', 'Device and software troubleshooting.', 80.00, 'approved', 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=400&q=80', NULL, NULL, NULL),
+    (9, 9, 'Math Tutoring', 'Private home tutoring.', 50.00, 'approved', 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=400&q=80', NULL, NULL, NULL),
+    (10, 10, '24-hr Plumbing', 'Emergency fix for leaks and clogs.', 100.00, 'approved', 'https://images.unsplash.com/photo-1482062364825-616fd23b8fc1?auto=format&fit=crop&w=400&q=80', 'Marina Bay Sands', 1.2834, 103.8607),
+    (11, 1, 'Private Dinner for Four', 'Gourmet meal prepared at your request.', 200.00, 'approved', 'https://images.unsplash.com/photo-1498654896293-37aacf113fd9?auto=format&fit=crop&w=400&q=80', 'Tampines', 1.3544, 103.9303),
+    (12, 2, 'Same-Day Delivery', 'Fast and efficient parcel delivery.', 30.00, 'approved', 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=400&q=80', 'Bukit Timah', 1.3327, 103.7811),
+    (13, 3, 'Drain Cleaning', 'Clearing blocked drains professionally.', 80.00, 'approved', 'https://images.unsplash.com/photo-1505695715220-3a366d958259?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1170', 'Woodlands', 1.4364, 103.7866),
+    (14, 4, 'Office Cleaning', 'Professional cleaning for offices.', 150.00, 'approved', 'https://images.unsplash.com/photo-1526045612212-70caf35c14df?auto=format&fit=crop&w=400&q=80', NULL, NULL, NULL),
+    (15, 5, 'Car Battery Replacement', 'Replace old or dead batteries.', 120.00, 'approved', 'https://images.unsplash.com/photo-1504215680853-026ed2a45def?auto=format&fit=crop&w=400&q=80', 'Bukit Batok', 1.3483, 103.7491),
+    (16, 6, 'Furniture Repair', 'Fix scratches, dents, and loose joints.', 90.00, 'approved', 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=958', NULL, NULL, NULL),
+    (17, 7, 'Haircut & Styling', 'Fresh styles for any occasion.', 75.00, 'approved', 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=400&q=80', 'Bishan', 1.3504, 103.8467),
+    (18, 8, 'Network Setup', 'Setup and configure your home network.', 90.00, 'approved', 'https://images.unsplash.com/photo-1549924231-f129b911e442?auto=format&fit=crop&w=400&q=80', NULL, NULL, NULL),
+    (19, 9, 'English Tutoring', 'Improve reading and writing skills.', 55.00, 'approved', 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=400&q=80', NULL, NULL, NULL),
+    (20, 10, 'Pipe Leak Repair', 'Fix pipe leaks quickly and efficiently.', 110.00, 'approved', 'https://images.unsplash.com/photo-1501594907352-04cda38ebc29?auto=format&fit=crop&w=400&q=80', 'Central Business District', 1.2821, 103.8515),
+    -- Continue similar entries to make up 40 rows --
+    (21, 1, 'Gourmet Breakfast Delivery', 'Start your day with a gourmet breakfast.', 50.00, 'approved', 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=400&q=80', NULL, NULL, NULL),
+    (22, 2, 'Overnight Parcel Delivery', 'Parcel delivery by next morning.', 40.00, 'approved', 'https://images.unsplash.com/photo-1494526585095-c41746248156?auto=format&fit=crop&w=400&q=80', 'Queenstown', 1.2956, 103.8198),
+    (23, 3, 'Bathroom Plumbing', 'Fix taps, showers, and toilets.', 70.00, 'approved', 'https://images.unsplash.com/photo-1454988501794-2992f706932e?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1174', 'Ang Mo Kio', 1.3695, 103.8392),
+    (24, 4, 'Carpet Cleaning', 'Professional carpet cleaning service.', 130.00, 'approved', 'https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&w=400&q=80', NULL, NULL, NULL),
+    (25, 5, 'Tire Replacement', 'Replace worn-out tires safely.', 160.00, 'approved', 'https://images.unsplash.com/photo-1525609004556-c46c7d6cf023?auto=format&fit=crop&w=400&q=80', 'Choa Chu Kang', 1.3938, 103.7443),
+    (26, 6, 'Kitchen Furniture Assembly', 'Assembly of kitchen furniture and cabinets.', 80.00, 'approved', 'https://images.unsplash.com/photo-1484154218962-a197022b5858?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1174', NULL, NULL, NULL),
+    (27, 7, 'Hair Treatment', 'Deep conditioning and scalp treatments.', 95.00, 'approved', 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=400&q=80', 'Pasir Ris', 1.3744, 103.9493),
+    (28, 8, 'Laptop Repair', 'Fix hardware and software issues.', 100.00, 'approved', 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=400&q=80', NULL, NULL, NULL),
+    (29, 9, 'Science Tutoring', 'Private tutoring for science subjects.', 60.00, 'approved', 'https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&w=400&q=80', NULL, NULL, NULL),
+    (30, 10, 'Emergency Drain Cleaning', 'Quick service for clogged drains.', 120.00, 'approved', 'https://images.unsplash.com/photo-1501004318641-b39e6451bec6?auto=format&fit=crop&w=400&q=80', 'Bedok', 1.3240, 103.9272),
+    (31, 1, 'Custom Cake Delivery', 'Order and have cakes delivered.', 80.00, 'approved', 'https://images.unsplash.com/photo-1447078806655-40579c2520d6?auto=format&fit=crop&w=400&q=80', 'Bukit Merah', 1.2805, 103.8198),
+    (32, 2, 'Express Courier', 'Fast same-day courier services.', 35.00, 'approved', 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=400&q=80', 'Geylang', 1.3208, 103.8868),
+    (33, 3, 'Garden Plumbing Repair', 'Fix outdoor water systems.', 85.00, 'approved', 'https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?auto=format&fit=crop&w=400&q=80', 'Punggol', 1.4020, 103.9090),
+    (34, 4, 'Window Cleaning', 'Professional window and glass cleaning.', 105.00, 'approved', 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80', NULL, NULL, NULL),
+    (35, 5, 'Car Detailing', 'Full exterior and interior cleaning.', 200.00, 'approved', 'https://images.unsplash.com/photo-1511918984145-48de785d4c4e?auto=format&fit=crop&w=400&q=80', 'Yishun', 1.4300, 103.8350),
+    (36, 6, 'Door Repair', 'Fix broken locks and hinges.', 75.00, 'approved', 'https://images.unsplash.com/photo-1520880867055-1e30d1cb001c?auto=format&fit=crop&w=400&q=80', NULL, NULL, NULL),
+    (37, 7, 'Hair Coloring', 'Professional dye jobs.', 120.00, 'approved', 'https://images.unsplash.com/photo-1511367461989-f85a21fda167?auto=format&fit=crop&w=400&q=80', 'Toa Payoh', 1.3321, 103.8489),
+    (38, 8, 'Hardware Upgrade', 'Increase your device performance.', 110.00, 'approved', 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=400&q=80', NULL, NULL, NULL),
+    (39, 9, 'Language Tutoring', 'Learn new languages with an expert.', 65.00, 'approved', 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=400&q=80', NULL, NULL, NULL),
+    (40, 10, 'Pipe Installation', 'New pipe installation for homes.', 140.00, 'approved', 'https://images.unsplash.com/photo-1501594907352-04cda38ebc29?auto=format&fit=crop&w=400&q=80', 'Tiong Bahru', 1.2869, 103.8287);
     """)
 
     # Seed Bookings

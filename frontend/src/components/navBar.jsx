@@ -9,6 +9,7 @@ const menuItems = [
   { label: "About", page: "about" },
   { label: "Contact Us", page: "contact" },
   { label: "Services", page: "service" },
+  { label: "Booking", page: "booking" }, 
   { label: "Bookmark", page: "bookmark" },
 ];
 

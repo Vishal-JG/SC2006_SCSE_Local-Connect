@@ -1,13 +1,11 @@
 import React from 'react'
 import './MainUI.css'
-import Header from '../../components/header'
+import Header from '../../components/LandingPage'
 import ServiceUI from '../ConsumerUI/ServiceUI/ServiceUI'
 
 const MainUI = () => {
   return (
-    <div>
-        <Header />
-    </div>
+    <Header />
   )
 }
 

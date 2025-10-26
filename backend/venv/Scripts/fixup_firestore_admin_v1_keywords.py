@@ -1,4 +1,4 @@
-#!C:\Users\User\Documents\SC2006_SCSE_Local-Connect\backend\venv\Scripts\python.exe
+#!C:\Users\User\Documents\GitHub\SC2006_SCSE_Local-Connect\backend\venv\Scripts\python.exe
 # -*- coding: utf-8 -*-
 # Copyright 2025 Google LLC
 #

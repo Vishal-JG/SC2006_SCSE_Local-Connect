@@ -10,7 +10,7 @@ DROP TABLE IF EXISTS Categories;
 DROP TABLE IF EXISTS Users;
 
 CREATE TABLE Users (
-    user_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id TEXT PRIMARY KEY,
     email TEXT NOT NULL UNIQUE,
     display_name TEXT,
     phone TEXT,
