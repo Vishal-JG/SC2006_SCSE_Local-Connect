@@ -86,6 +86,56 @@ def reverse_geocode():
         else:
             return jsonify({"error": "No address found"}), 404
     except requests.RequestException as e:
+# ---------------------------------------------
+# URA PARKING LOT (GEOJSON)
+# ---------------------------------------------
+@external_bp.route("/govsg/ura-parking-lots", methods=["GET"])
+def get_ura_parking_lots():
+    """
+    Fetch URA Parking Lot (GeoJSON) data from data.gov.sg.
+    The API requires two steps:
+    1. Call poll-download endpoint to get a temporary file URL.
+    2. Fetch that file to get the actual GeoJSON content.
+    """
+    dataset_id = "d_d959102fa76d58f2de276bfbb7e8f68e"
+    poll_url = f"https://api-open.data.gov.sg/v1/public/api/datasets/{dataset_id}/poll-download"
+
+    try:
+        # Step 1: Request the temporary file link
+        poll_response = requests.get(poll_url, timeout=10)
+        poll_data = poll_response.json()
+
+        # Handle errors from the dataset API
+        if poll_data.get("code") != 0:
+            err_msg = poll_data.get("errMsg", "Unknown error from data.gov.sg API")
+            return jsonify({"error": err_msg}), 502
+
+        # Step 2: Download the GeoJSON file using the returned URL
+        download_url = poll_data["data"]["url"]
+        geojson_response = requests.get(download_url, timeout=20)
+
+        # Return raw GeoJSON
+        return jsonify(geojson_response.json()), 200
+
+    except requests.exceptions.RequestException as e:
+        return jsonify({"error": f"Request failed: {str(e)}"}), 500
+    except ValueError:
+        return jsonify({"error": "Failed to parse response as JSON"}), 500
+
+# -----------------------------
+# HDB CARPARK AVAILABILITY 
+# -----------------------------
+@external_bp.route("/govsg/hdb-carpark-info", methods=["GET"])
+def get_hdb_carpark_info():
+    dataset_id = "d_23f946fa557947f93a8043bbef41dd09"
+    url = f"https://data.gov.sg/api/action/datastore_search?resource_id={dataset_id}"
+
+    try:
+        response = requests.get(url)
+        response.raise_for_status()  # Raises an HTTPError for bad responses (4xx/5xx)
+        data = response.json()
+        return jsonify(data), 200
+    except requests.exceptions.RequestException as e:
         return jsonify({"error": str(e)}), 500
 
 # ------------------------
@@ -101,6 +151,34 @@ def gov_weather_2h():
     except requests.RequestException as e:
         return jsonify({"error": str(e)})
 
+# ---------------------------------------------
+# CERTIFICATE GRADING OF LICENSED EATING ESTABLISHMENTS
+# ---------------------------------------------
+@external_bp.route("/govsg/sfa-licensed-establishments", methods=["GET"])
+def get_sfa_licensed_establishments():
+    dataset_id = "d_546a95c5e6a0a264a82247ec107a0629"
+    poll_url = f"https://api-open.data.gov.sg/v1/public/api/datasets/{dataset_id}/poll-download"
+
+    try:
+        # Step 1: Poll the download URL
+        poll_response = requests.get(poll_url)
+        poll_response.raise_for_status()
+        json_data = poll_response.json()
+
+        if json_data.get("code") != 0:
+            return jsonify({"error": json_data.get("errMsg", "Unknown error")}), 500
+
+        # Step 2: Fetch the actual JSON/GeoJSON file
+        data_url = json_data["data"]["url"]
+        data_response = requests.get(data_url)
+        data_response.raise_for_status()
+
+        geojson = data_response.json()
+        return jsonify(geojson), 200
+
+    except requests.exceptions.RequestException as e:
+        return jsonify({"error": str(e)}), 500
+        
 # ------------------------
 # ACRA businesses with geocoding
 # ------------------------
