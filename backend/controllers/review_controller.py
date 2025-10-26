@@ -1,5 +1,5 @@
-from flask import Blueprint, request, jsonify, current_app
-from db import get_db
+from flask import Blueprint, request, jsonify
+from backend.db import get_db
 
 review_bp = Blueprint("review_bp", __name__)
 

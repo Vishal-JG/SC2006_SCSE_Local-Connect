@@ -3,8 +3,8 @@ Booking Controller
 Handles all booking-related API endpoints and logic.
 """
 from flask import Blueprint, request, jsonify, current_app
-from models.booking import Booking
-from models.user import User
+from backend.models.booking import Booking
+from backend.models.user import User
 import firebase_admin
 import traceback
 
@@ -42,6 +42,7 @@ def get_user_role(user_id):
     return user.role if user else None
 
 @booking_bp.route('/bookings', methods=['POST'])
+#@login_required
 def create_booking():
     """
     Create a new booking.
@@ -105,6 +106,7 @@ def create_booking():
 
 
 @booking_bp.route('/bookings', methods=['GET'])
+#@login_required
 def get_user_bookings():
     """
     Get bookings for the current user.
@@ -158,6 +160,7 @@ def get_user_bookings():
 
 
 @booking_bp.route('/bookings/<int:booking_id>', methods=['GET'])
+#@login_required
 def get_booking_details(booking_id):
     """
     Get detailed information about a specific booking.
@@ -214,6 +217,7 @@ def get_booking_details(booking_id):
 
 
 @booking_bp.route('/bookings/<int:booking_id>/status', methods=['PUT'])
+#@login_required
 def update_booking_status(booking_id):
     """
     Update the status of a booking.
@@ -315,6 +319,7 @@ def update_booking_status(booking_id):
 
 
 @booking_bp.route('/bookings/<int:booking_id>', methods=['DELETE'])
+#@login_required
 def delete_booking(booking_id):
     """
     Delete a booking.

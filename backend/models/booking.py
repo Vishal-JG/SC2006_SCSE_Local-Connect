@@ -4,7 +4,7 @@ Represents a booking made by a customer for a service.
 Maps to the Bookings table in the database.
 """
 from datetime import datetime
-from db import get_db
+from backend.db import get_db
 
 
 class Booking:

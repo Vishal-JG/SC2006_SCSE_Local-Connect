@@ -1,78 +1,70 @@
-import React, { useState, useEffect } from 'react'
-import './BookmarkUI.css'
-
-const dummyBookmarks = [
-  {
-    "id": "1",
-    "name": "Quick Plumbing Solutions",
-    "description": "Fast and reliable plumbing services for home and commercial needs.",
-    "image": "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80",
-    "price": "$50 - $100"
-  },
-  {
-    "id": "2",
-    "name": "Sparkle Cleaners",
-    "description": "Professional cleaning services with eco-friendly products.",
-    "image": "https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=700&q=80",
-    "price": "$70 - $150"
-  },
-  {
-    "id": "3",
-    "name": "City Cafe",
-    "description": "Popular cafe with great coffee and cozy ambiance.",
-    "image": "https://images.unsplash.com/photo-1549924231-f129b911e442?auto=format&fit=crop&w=400&q=80",
-    "price": "$5 - $15"
-  },
-  {
-    "id": "4",
-    "name": "Gourmet Bakery",
-    "description": "Fresh baked goods, cakes, and pastries.",
-    "image": "https://images.unsplash.com/photo-1528821167780-4f63491a6a03?auto=format&fit=crop&w=400&q=80",
-    "price": "$10 - $50"
-  },
-  {
-    "id": "5",
-    "name": "Tailored Clothing",
-    "description": "Custom tailoring with quick turn-around.",
-    "image": "https://images.unsplash.com/photo-1549924310-cb9a1f3768d4?auto=format&fit=crop&w=400&q=80",
-    "price": "$80 - $300"
-  }
-]
+import React, { useState, useEffect } from 'react';
+import { getAuth } from 'firebase/auth';
+import './BookmarkUI.css';
 
 const BookmarkUI = () => {
-  //state for bookmark
-  const [bookmarks, setBookmarks] = useState(dummyBookmarks)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
-  //need to replace with real endpoints
-  // useEffect(() => {
-  //     fetch('http://localhost:5000/api/bookmarks', {
-  //       credentials: 'include', // if using sessions or similar
-  //       headers: {
-  //         'Authorization': `Bearer ${localStorage.getItem('token')}`
-  //       }
-  //     })
-  //       .then(res => {
-  //         if (!res.ok) throw new Error("Failed to fetch bookmarks");
-  //         return res.json();
-  //       })
-  //       .then(data => {
-  //         setBookmarks(data);
-  //         setLoading(false);
-  //       })
-  //       .catch(err => {
-  //         setError(err.message);
-  //         setLoading(false);
-  //       });
-  //   }, []);
-  
-  if (loading) return <div className="bookmark-container">Loading bookmarks…</div>;
-  if (error) return <div className="bookmark-container error">Error: {error}</div>;
-  if (bookmarks.length === 0) return <div className="bookmark-container">No bookmarks found.</div>;
+  const [bookmarks, setBookmarks] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [showNotification, setShowNotification] = useState(false);
+
+  useEffect(() => {
+    const fetchBookmarks = async () => {
+      try {
+        const auth = getAuth();
+        const user = auth.currentUser;
+
+        if (!user) {
+          setShowNotification(true);
+          setLoading(false);
+          return;
+        }
+
+        const token = await user.getIdToken();
+
+        const res = await fetch('http://localhost:5000/api/bookmarks', {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          }
+        });
+
+        if (!res.ok) throw new Error('Failed to fetch bookmarks');
+        const data = await res.json();
+
+        const mapped = data.bookmarks?.map(item => ({
+          id: item.listing_id,
+          name: item.title,
+          description: item.description,
+          image: item.image_url || 'https://via.placeholder.com/400x300',
+          price: item.price ? `$${item.price.toFixed(2)}` : 'N/A'
+        })) || [];
+
+        setBookmarks(mapped);
+      } catch (err) {
+        console.error("Error fetching bookmarks:", err);
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBookmarks();
+  }, []);
 
   return (
     <div className="bookmark-container">
-      <h1>Your Bookmarked Services</h1>
+      {showNotification && (
+        <div className="notification error">
+          You must be logged in to view your bookmarks.
+        </div>
+      )}
+
+      {loading && <div>Loading bookmarks…</div>}
+      {error && <div className="error">Error: {error}</div>}
+      {!loading && !error && bookmarks.length === 0 && (
+        <div>No bookmarks found.</div>
+      )}
+
       <div className="bookmark-list">
         {bookmarks.map(service => (
           <div key={service.id} className="bookmark-card">
@@ -86,7 +78,8 @@ const BookmarkUI = () => {
         ))}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default BookmarkUI
+export default BookmarkUI;
+

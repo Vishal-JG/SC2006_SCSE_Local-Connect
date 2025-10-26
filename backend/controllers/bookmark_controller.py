@@ -6,8 +6,8 @@ Customers can bookmark/unbookmark services.
 from flask import Blueprint, request, jsonify
 import firebase_admin
 from firebase_admin import auth
-from models.bookmark import Bookmark
-from models.user import User
+from backend.models.bookmark import Bookmark
+from backend.models.user import User
 
 
 bookmark_bp = Blueprint('bookmark', __name__)
@@ -24,14 +24,19 @@ def verify_token():
         ValueError: If token is missing or invalid
     """
     auth_header = request.headers.get('Authorization')
+    print("Received Authorization header:", auth_header)
     if not auth_header or not auth_header.startswith('Bearer '):
         raise ValueError("Missing or invalid Authorization header")
     
-    token = auth_header.split('Bearer ')[1]
+    token = auth_header[len('Bearer '):].strip()
+    if isinstance(token, bytes):
+        print("Decoded token:", decoded_token)
+        token = token.decode('utf-8')
     try:
         decoded_token = auth.verify_id_token(token)
         return decoded_token['uid']
     except Exception as e:
+        print("Token verification failed:", str(e))
         raise ValueError(f"Invalid token: {str(e)}")
 
 
@@ -46,6 +51,7 @@ def get_user_role(user_id):
         ValueError: If user not found
     """
     user = User.get_by_id(user_id)
+    print(f"User fetched for id {user_id}: {user}")
     if not user:
         raise ValueError("User not found")
     return user.role

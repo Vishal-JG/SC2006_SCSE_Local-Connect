@@ -1,3 +1,14 @@
+DROP TABLE IF EXISTS Provider_Analytics;
+DROP TABLE IF EXISTS Listing_Status;
+DROP TABLE IF EXISTS Admin_Actions;
+DROP TABLE IF EXISTS Bookmarks;
+DROP TABLE IF EXISTS Reviews;
+DROP TABLE IF EXISTS Bookings;
+DROP TABLE IF EXISTS Listings;
+DROP TABLE IF EXISTS Providers;
+DROP TABLE IF EXISTS Categories;
+DROP TABLE IF EXISTS Users;
+
 CREATE TABLE Users (
     user_id INTEGER PRIMARY KEY AUTOINCREMENT,
     email TEXT NOT NULL UNIQUE,
@@ -29,6 +40,10 @@ CREATE TABLE Listings (
     description TEXT,
     price REAL NOT NULL,
     status TEXT CHECK(status IN ('pending', 'approved', 'rejected')) DEFAULT 'pending',
+    image_url TEXT,
+    location TEXT,
+    latitude REAL,
+    longitude REAL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (provider_id) REFERENCES Providers(provider_id),
     FOREIGN KEY (category_id) REFERENCES Categories(category_id)

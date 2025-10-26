@@ -3,6 +3,7 @@ import './Authpage.css';
 import { auth } from '../firebase'; 
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
+import MainUI from "./MainUI/MainUI"
 
 import {
   signInWithEmailAndPassword,
@@ -85,7 +86,7 @@ export default function AuthPage() {
         role: signUpRole,
         phone: signUpPhone, 
       };
-
+  
       if (signUpRole === 'provider') {
         userData.businessName = businessName;
         userData.businessDescription = businessDescription;

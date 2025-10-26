@@ -4,7 +4,7 @@ Represents a bookmark (saved service) by a user.
 Maps to the Bookmarks table in the database.
 """
 from datetime import datetime
-from db import get_db
+from backend.db import get_db
 
 
 class Bookmark:

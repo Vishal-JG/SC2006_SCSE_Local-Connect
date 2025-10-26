@@ -65,3 +65,17 @@
   color: #2979f7;
   font-size: 1rem;
 }
+
+.notification {
+  padding: 12px;
+  margin-bottom: 16px;
+  border-radius: 5px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.notification.error {
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}

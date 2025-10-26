@@ -4,49 +4,53 @@ import bookmark from '../../../assets/bookmark.png'
 import './ServiceDetailPage.css'
 import BackButton from '../../../components/BackButton';
 
-const dummyServiceData = {
-  plumbingservices: [
-    {
-      id: "1",
-      name: "Elco Plumber Co.",
-      rating: 4.8,
-      description:
-        "Elco Plumber Co. provides fast, reliable, and affordable plumbing solutions for homes and businesses. Our certified technicians handle leaks, installations, inspections, and emergencies.",
-      price: "$50 - $60",
-      image: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80"
-    },
-    {
-      id: "2",
-      name: "RapidFlow Plumbing Co.",
-      rating: 4.7,
-      description: "Serving your plumbing needs quickly and professionally.",
-      price: "$60 - $80",
-      image: "https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=700&q=80"
-    }
-  ]
-};
+// const dummyServiceData = {
+//   plumbingservices: [
+//     {
+//       id: "1",
+//       name: "Elco Plumber Co.",
+//       rating: 4.8,
+//       description:
+//         "Elco Plumber Co. provides fast, reliable, and affordable plumbing solutions for homes and businesses. Our certified technicians handle leaks, installations, inspections, and emergencies.",
+//       price: "$50 - $60",
+//       image: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80"
+//     },
+//     {
+//       id: "2",
+//       name: "RapidFlow Plumbing Co.",
+//       rating: 4.7,
+//       description: "Serving your plumbing needs quickly and professionally.",
+//       price: "$60 - $80",
+//       image: "https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=700&q=80"
+//     }
+//   ]
+// };
 
 const ServiceDetailPage = () => {
     const {type, id} = useParams()
     //test with dummy data, ltr uncomment the state hook
-    const normalizedType = type.toLowerCase().replace(/\s+/g, '');
-    console.log(id)
-    const service = (dummyServiceData[normalizedType] && dummyServiceData[normalizedType].find((svc) => svc.id === id)) || null
+    // const normalizedType = type.toLowerCase().replace(/\s+/g, '');
+    // console.log(id)
+    // const service = (dummyServiceData[normalizedType] && dummyServiceData[normalizedType].find((svc) => svc.id === id)) || null
     const navigate = useNavigate()
-    // const [service, setService] = useState(null)
+    const [service, setService] = useState(null)
 
     const handleOnClick = ()=> {
         navigate("map")
     }
     
-    //*Change Needed*//
-    // useEffect(() => {
-    //     //fetch from API
-    //     fetch(`http://localhost:5000/api/services/${type}/${id}`)
-    //     .then(res => res.json())
-    //     .then(data => setService(data))
-    //     .catch(() => setService(null))
-    // }, [type, id])
+    useEffect(() => {
+        fetch(`http://localhost:5000/api/services/${id}`)
+        .then((res) => {
+            if (!res.ok) throw new Error('Service not found');
+            return res.json();
+        })
+        .then((data) => setService(data))
+        .catch((err) => {
+            console.error(err);
+            setService(null);
+        });
+    }, [id]);
 
     if (!service) return(
         <div className="service-detail-bg">
@@ -56,7 +60,7 @@ const ServiceDetailPage = () => {
 
     return (
         <div className='service-detail-page'>
-            <div className='service-banner' style={{ backgroundImage: `url(${service.image})` }}></div>
+            <div className='service-banner' style={{ backgroundImage: `url(${service.image_url})` }}></div>
             <BackButton />
             <div className='service-detail-content'>
                 <div className='title-row'>

@@ -3,7 +3,9 @@ import requests
 import time
 import json
 
-external_bp = Blueprint("external_bp", __name__)
+service_bp = Blueprint('service_bp', __name__)
+external_bp = Blueprint('external_bp', __name__)
+bookmark_bp = Blueprint('bookmark_bp', __name__)
 
 BASE_DATAGOV_API = "https://data.gov.sg/api/action/datastore_search"
 
@@ -61,6 +63,29 @@ def geocode_address():
 
     return jsonify(loc)
 
+# Reverse geocode to get human-readable address
+@external_bp.route("/maps/reverse_geocode", methods=["GET"])
+def reverse_geocode():
+    lat = request.args.get("lat")
+    lng = request.args.get("lng")
+    if not lat or not lng:
+        return jsonify({"error": "lat and lng params required"}), 400
+
+    key = current_app.config["GOOGLE_MAPS_API_KEY"]
+    url = "https://maps.googleapis.com/maps/api/geocode/json"
+    params = {"latlng": f"{lat},{lng}", "key": key}
+    
+    try:
+        resp = requests.get(url, params=params, timeout=10)
+        resp.raise_for_status()
+        geo_data = resp.json()
+        if geo_data.get("results"):
+            # Return the formatted address of the first result
+            address = geo_data["results"][0]["formatted_address"]
+            return jsonify({"address": address})
+        else:
+            return jsonify({"error": "No address found"}), 404
+    except requests.RequestException as e:
 # ---------------------------------------------
 # URA PARKING LOT (GEOJSON)
 # ---------------------------------------------
