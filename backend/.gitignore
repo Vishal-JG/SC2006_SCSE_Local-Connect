@@ -1,6 +1,7 @@
 .venv/
 secrets
 .env
+venv
 __pycache__/
 *.pyc
 firebase-adminsdk.json
