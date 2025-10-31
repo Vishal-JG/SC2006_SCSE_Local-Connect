@@ -47,8 +47,9 @@ export default function AuthPage() {
         headers: { Authorization: `Bearer ${idToken}` }
       });
 
+      localStorage.setItem("token", idToken);
       setMessage(`Login successful! Welcome, ${userCredential.user.email}`);
-      navigate('/MainUI');
+      navigate('/service');
     } catch (error) {
       setMessage(`Error: ${error.message}`);
     }

@@ -17,7 +17,6 @@
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
 }
 
-/* Place bookmark icon on top right corner of banner */
 .service-banner > button {
   position: absolute;
   top: 15px;
@@ -48,7 +47,7 @@
 
 .service-rating {
   font-size: 1.2rem;
-  color: #ffcc00; /* gold star color */
+  color: #ffcc00;
   margin-bottom: 20px;
 }
 
@@ -65,48 +64,82 @@
   color: #cccccc;
 }
 
+/* Actions row container */
 .actions-row {
   display: flex;
-  gap: 15px;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: space-between;
 }
 
-.location-btn, .info-btn {
+/* Base action button */
+.action-btn {
   flex: 1;
-  padding: 12px 15px;
-  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 16px;
   border-radius: 12px;
-  border: none;
+  font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  min-width: 140px;
+  text-align: center;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  border: none;
 }
 
-.location-btn {
-  background-color: #4caf50;
-  color: white;
+/* Primary button (Book Now) */
+.action-btn--primary {
+  background-color: #4f46e5;
+  color: #fff;
 }
 
-.location-btn:hover {
-  background-color: #23867a;
+.action-btn--primary:hover {
+  background-color: #4338ca;
 }
 
-.info-btn {
-  background-color: white;
-  border: 2px solid #eeeeee;
-  color: #223344;
+/* WhatsApp button */
+.action-btn--whatsapp {
+  background-color: #25D366;
+  color: #fff;
 }
 
-.info-btn:hover {
-  background-color: #1276db;
-  color: #222222;
+.action-btn--whatsapp:hover {
+  background-color: #1ebe5b;
 }
 
-/* Centering text for service not found message */
+/* Secondary button (Recycling, Other) */
+.action-btn--secondary {
+  background-color: #f3f3f3;
+  color: #333;
+  border: 1px solid #ccc;
+}
+
+.action-btn--secondary:hover {
+  background-color: #e0e0e0;
+}
+
+/* Map button */
+.action-btn--map {
+  background-color: #FF9800;
+  color: #fff;
+}
+
+.action-btn--map:hover {
+  background-color: #e68900;
+}
+
+/* Icon spacing in buttons */
+.action-btn svg {
+  margin-right: 8px;
+}
+
+/* Centered “Service not found” message */
 .service-detail-bg.centered {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 300px;
   font-size: 1.6rem;
-  color: #bbb;;
+  color: #bbb;
 }
-

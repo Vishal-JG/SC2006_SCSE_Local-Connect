@@ -50,7 +50,7 @@ const BookingOverlay = ({ isOpen, onClose, listingId, userId }) => {
       console.log("POST body:", { listingId, formattedDate, userId });
       // Make API call to create booking
       const response = await axios.post(
-        'http://localhost:5000/api/bookings', // Adjust URL to match your backend
+        'http://localhost:5000/api/bookings', 
         {
           listing_id: parseInt(listingId),
           user_id: parseInt(userId),

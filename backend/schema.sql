@@ -63,7 +63,7 @@ CREATE TABLE Bookings (
 CREATE TABLE Reviews (
     review_id INTEGER PRIMARY KEY AUTOINCREMENT,
     booking_id INTEGER NOT NULL,
-    user_id INTEGER NOT NULL,
+    user_id TEXT,
     listing_id INTEGER NOT NULL,
     rating INTEGER CHECK (rating >= 1 AND rating <= 5),
     comment TEXT,

@@ -152,7 +152,7 @@ def seed_db_command():
     # Seed Bookings
     db.executescript("""
     INSERT INTO Bookings (listing_id, user_id, booking_date, status) VALUES
-    (1, 1, '2025-10-21 18:00:00', 'confirmed'),
+    (1, 'o8D1NE4esoWkurIzw9EuogMnwKI2', '2025-10-21 18:00:00', 'confirmed'),
     (4, 2, '2025-10-22 09:00:00', 'completed'),
     (10, 1, '2025-10-22 14:00:00', 'pending');
     """)
@@ -160,8 +160,166 @@ def seed_db_command():
     # Seed Reviews
     db.executescript("""
     INSERT INTO Reviews (booking_id, user_id, listing_id, rating, comment) VALUES
-    (1, 1, 1, 5, 'Chef Jason was amazing!'),
-    (2, 2, 4, 4, 'Great cleaning service!');
+    -- Listing 1
+    (1, 1, 1, 5, 'Amazing chef experience, highly recommend!'),
+    (2, 2, 1, 4, 'Very good service, delicious food!'),
+
+    -- Listing 2
+    (3, 1, 2, 5, 'Parcel arrived super fast.'),
+    (4, 3, 2, 4, 'Good delivery, but package was slightly late.'),
+
+    -- Listing 3
+    (5, 2, 3, 4, 'Plumber was professional and fixed the leak.'),
+    (6, 4, 3, 5, 'Excellent service, would hire again.'),
+
+    -- Listing 4
+    (7, 1, 4, 5, 'Home cleaning was thorough and quick.'),
+    (8, 3, 4, 4, 'Good cleaning, but missed a few spots.'),
+
+    -- Listing 5
+    (9, 2, 5, 5, 'Mechanic fixed my car efficiently.'),
+    (10, 4, 5, 4, 'Good service, a bit pricey.'),
+
+    -- Listing 6
+    (11, 1, 6, 4, 'Handyman did a great job.'),
+    (12, 3, 6, 5, 'Very satisfied with the repairs.'),
+
+    -- Listing 7
+    (13, 2, 7, 5, 'Salon at home was amazing!'),
+    (14, 4, 7, 4, 'Good hair styling, took a bit long.'),
+
+    -- Listing 8
+    (15, 1, 8, 5, 'Computer repair was quick and effective.'),
+    (16, 3, 8, 4, 'Device works perfectly now.'),
+
+    -- Listing 9
+    (17, 2, 9, 5, 'Tutoring really helped my child improve.'),
+    (18, 4, 9, 4, 'Good explanations, very patient tutor.'),
+
+    -- Listing 10
+    (19, 1, 10, 5, 'Plumber arrived quickly and solved the issue.'),
+    (20, 3, 10, 4, 'Good service, slightly expensive.'),
+
+    -- Listing 11
+    (21, 2, 11, 5, 'Dinner was perfect!'),
+    (22, 4, 11, 4, 'Loved the food, service was good.'),
+
+    -- Listing 12
+    (23, 1, 12, 5, 'Same-day delivery was flawless.'),
+    (24, 3, 12, 4, 'Good speed, package safe.'),
+
+    -- Listing 13
+    (25, 2, 13, 4, 'Drain cleaning took less time than expected.'),
+    (26, 4, 13, 5, 'Very satisfied, highly recommend.'),
+
+    -- Listing 14
+    (27, 1, 14, 5, 'Office cleaning was professional.'),
+    (28, 3, 14, 4, 'Good cleaning, missed a corner.'),
+
+    -- Listing 15
+    (29, 2, 15, 5, 'Battery replaced quickly.'),
+    (30, 4, 15, 4, 'Car is running fine now.'),
+
+    -- Listing 16
+    (31, 1, 16, 4, 'Furniture repaired well.'),
+    (32, 3, 16, 5, 'Excellent workmanship.'),
+
+    -- Listing 17
+    (33, 2, 17, 5, 'Haircut perfect!'),
+    (34, 4, 17, 4, 'Very happy with the styling.'),
+
+    -- Listing 18
+    (35, 1, 18, 4, 'Network setup was smooth.'),
+    (36, 3, 18, 5, 'Internet works perfectly now.'),
+
+    -- Listing 19
+    (37, 2, 19, 5, 'English tutoring helped my child a lot.'),
+    (38, 4, 19, 4, 'Good teaching, patient tutor.'),
+
+    -- Listing 20
+    (39, 1, 20, 5, 'Pipe leak repaired fast.'),
+    (40, 3, 20, 4, 'Great service, affordable price.'),
+
+    -- Listing 21
+    (41, 2, 21, 5, 'Breakfast delivered fresh and on time.'),
+    (42, 4, 21, 4, 'Very tasty breakfast, will order again.'),
+
+    -- Listing 22
+    (43, 1, 22, 5, 'Overnight delivery was perfect.'),
+    (44, 3, 22, 4, 'Parcel arrived safe and on time.'),
+
+    -- Listing 23
+    (45, 2, 23, 4, 'Bathroom plumbing fixed efficiently.'),
+    (46, 4, 23, 5, 'Good service, plumber was friendly.'),
+
+    -- Listing 24
+    (47, 1, 24, 5, 'Carpet cleaned very well.'),
+    (48, 3, 24, 4, 'Nice job, but slight odor remained.'),
+
+    -- Listing 25
+    (49, 2, 25, 5, 'Tires replaced professionally.'),
+    (50, 4, 25, 4, 'Good service, a bit long wait.'),
+
+    -- Listing 26
+    (51, 1, 26, 4, 'Furniture assembled correctly.'),
+    (52, 3, 26, 5, 'Perfect assembly, very satisfied.'),
+
+    -- Listing 27
+    (53, 2, 27, 5, 'Hair treatment worked wonders.'),
+    (54, 4, 27, 4, 'Hair feels soft and healthy.'),
+
+    -- Listing 28
+    (55, 1, 28, 5, 'Laptop repaired quickly.'),
+    (56, 3, 28, 4, 'Good service, fixed my device.'),
+
+    -- Listing 29
+    (57, 2, 29, 5, 'Science tutoring really helped.'),
+    (58, 4, 29, 4, 'Excellent explanations, patient tutor.'),
+
+    -- Listing 30
+    (59, 1, 30, 5, 'Emergency drain cleared fast.'),
+    (60, 3, 30, 4, 'Good work, resolved issue quickly.'),
+
+    -- Listing 31
+    (61, 2, 31, 5, 'Cake arrived fresh and delicious.'),
+    (62, 4, 31, 4, 'Very happy with delivery.'),
+
+    -- Listing 32
+    (63, 1, 32, 5, 'Express courier was excellent.'),
+    (64, 3, 32, 4, 'Package delivered quickly.'),
+
+    -- Listing 33
+    (65, 2, 33, 5, 'Garden plumbing fixed perfectly.'),
+    (66, 4, 33, 4, 'Good service, professional plumber.'),
+
+    -- Listing 34
+    (67, 1, 34, 5, 'Windows are sparkling clean.'),
+    (68, 3, 34, 4, 'Great cleaning, some streaks left.'),
+
+    -- Listing 35
+    (69, 2, 35, 5, 'Car detailing was amazing.'),
+    (70, 4, 35, 4, 'Very thorough cleaning, nice job.'),
+
+    -- Listing 36
+    (71, 1, 36, 5, 'Door repair was quick.'),
+    (72, 3, 36, 4, 'Good service, fixed door perfectly.'),
+
+    -- Listing 37
+    (73, 2, 37, 5, 'Hair coloring turned out great.'),
+    (74, 4, 37, 4, 'Nice job, exactly the color I wanted.'),
+
+    -- Listing 38
+    (75, 1, 38, 5, 'Hardware upgrade boosted performance.'),
+    (76, 3, 38, 4, 'Great improvement, works smoothly.'),
+
+    -- Listing 39
+    (77, 2, 39, 5, 'Language tutoring is excellent.'),
+    (78, 4, 39, 4, 'Very patient and knowledgeable tutor.'),
+
+    -- Listing 40
+    (79, 1, 40, 5, 'Pipe installation was fast and clean.'),
+    (80, 3, 40, 4, 'Good work, pipes installed properly.');
+
     """)
 
     # Seed Bookmarks

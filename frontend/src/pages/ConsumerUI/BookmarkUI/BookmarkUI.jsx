@@ -15,13 +15,12 @@ const categoryMap = {
   "private tutoring": 9,
   "plumbing services": 10
 };
-const reverseCategoryMap = Object.entries(categoryMap).reduce(
-  (acc, [key, value]) => {
-    acc[value] = key;
-    return acc;
-  },
-  {}
-);
+
+const reverseCategoryMap = Object.entries(categoryMap).reduce((acc, [key, value]) => {
+  acc[value] = key;
+  return acc;
+}, {});
+
 const BookmarkUI = () => {
   const [bookmarks, setBookmarks] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -57,8 +56,9 @@ const BookmarkUI = () => {
             id: item.listing_id,
             name: item.title,
             description: item.description,
-            image: item.image_url || "https://via.placeholder.com/400x300",
+            image: item.image_url,
             price: item.price ? `$${item.price.toFixed(2)}` : "N/A",
+            categoryId: categoryMap[item.category_name?.toLowerCase()] || 0,
           })) || [];
 
         setBookmarks(mapped);
@@ -72,6 +72,14 @@ const BookmarkUI = () => {
 
     fetchBookmarks();
   }, []);
+
+  // Hide notification automatically after 5 seconds
+  useEffect(() => {
+    if (showNotification) {
+      const timer = setTimeout(() => setShowNotification(false), 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [showNotification]);
 
   const handleCardClick = (listingId) => {
     const bookmark = bookmarks.find((b) => b.id === listingId);
@@ -92,9 +100,9 @@ const BookmarkUI = () => {
 
       {loading && <div>Loading bookmarks…</div>}
       {error && <div className="error">Error: {error}</div>}
-      {/* {!loading && !error && bookmarks.length === 0 && (
+      {!loading && !error && bookmarks.length === 0 && (
         <div>No bookmarks found.</div>
-      )} */}
+      )}
 
       <div className="bookmark-list">
         {bookmarks.map((service) => (
@@ -104,7 +112,9 @@ const BookmarkUI = () => {
             onClick={() => handleCardClick(service.id)}
             tabIndex={0}
             role="button"
-            onKeyPress={(e) => e.key === "Enter" && handleCardClick(service.id)}
+            onKeyPress={(e) => {
+              if (e.key === "Enter" || e.key === " ") handleCardClick(service.id);
+            }}
           >
             <img
               src={service.image}

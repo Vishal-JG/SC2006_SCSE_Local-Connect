@@ -86,3 +86,241 @@
     font-size: 1.1rem;
     padding: 32px 0;
 }
+
+.service-card-rating span {
+  transition: color 0.2s ease;
+}
+
+.service-card:hover .service-card-rating span {
+  color: #facc15; /* slightly brighter yellow */
+}
+
+.active-filters-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 0 5rem 20px 5rem;
+}
+
+.filter-chip {
+  background-color: #f3f4f6;
+  color: #1f2937;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  transition: all 0.2s ease;
+}
+
+.filter-chip:hover {
+  background-color: #e5e7eb;
+}
+
+.remove-chip {
+  cursor: pointer;
+  color: #6b7280;
+  font-weight: bold;
+}
+
+.remove-chip:hover {
+  color: #ef4444;
+}
+
+.active-filter-chip {
+  background: #eef2ff;
+  color: #3730a3;
+  font-weight: 600;
+  display: inline-block;
+  padding: 8px 16px;
+  border-radius: 9999px;
+  margin: 0 0 20px 5rem;
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.15);
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.active-filter-chip {
+  background: #eef2ff;
+  color: #3730a3;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border-radius: 9999px;
+  margin: 0 0 20px 5rem;
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.15);
+  animation: fadeIn 0.3s ease;
+}
+
+.clear-chip-btn {
+  border: none;
+  background: transparent;
+  color: #4f46e5;
+  font-size: 0.9rem;
+  cursor: pointer;
+  font-weight: 700;
+  transition: color 0.2s ease;
+}
+
+.clear-chip-btn:hover {
+  color: #ef4444;
+}
+
+/* ⭐ Rating Row */
+.rating-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #ffcc00;
+  margin-bottom: 15px;
+}
+
+.star-icon {
+  color: #ffd700;
+  font-size: 1.4rem;
+}
+
+.rating-score {
+  color: #fff;
+}
+
+.rating-text {
+  color: #ccc;
+  font-size: 1rem;
+}
+
+/* 📍 Location Row */
+.location-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1.1rem;
+  color: #9fd3c7;
+  margin-bottom: 20px;
+}
+
+.location-icon {
+  color: #50fa7b;
+  font-size: 1.2rem;
+}
+
+/* Slight hover feedback */
+.location-row:hover {
+  color: #7fffd4;
+  cursor: default;
+}
+
+/* --- Base action button (shared) --- */
+.action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  border: none;
+  transition: transform 0.12s ease, box-shadow 0.12s ease, background-color 0.12s ease;
+  height: 44px; /* consistent height for alignment */
+  line-height: 1;
+  white-space: nowrap;
+}
+
+/* primary (green) */
+.action-btn--primary {
+  background-color: #16a34a; /* green */
+  color: #fff;
+  box-shadow: 0 4px 10px rgba(16, 185, 129, 0.12);
+}
+.action-btn--primary:hover { transform: translateY(-2px); background-color: #0f8a3f; }
+
+/* secondary (muted) */
+.action-btn--secondary {
+  background-color: #f3f4f6;
+  color: #111827;
+  box-shadow: 0 2px 6px rgba(15,23,42,0.06);
+}
+.action-btn--secondary:hover { transform: translateY(-2px); }
+
+/* outline style (for More info) */
+.action-btn--outline {
+  background: transparent;
+  border: 2px solid rgba(255,255,255,0.08);
+  color: #eef2ff;
+  box-shadow: none;
+}
+.action-btn--outline:hover {
+  background: rgba(255,255,255,0.04);
+  transform: translateY(-2px);
+}
+
+/* specific smaller tweaks if you want different color on location/recycling */
+.location-btn { /* inherits action-btn--primary if used */ }
+.recycling-btn { /* inherits action-btn--secondary if used */ }
+
+/* --- Layout for the action row --- */
+.actions-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+/* When extras exist, left align extras and push main action to right */
+.actions-row--with-extras .homecleaning-extras {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+/* main-action to align the "More info" on the right */
+.main-action {
+  margin-left: auto;
+}
+
+/* On narrow screens stack them vertically */
+@media (max-width: 640px) {
+  .actions-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .homecleaning-extras {
+    width: 100%;
+    justify-content: stretch;
+  }
+  .homecleaning-extras .action-btn {
+    flex: 1;
+  }
+  .main-action {
+    width: 100%;
+    margin-left: 0;
+  }
+  .main-action .action-btn {
+    width: 100%;
+  }
+}
+
+/* optional small visual tweak for the bookmark button in banner so it doesn't shift layout */
+.service-banner > button {
+  z-index: 10;
+}

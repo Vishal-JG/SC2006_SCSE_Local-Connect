@@ -24,6 +24,7 @@ const wasteIcon = new L.Icon({ iconUrl: waste_marker, iconSize: [38, 38] });
 const deliveryIcon  = new L.Icon({ iconUrl: camera_icon, iconSize: [20, 20] }); 
 const MapUI = () => {
   const { type, id } = useParams();
+  console.log("Service Type:", type);
   const navigate = useNavigate();
 
   const [serviceLocation, setServiceLocation] = useState(null);
@@ -246,9 +247,9 @@ const MapUI = () => {
 
   if (!serviceLocation) return <p>Loading...</p>;
 
-  const showCarparkToggle = id == 5;
-  const showWasteToggle = id == 4;
-  const showCameraToggle = id == 2;
+  const showCarparkToggle = type == "auto mechanic";
+  const showWasteToggle = type == "home cleaning";
+  const showCameraToggle = type == "package delivery";
 
   return (
     <>
