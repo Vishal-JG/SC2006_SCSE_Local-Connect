@@ -1,4 +1,0 @@
-do from project root
-$env:SKIP_FIREBASE='1'
-flask --app backend:create_app init-db
-flask --app backend:create_app seed-db

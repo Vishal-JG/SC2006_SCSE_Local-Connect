@@ -7,3 +7,4 @@ firebase-adminsdk.json
 tests/
 docs/
 migrations/
+venv/

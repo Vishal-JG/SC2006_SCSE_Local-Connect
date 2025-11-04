@@ -53,24 +53,54 @@ def get_user_role(user_id):
 @booking_bp.route('/bookings', methods=['POST'])
 #@login_required
 def create_booking():
+    """
+    Create a New Booking
+    ---
+    tags:
+      - Bookings
+    security:
+      - Bearer: []
+    parameters:
+      - name: Authorization
+        in: header
+        type: string
+        required: true
+        description: "Firebase JWT token (format: Bearer TOKEN)"
+      - name: body
+        in: body
+        required: true
+        schema:
+          type: object
+          properties:
+            listing_id:
+              type: integer
+              example: 123
+            booking_date:
+              type: string
+              format: date-time
+              example: "2023-12-25T14:30:00"
+    responses:
+      201:
+        description: Booking created successfully
+        schema:
+          type: object
+          properties:
+            success:
+              type: boolean
+            message:
+              type: string
+            booking:
+              type: object
+      400:
+        description: Bad request (invalid parameters)
+      401:
+        description: Unauthorized
+      500:
+        description: Server error
+    """
     print("=== HEADERS RECEIVED ===")
     for k, v in request.headers:
         print(f"{k}: {v}")
-    """
-    Create a new booking.
-    
-    Request body:
-    {
-        "listing_id": 123,
-        "booking_date": "2023-12-25T14:30:00"
-    }
-    
-    Returns:
-        201: Booking created successfully
-        400: Bad request (invalid parameters)
-        401: Unauthorized
-        500: Server error
-    """
     try:
         # Verify authentication
         user_id, error_response, status_code = verify_token()
@@ -121,16 +151,47 @@ def create_booking():
 #@login_required
 def get_user_bookings():
     """
-    Get bookings for the current user.
-    
-    Query parameters:
-    - status: Filter by status (optional)
-    - role: 'customer' or 'provider' (default: 'customer')
-    
-    Returns:
-        200: List of bookings
-        401: Unauthorized
-        500: Server error
+    Get User Bookings (Customer or Provider View)
+    ---
+    tags:
+      - Bookings
+    security:
+      - Bearer: []
+    parameters:
+      - name: Authorization
+        in: header
+        type: string
+        required: true
+        description: "Firebase JWT token (format: Bearer TOKEN)"
+      - name: status
+        in: query
+        type: string
+        required: false
+        description: Filter by status (pending, confirmed, completed, canceled)
+      - name: role
+        in: query
+        type: string
+        required: false
+        default: customer
+        description: View as customer or provider
+    responses:
+      200:
+        description: List of bookings
+        schema:
+          type: object
+          properties:
+            success:
+              type: boolean
+            bookings:
+              type: array
+              items:
+                type: object
+      401:
+        description: Unauthorized
+      403:
+        description: Not a provider
+      500:
+        description: Server error
     """
     try:
         # Verify authentication
@@ -175,18 +236,41 @@ def get_user_bookings():
 #@login_required
 def get_booking_details(booking_id):
     """
-    Get detailed information about a specific booking.
-    Includes service and provider details.
-    
-    URL parameters:
-    - booking_id: ID of the booking to retrieve
-    
-    Returns:
-        200: Booking details
-        401: Unauthorized
-        403: Not authorized to view this booking
-        404: Booking not found
-        500: Server error
+    Get Booking Details
+    ---
+    tags:
+      - Bookings
+    security:
+      - Bearer: []
+    parameters:
+      - name: Authorization
+        in: header
+        type: string
+        required: true
+        description: "Firebase JWT token (format: Bearer TOKEN)"
+      - name: booking_id
+        in: path
+        type: integer
+        required: true
+        description: ID of the booking to retrieve
+    responses:
+      200:
+        description: Booking details with service and provider info
+        schema:
+          type: object
+          properties:
+            success:
+              type: boolean
+            booking:
+              type: object
+      401:
+        description: Unauthorized
+      403:
+        description: Not authorized to view this booking
+      404:
+        description: Booking not found
+      500:
+        description: Server error
     """
     try:
         # Verify authentication
@@ -232,23 +316,54 @@ def get_booking_details(booking_id):
 #@login_required
 def update_booking_status(booking_id):
     """
-    Update the status of a booking.
-    
-    URL parameters:
-    - booking_id: ID of the booking to update
-    
-    Request body:
-    {
-        "status": "confirmed" | "cancelled" | "completed"
-    }
-    
-    Returns:
-        200: Status updated successfully
-        400: Bad request (invalid status)
-        401: Unauthorized
-        403: Not authorized to update this booking
-        404: Booking not found
-        500: Server error
+    Update Booking Status
+    ---
+    tags:
+      - Bookings
+    security:
+      - Bearer: []
+    parameters:
+      - name: Authorization
+        in: header
+        type: string
+        required: true
+        description: "Firebase JWT token (format: Bearer TOKEN)"
+      - name: booking_id
+        in: path
+        type: integer
+        required: true
+        description: ID of the booking to update
+      - name: body
+        in: body
+        required: true
+        schema:
+          type: object
+          properties:
+            status:
+              type: string
+              enum: [confirmed, cancelled, completed]
+    responses:
+      200:
+        description: Status updated successfully
+        schema:
+          type: object
+          properties:
+            success:
+              type: boolean
+            message:
+              type: string
+            booking:
+              type: object
+      400:
+        description: Bad request (invalid status)
+      401:
+        description: Unauthorized
+      403:
+        description: Not authorized to update this booking
+      404:
+        description: Booking not found
+      500:
+        description: Server error
     """
     try:
         # Verify authentication
@@ -334,18 +449,41 @@ def update_booking_status(booking_id):
 #@login_required
 def delete_booking(booking_id):
     """
-    Delete a booking.
-    Only pending bookings can be deleted, and only by the customer who created them.
-    
-    URL parameters:
-    - booking_id: ID of the booking to delete
-    
-    Returns:
-        200: Booking deleted successfully
-        401: Unauthorized
-        403: Not authorized to delete this booking
-        404: Booking not found or not eligible for deletion
-        500: Server error
+    Delete Booking
+    ---
+    tags:
+      - Bookings
+    security:
+      - Bearer: []
+    parameters:
+      - name: Authorization
+        in: header
+        type: string
+        required: true
+        description: "Firebase JWT token (format: Bearer TOKEN)"
+      - name: booking_id
+        in: path
+        type: integer
+        required: true
+        description: ID of the booking to delete
+    responses:
+      200:
+        description: Booking deleted successfully
+        schema:
+          type: object
+          properties:
+            success:
+              type: boolean
+            message:
+              type: string
+      401:
+        description: Unauthorized
+      403:
+        description: Not authorized to delete this booking
+      404:
+        description: Booking not found or not eligible for deletion
+      500:
+        description: Server error
     """
     try:
         # Verify authentication
