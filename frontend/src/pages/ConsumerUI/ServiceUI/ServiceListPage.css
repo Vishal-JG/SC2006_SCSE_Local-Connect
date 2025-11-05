@@ -1,10 +1,10 @@
 .service-list-page {
-    padding: 32px 0;
+    padding: 10px 0;
 }
 
 .service-list-page h2 {
-    color: black;
-    margin-bottom: 32px;
+    color: white;
+    margin-bottom: 10px;
     text-align: center;
     font-size: 2rem;
     font-weight: 700;
@@ -12,21 +12,25 @@
 
 .service-card-grid {
     display: grid;
-    grid-template-columns: repeat(2, minmax(320px, 1fr));
-    gap: 40px 32px;
-    justify-content: center;
+    grid-template-columns: repeat(2, 1fr); 
+    gap: 40px; 
+    max-width: 1600px; 
+    margin: 0 auto;    
+    justify-items: stretch;
 }
+
 
 .service-card {
     display: flex;
-    margin-left: 5rem;
     background: #fff;
     border-radius: 12px;
     box-shadow: 0 4px 24px rgba(0,0,0,0.10);
     overflow: hidden;
     height: 220px;
     align-items: stretch;
-    width: 50rem;
+    width: 100%; /* Take available width from the grid column */
+    max-width: none; /* Optional: Set a max width per card */
+    margin: 0 auto;   /* Center the card inside its grid cell */
 }
 
 .service-card-img {
@@ -62,10 +66,10 @@
 .service-card-btn {
     align-self: flex-end;
     padding: 8px 18px;
-    border: 1px solid #2d2254;
+    border: 1px solid black;
     border-radius: 20px;
     background: #fff;
-    color: #2d2254;
+    color: black;
     font-size: 1rem;
     cursor: pointer;
     transition: background 0.2s, color 0.2s;

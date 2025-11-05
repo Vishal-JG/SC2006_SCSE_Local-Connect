@@ -20,6 +20,8 @@ load_dotenv()
 
 key_path = os.getenv('GOOGLE_APPLICATION_CREDENTIALS')
 
+print("Firebase key_path from env:", key_path)
+print("File exists?", os.path.exists(key_path))
 cred = credentials.Certificate(key_path)  
 firebase_admin.initialize_app(cred)
 

@@ -101,83 +101,83 @@ const ServiceDetailPage = () => {
       >
         <BookmarkButton listingId={service.listing_id} />
       </div>
+      <div className="service-info-card">
+        <div className="service-info">
+          <h1 className="service-title">{service.title || service.name}</h1>
 
-      <div className="service-info">
-        <h1 className="service-title">{service.title || service.name}</h1>
-
-        {/* Rating */}
-        <div className="rating-row">
-          <FaStar className="star-icon" />
-          <span className="rating-score">{service.avg_rating}</span>
-          <span className="rating-text">/ 5</span>
-        </div>
-
-        {/* Location */}
-        {service.location && (
-          <div className="location-row">
-            <FaMapMarkerAlt
-              className="location-icon"
-              onClick={() => navigate("/map")}
-              title="View on Map"
-            />
-            <span>{service.location}</span>
+          {/* Rating */}
+          <div className="rating-row">
+            <FaStar className="star-icon" />
+            <span className="rating-score">{service.avg_rating}</span>
+            <span className="rating-text">/ 5</span>
           </div>
-        )}
 
-        <p className="service-description">{service.description}</p>
-
-        <p className="service-price">
-          <b>Price:</b> ${service.price || "50 - 60"}
-        </p>
-
-        {/* Actions Row */}
-        <div className="actions-row" style={{ flexWrap: "wrap", gap: "12px" }}>
-          {/* Home cleaning → Recycling Points */}
-          {isHomeCleaning && (
-            <button
-              className="action-btn action-btn--secondary recycling-btn"
-              onClick={() => navigate("map")}
-            >
-              ♻️ Show Recycling Points
-            </button>
+          {/* Location */}
+          {service.location && (
+            <div className="location-row">
+              <FaMapMarkerAlt
+                className="location-icon"
+                onClick={() => navigate("/map")}
+                title="View on Map"
+              />
+              <span>{service.location}</span>
+            </div>
           )}
 
-          {/* Other services with location → View on Map */}
-          {!isHomeCleaning && service.latitude && service.longitude && (
+          <p className="service-description">{service.description}</p>
+
+          <p className="service-price">
+            <b>Price:</b> ${service.price || "50 - 60"}
+          </p>
+
+          {/* Actions Row */}
+          <div className="actions-row" style={{ flexWrap: "wrap", gap: "12px" }}>
+            {/* Home cleaning → Recycling Points */}
+            {isHomeCleaning && (
+              <button
+                className="action-btn action-btn--secondary recycling-btn"
+                onClick={() => navigate("map")}
+              >
+                ♻️ Show Recycling Points
+              </button>
+            )}
+
+            {/* Other services with location → View on Map */}
+            {!isHomeCleaning && service.latitude && service.longitude && (
+              <button
+                className="action-btn action-btn--map action-btn--primary location-btn"
+                onClick={() => navigate("map")}
+              >
+                📍 View on Map
+              </button>
+            )}
+
+            {/* WhatsApp Contact */}
             <button
-              className="action-btn action-btn--map action-btn--primary location-btn"
-              onClick={() => navigate("map")}
+              className="action-btn action-btn--whatsapp"
+              onClick={() => {
+                const phoneNumber = "+60197123431"; 
+                const message = encodeURIComponent(
+                  `Hello, I'm interested in your service: ${service.title || service.name}`
+                );
+                window.open(`https://wa.me/${phoneNumber}?text=${message}`, "_blank");
+              }}
             >
-              📍 View on Map
+              <FaWhatsapp style={{ marginRight: "8px" }} />
+              Contact via WhatsApp
             </button>
-          )}
 
-          {/* WhatsApp Contact */}
-          <button
-            className="action-btn action-btn--whatsapp"
-            onClick={() => {
-              const phoneNumber = "+60197123431"; 
-              const message = encodeURIComponent(
-                `Hello, I'm interested in your service: ${service.title || service.name}`
-              );
-              window.open(`https://wa.me/${phoneNumber}?text=${message}`, "_blank");
-            }}
-          >
-            <FaWhatsapp style={{ marginRight: "8px" }} />
-            Contact via WhatsApp
-          </button>
-
-          {/* Book Now */}
-          <button
-            className="action-btn action-btn--primary booknow-btn"
-            onClick={() => setIsBookingOpen(true)}
-          >
-            <FaCalendarAlt style={{ marginRight: "8px" }} />
-            Book Now
-          </button>
+            {/* Book Now */}
+            <button
+              className="action-btn action-btn--primary booknow-btn"
+              onClick={() => setIsBookingOpen(true)}
+            >
+              <FaCalendarAlt style={{ marginRight: "8px" }} />
+              Book Now
+            </button>
+          </div>
         </div>
       </div>
-
       {/* Booking overlay */}
       <BookingOverlay
         isOpen={isBookingOpen}

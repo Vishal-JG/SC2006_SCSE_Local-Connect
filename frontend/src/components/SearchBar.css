@@ -5,6 +5,8 @@
   max-width: 420px;
   margin: 0 auto;
   font-family: "Inter", sans-serif;
+  margin-bottom: 30px;
+  margin-top: 10px;
 }
 
 /* Search box */
@@ -14,7 +16,7 @@
   background: #fff;
   border: 1px solid #e4e4e7;
   border-radius: 14px;
-  padding: 8px 12px;
+  padding: 0px 14px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
   transition: all 0.2s ease;
 }
@@ -39,6 +41,7 @@
   font-size: 0.95rem;
   color: #333;
   background: transparent;
+  padding-top: 20px;
 }
 
 /* Filter button */

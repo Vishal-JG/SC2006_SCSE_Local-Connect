@@ -6,6 +6,11 @@
     font-family: "Oufit", sans-serif;
 }
 
+body {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #488cfb 0%, #21c6b7 100%);
+  color: white;
+}
 
 a{
     text-decoration: none;
