@@ -1,7 +1,7 @@
 import React from "react";
 import Authpage from "./pages/Authpage";
 import Navbar from "./components/navBar";
-import { BrowserRouter, Route, Routes } from "react-router-dom"
+import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom"
 import "./App.css"
 import MainUI from "./pages/MainUI/MainUI";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -34,12 +34,19 @@ import CompletedServicePage from "./pages/ProviderUI/CompletedServicePage";
 // Admin UI pages
 import AdminHomePage from "./pages/AdminUI/AdminHomePage";
 import AllReviewsPage from "./pages/AdminUI/AllReviewsPage";
+import AllExistingListingsPage from "./pages/AdminUI/AllExistingListingsPage";
+import AllPendingListingsPage from "./pages/AdminUI/AllPendingListingsPage";
+import ReviewPage from "./pages/AdminUI/ReviewPage";
 
 // Component to conditionally render NavBar
 function ConditionalNavBar() {
   const { userRole } = useAuth();
-  // Only show NavBar for consumers or when no role is set (public pages)
-  const shouldShowNavBar = !userRole || userRole === 'customer';
+  const location = useLocation();
+  const path = location.pathname || '';
+  // Only show NavBar for consumers or when no role is set (public pages),
+  // and never show on provider/admin sections to avoid flicker before role loads
+  const inRestrictedSection = path.startsWith('/AdminUI') || path.startsWith('/ProviderUI');
+  const shouldShowNavBar = (!userRole || userRole === 'customer') && !inRestrictedSection;
   
   return shouldShowNavBar ? (
     <div className="navbar-alignment">
@@ -133,14 +140,34 @@ export default function App() {
           } />
 
           {/* Admin routes */}
-          <Route path="/admin/dashboard" element={
+          <Route path="/AdminUI/AdminHomePage" element={
             <ProtectedRoute allowedRoles={['admin']}>
               <AdminHomePage />
             </ProtectedRoute>
           } />
+            <Route path="/admin/dashboard" element={
+              <ProtectedRoute allowedRoles={['admin']}>
+                <AdminHomePage />
+              </ProtectedRoute>
+            } />
           <Route path="/AdminUI/AllReviewsPage" element={
             <ProtectedRoute allowedRoles={['admin']}>
               <AllReviewsPage />
+            </ProtectedRoute>
+          } />
+          <Route path="/AdminUI/AllExistingListingsPage" element={
+            <ProtectedRoute allowedRoles={['admin']}>
+              <AllExistingListingsPage />
+            </ProtectedRoute>
+          } />
+          <Route path="/AdminUI/AllPendingListingsPage" element={
+            <ProtectedRoute allowedRoles={['admin']}>
+              <AllPendingListingsPage />
+            </ProtectedRoute>
+          } />
+          <Route path="/AdminUI/ReviewPage/:id" element={
+            <ProtectedRoute allowedRoles={['admin']}>
+              <ReviewPage />
             </ProtectedRoute>
           } />
 

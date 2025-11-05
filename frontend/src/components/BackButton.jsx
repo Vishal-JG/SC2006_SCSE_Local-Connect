@@ -2,12 +2,21 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { FaArrowLeft } from "react-icons/fa";
 
-const BackButton = () => {
+// Optional `to` prop: when provided, navigate to that path; otherwise go back in history
+const BackButton = ({ to }) => {
   const navigate = useNavigate();
 
+  const handleClick = () => {
+    if (to) {
+      navigate(to);
+    } else {
+      navigate(-1);
+    }
+  };
+
   return (
-    <button 
-      onClick={() => navigate(-1)} 
+    <button
+      onClick={handleClick}
       style={{
         display: "flex",
         alignItems: "center",

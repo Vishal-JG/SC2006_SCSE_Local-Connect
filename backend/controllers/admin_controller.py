@@ -54,12 +54,21 @@ def delete_review(review_id):
 @admin_bp.route("/admin/reviews", methods=["GET"])
 def get_all_reviews():
     db = get_db()
-    reviews = db.execute("""
-        SELECT r.review_id AS id, u.display_name AS reviewer, l.title AS service, r.comment, r.rating
+    reviews = db.execute(
+        """
+        SELECT 
+            r.review_id AS id,
+            u.display_name AS reviewer,
+            l.title AS service,
+            r.comment,
+            r.rating,
+            r.created_at
         FROM Reviews r
         JOIN Users u ON r.user_id = u.user_id
         JOIN Listings l ON r.listing_id = l.listing_id
-    """).fetchall()
+        ORDER BY r.created_at DESC
+        """
+    ).fetchall()
     return jsonify([dict(r) for r in reviews])
 
 # -----------------------------

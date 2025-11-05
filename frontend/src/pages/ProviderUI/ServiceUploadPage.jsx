@@ -110,7 +110,7 @@ const ServiceUploadPage = () => {
   return (
     <div className={styles.page}>
       <div className={styles.header}>
-        <BackButton />
+        <BackButton to="/ProviderUI/MyListingsPage" />
         <h1 className={styles.title}>
           <FilePlus size={24} /> Add New Service
         </h1>

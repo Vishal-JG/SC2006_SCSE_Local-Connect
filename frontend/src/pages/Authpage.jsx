@@ -47,37 +47,52 @@ export default function AuthPage() {
       const userCredential = await signInWithEmailAndPassword(auth, loginEmail, loginPassword);
       const idToken = await userCredential.user.getIdToken(true); // Force fresh token
 
-      const loginResponse = await axios.post('http://localhost:5000/api/login', {}, {
-        headers: { Authorization: `Bearer ${idToken}` }
-      });
-
-      if (!loginResponse.data.success) {
-        setMessage(`Error: ${loginResponse.data.error}`);
-        return;
-      }
-
       localStorage.setItem("token", idToken);
 
-      // Step 2: Fetch user profile to get role
-      const profileResponse = await axios.get('http://localhost:5000/api/users/me', {
+      // Step 1: Try to fetch profile directly (avoid unnecessary priming if user already exists)
+      const getProfile = async () => axios.get('http://localhost:5000/api/users/me', {
         headers: { Authorization: `Bearer ${idToken}` }
       });
 
-      if (!profileResponse.data.success) {
-        setMessage(`Error fetching user profile: ${profileResponse.data.error}`);
+      let profileResponse;
+      try {
+        profileResponse = await getProfile();
+      } catch (err) {
+        const status = err?.response?.status;
+        if (status === 401 || status === 404) {
+          // Step 2: Prime backend session then retry profile
+          try {
+            await axios.post('http://localhost:5000/api/login', {}, {
+              headers: { Authorization: `Bearer ${idToken}` }
+            });
+            profileResponse = await getProfile();
+          } catch (retryErr) {
+            setMessage(`Error: ${retryErr?.response?.data?.error || retryErr.message}`);
+            return;
+          }
+        } else {
+          setMessage(`Error: ${err?.response?.data?.error || err.message}`);
+          return;
+        }
+      }
+
+      if (!profileResponse?.data?.success) {
+        setMessage(`Error fetching user profile: ${profileResponse?.data?.error || 'Unknown error'}`);
         return;
       }
 
       const userRole = profileResponse.data.user.role;
       localStorage.setItem("role", userRole);
 
-      // Step 3: Navigate based on role
+      // Step 3: Wait for AuthContext to fully sync before navigating
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
       if (userRole === 'admin') {
-        navigate('/admin/dashboard');
+        navigate('/admin/dashboard', { replace: true });
       } else if (userRole === 'provider') {
-        navigate('/ProviderUI/ProviderDashboard');
+        navigate('/ProviderUI/ProviderDashboard', { replace: true });
       } else {
-        navigate('/service'); // consumer
+        navigate('/service', { replace: true }); // consumer
       }
 
       setMessage(`Login successful! Welcome, ${userCredential.user.displayName || loginEmail}`);
@@ -104,16 +119,20 @@ export default function AuthPage() {
         signUpPassword
       );
 
+      const fullName = `${signUpFirstName} ${signUpLastName}`;
+      
       await updateProfile(userCredential.user, {
-        displayName: `${signUpFirstName} ${signUpLastName}`,
+        displayName: fullName,
       });
 
-      const idToken = await userCredential.user.getIdToken();
+      // Force token refresh after updating profile to include displayName
+      const idToken = await userCredential.user.getIdToken(true);
 
-      // Compose signup payload for backend
+      // Compose signup payload for backend - include display_name explicitly
       const signupData = {
         role: signUpRole,
         phone: signUpPhone,
+        display_name: fullName,
         business_name: signUpRole === 'provider' ? businessName : undefined,
         business_description: signUpRole === 'provider' ? businessDescription : undefined
       };
@@ -124,9 +143,20 @@ export default function AuthPage() {
 
       if (response.data.success) {
         localStorage.setItem("token", idToken);
-        localStorage.setItem("role", response.data.user?.role || signUpRole);
-        setMessage(`Account created successfully as ${response.data.user?.role || signUpRole}!`);
-        navigate('/MainUI');
+        const userRole = response.data.user?.role || signUpRole;
+        localStorage.setItem("role", userRole);
+        setMessage(`Account created successfully as ${userRole}!`);
+        
+        // Wait for AuthContext to fully sync before navigating
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        if (userRole === 'admin') {
+          navigate('/admin/dashboard', { replace: true });
+        } else if (userRole === 'provider') {
+          navigate('/ProviderUI/ProviderDashboard', { replace: true });
+        } else {
+          navigate('/', { replace: true }); // consumer -> landing page
+        }
       } else {
         setMessage(`Error: ${response.data.error}`);
       }

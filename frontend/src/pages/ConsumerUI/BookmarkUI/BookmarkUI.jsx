@@ -3,6 +3,8 @@ import { getAuth } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import "./BookmarkUI.css";
 
+const DEFAULT_IMAGE = "https://via.placeholder.com/300x200?text=No+Image";
+
 const categoryMap = {
   "personal chef": 1,
   "package delivery": 2,
@@ -56,7 +58,7 @@ const BookmarkUI = () => {
             id: item.listing_id,
             name: item.title,
             description: item.description,
-            image: item.image_url,
+            image: item.image_url || DEFAULT_IMAGE,
             price: item.price ? `$${item.price.toFixed(2)}` : "N/A",
             categoryId: categoryMap[item.category_name?.toLowerCase()] || 0,
           })) || [];
@@ -120,6 +122,10 @@ const BookmarkUI = () => {
               src={service.image}
               alt={service.name}
               className="bookmark-image"
+              onError={(e) => {
+                e.target.onerror = null;
+                e.target.src = DEFAULT_IMAGE;
+              }}
             />
             <div className="bookmark-details">
               <h3>{service.name}</h3>

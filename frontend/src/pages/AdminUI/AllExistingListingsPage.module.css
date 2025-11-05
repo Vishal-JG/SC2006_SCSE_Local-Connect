@@ -1,4 +1,4 @@
-.allReviews {
+.allExistingListings {
   width: 100%;
   min-height: 100vh;
   background: linear-gradient(135deg, #1a0033 0%, #21005d 50%, #2d0070 100%);
@@ -9,7 +9,7 @@
   overflow-x: hidden;
 }
 
-.allReviews::before {
+.allExistingListings::before {
   content: '';
   position: absolute;
   inset: 0;
@@ -42,8 +42,8 @@
   margin: 0;
 }
 
-/* Reviews grid */
-.reviewGrid {
+/* Listings grid */
+.listingsGrid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 2rem;
@@ -74,7 +74,7 @@
   font-size: 0.95rem;
 }
 
-/* Review card */
+/* Individual listing card */
 .card {
   background: linear-gradient(145deg, rgba(255, 255, 255, 0.12) 0%, rgba(199, 191, 214, 0.15) 100%);
   border-radius: 20px;
@@ -102,19 +102,19 @@
   gap: 1rem;
 }
 
-.reviewer {
+.title {
   margin: 0;
   font-size: 1.2rem;
   font-weight: 700;
 }
 
-.ratingBadge {
+.badgeApproved {
   padding: 0.3rem 0.75rem;
   border-radius: 999px;
-  background: linear-gradient(135deg, #FFD700 0%, #F5C518 100%);
-  color: #1a0033;
-  font-weight: 700;
-  font-size: 0.9rem;
+  background: linear-gradient(135deg, #4caf50 0%, #81c784 100%);
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.85rem;
 }
 
 .metaRow {
@@ -125,10 +125,16 @@
   font-size: 0.95rem;
 }
 
-.metaLabel { opacity: 0.9; }
-.metaValue { color: #fff; font-weight: 600; }
+.metaLabel {
+  opacity: 0.9;
+}
 
-.comment {
+.metaValue {
+  color: #fff;
+  font-weight: 600;
+}
+
+.description {
   margin-top: 0.25rem;
   color: #ffffff;
 }
@@ -139,22 +145,15 @@
   margin-top: 0.5rem;
 }
 
-.viewBtn,
 .deleteBtn {
   padding: 0.6rem 1rem;
   border-radius: 10px;
   border: 1px solid rgba(255, 255, 255, 0.25);
   background: rgba(255, 255, 255, 0.2);
   color: #fff;
-  font-weight: 700;
+  font-weight: 600;
   cursor: pointer;
   transition: all 0.25s ease;
-}
-
-.viewBtn:hover {
-  background: #87CEEB;
-  border-color: #87CEEB;
-  color: #1a0033;
 }
 
 .deleteBtn:hover {
@@ -164,15 +163,26 @@
 
 /* Responsive */
 @media (max-width: 768px) {
-  .header { padding: 1.5rem 1.5rem; }
-  .header h2 { font-size: 1.5rem; }
-  .reviewGrid { grid-template-columns: 1fr; gap: 1.25rem; padding: 2rem 5%; }
+  .header {
+    padding: 1.5rem 1.5rem;
+  }
+  .header h2 {
+    font-size: 1.5rem;
+  }
+  .listingsGrid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+    padding: 2rem 5%;
+  }
 }
 
-/* Modal */
+/* Glassmorphic Modal */
 .modalOverlay {
   position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   background: rgba(0, 0, 0, 0.45);
   display: flex;
   justify-content: center;
@@ -194,9 +204,17 @@
   backdrop-filter: blur(14px);
 }
 
-.modalBox p { margin-bottom: 1.2rem; font-size: 1.05rem; color: #e5e5e5; }
+.modalBox p {
+  margin-bottom: 1.2rem;
+  font-size: 1.05rem;
+  color: #e5e5e5;
+}
 
-.modalActions { display: flex; justify-content: center; gap: 1rem; }
+.modalActions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
 
 .cancelBtn,
 .confirmBtn {
@@ -209,8 +227,22 @@
   border: none;
 }
 
-.cancelBtn { background-color: rgba(255, 255, 255, 0.25); color: #ffffff; }
-.cancelBtn:hover { background-color: rgba(255, 255, 255, 0.35); }
+.cancelBtn {
+  background-color: rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+}
 
-.confirmBtn { background-color: #fff; color: #a62f2f; border: 1px solid #a62f2f; }
-.confirmBtn:hover { background-color: #f87171; color: #fff; }
+.cancelBtn:hover {
+  background-color: rgba(255, 255, 255, 0.35);
+}
+
+.confirmBtn {
+  background-color: #fff;
+  color: #a62f2f;
+  border: 1px solid #a62f2f;
+}
+
+.confirmBtn:hover {
+  background-color: #f87171;
+  color: #fff;
+}

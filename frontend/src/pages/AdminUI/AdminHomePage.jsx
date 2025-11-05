@@ -1,26 +1,11 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
+import { getAuth, signOut } from "firebase/auth";
 import styles from "./AdminHomePage.module.css";
-import { useAuth } from "../../AuthContext"; // adjust path if needed
-import { signOut } from "firebase/auth";
-import { auth } from "../../firebase"; // adjust path to your firebase.js
 
 const AdminHomePage = () => {
   const navigate = useNavigate();
-  const { user, userRole, logout } = useAuth();
 
-  // ------------------------------
-  // Redirect if not authenticated or not admin
-  // ------------------------------
-  useEffect(() => {
-    if (!user || userRole !== "admin") {
-      navigate("/login");
-    }
-  }, [user, userRole, navigate]);
-
-  // ------------------------------
-  // Navigation handlers
-  // ------------------------------
   const onAllReviewsClick = useCallback(
     () => navigate("/AdminUI/AllReviewsPage"),
     [navigate]
@@ -34,36 +19,37 @@ const AdminHomePage = () => {
     [navigate]
   );
 
-  // ------------------------------
-  // Logout handler
-  // ------------------------------
-  const onLogoutClick = useCallback(async () => {
-    try {
-      await logout(); // clears context & localStorage
-      await signOut(auth); // Firebase sign out
-      navigate("/login");
-    } catch (error) {
-      console.error("Logout failed", error);
-    }
-  }, [logout, navigate]);
+  const onLogoutClick = useCallback(() => {
+    const auth = getAuth();
+    signOut(auth)
+      .then(() => {
+        navigate("/login");
+      })
+      .catch((error) => {
+        console.error("Logout failed", error);
+        alert("Logout failed. Please try again.");
+      });
+  }, [navigate]);
 
   return (
     <div className={styles.adminDashboard}>
+      {/* Back button + title to mirror provider style */}
       <div className={styles.dashboardHeader}>
-        <h2>Admin Dashboard</h2>
+        <h2 className={styles.headerTitle}>Admin Dashboard</h2>
       </div>
 
+      {/* Action cards grid (text-only, no icons) */}
       <div className={styles.dashboardButtons}>
         <div className={styles.card} onClick={onAllReviewsClick}>
           <p>All Reviews</p>
         </div>
 
         <div className={styles.card} onClick={onExistingListingsClick}>
-          <p>All Existing Listings</p>
+          <p>Existing Listings</p>
         </div>
 
         <div className={styles.card} onClick={onPendingListingsClick}>
-          <p>All Pending Listings</p>
+          <p>Pending Listings</p>
         </div>
 
         <div className={styles.card} onClick={onLogoutClick}>

@@ -14,6 +14,7 @@ from backend.db import get_db
 import os
 
 from backend.db import init_app, init_db, seed_db_command # import db initializer and init function
+import time
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -129,10 +130,21 @@ def api_login():
         return jsonify({'error': 'Missing Authorization token'}), 401
 
     try:
-        decoded_token = auth.verify_id_token(token)
+        # Retry verify briefly to mitigate rare clock skew or propagation timing issues
+        last_err = None
+        for attempt in range(3):
+            try:
+                decoded_token = auth.verify_id_token(token)
+                break
+            except Exception as ve:
+                last_err = ve
+                # For first two attempts, sleep briefly then retry
+                if attempt < 2:
+                    time.sleep(0.3)
+                else:
+                    raise ve
         firebase_uid = decoded_token.get('uid')
         email = decoded_token.get('email')
-        display_name = decoded_token.get('name', 'Unnamed User')
 
         if not firebase_uid or not email:
             return jsonify({'error': 'Invalid Firebase token'}), 400
@@ -142,6 +154,22 @@ def api_login():
         role = data.get('role', 'customer')  # 'customer' by default
         business_name = data.get('business_name')
         business_description = data.get('business_description')
+        
+        # Priority order for display_name:
+        # 1. Explicitly provided in request body (signup)
+        # 2. From Firebase token
+        # 3. From Firebase Auth user record
+        # 4. Fallback to 'Unnamed User'
+        display_name = data.get('display_name')
+        if not display_name:
+            display_name = decoded_token.get('name') or decoded_token.get('display_name') or decoded_token.get('displayName')
+        
+        if not display_name:
+            try:
+                firebase_user = auth.get_user(firebase_uid)
+                display_name = firebase_user.display_name or 'Unnamed User'
+            except:
+                display_name = 'Unnamed User'
 
         # --- Create or fetch user ---
         user = create_user_if_not_exists(
@@ -165,7 +193,7 @@ def api_login():
         }), 200
 
     except Exception as e:
-        print("Login error:", e)
+        print("[api_login] Login error:", repr(e))
         return jsonify({'success': False, 'error': str(e)}), 401
 
     
@@ -214,6 +242,51 @@ def get_user_profile():
 
     except Exception as e:
         print("Error verifying user:", e)
+        return jsonify({'success': False, 'error': str(e)}), 401
+
+@app.route('/api/users/delete', methods=['DELETE'])
+def delete_user_account():
+    """Allow a user to delete their own account."""
+    token = request.headers.get('Authorization', '').split('Bearer ')[-1]
+    if not token:
+        return jsonify({'error': 'Missing Authorization token'}), 401
+
+    try:
+        decoded_token = auth.verify_id_token(token)
+        firebase_uid = decoded_token.get('uid')
+
+        if not firebase_uid:
+            return jsonify({'error': 'Invalid Firebase token'}), 400
+
+        db = get_db()
+        
+        # Check if user exists
+        user = User.get_by_id(firebase_uid)
+        if not user:
+            return jsonify({'error': 'User not found'}), 404
+
+        # Delete user from database
+        result = db.execute("DELETE FROM Users WHERE user_id = ?", (firebase_uid,))
+        db.commit()
+
+        if result.rowcount == 0:
+            return jsonify({'error': 'Failed to delete user'}), 500
+
+        # Also delete the user from Firebase Authentication
+        try:
+            auth.delete_user(firebase_uid)
+            print(f"[delete_user_account] Deleted Firebase user: {firebase_uid}")
+        except Exception as firebase_err:
+            print(f"[delete_user_account] Warning: Could not delete Firebase user: {firebase_err}")
+            # Continue anyway since DB deletion succeeded
+
+        return jsonify({
+            'success': True,
+            'message': 'Account deleted successfully'
+        }), 200
+
+    except Exception as e:
+        print("[delete_user_account] Error:", repr(e))
         return jsonify({'success': False, 'error': str(e)}), 401
 
 if __name__ == '__main__':

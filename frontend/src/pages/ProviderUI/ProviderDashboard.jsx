@@ -51,7 +51,6 @@ const ProviderDashboard = () => {
     <div className={styles.providerDashboard}>
       {/* Back button + title */}
       <div className={styles.dashboardHeader}>
-        <BackButton />
         <h2>Provider Dashboard</h2>
       </div>
 

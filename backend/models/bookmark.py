@@ -150,12 +150,16 @@ class Bookmark:
                 l.description,
                 l.price,
                 l.status,
+                l.image_url,
+                l.category_id,
                 l.provider_id,
                 p.business_name,
-                p.description as provider_description
+                p.description as provider_description,
+                c.name as category_name
             FROM Bookmarks b
             JOIN Listings l ON b.listing_id = l.listing_id
             JOIN Providers p ON l.provider_id = p.provider_id
+            LEFT JOIN Categories c ON l.category_id = c.category_id
             WHERE b.user_id = ? AND l.status = 'approved'
             ORDER BY b.created_at DESC
             """,

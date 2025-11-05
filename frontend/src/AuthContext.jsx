@@ -7,7 +7,8 @@ const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
-  const [userRole, setUserRole] = useState(null); // <-- added userRole
+  const [userRole, setUserRole] = useState(null);
+  const [initializing, setInitializing] = useState(true); // prevent route races
 
   useEffect(() => {
     let refreshInterval;
@@ -17,44 +18,58 @@ export function AuthProvider({ children }) {
 
       if (currentUser) {
         const setToken = async () => {
-          // Force fresh token with (true) parameter
-          const token = await currentUser.getIdToken(true);
+          const token = await currentUser.getIdToken(true); // force fresh
           localStorage.setItem("token", token);
         };
 
         await setToken(); // initial token save
 
-        // Fetch user role from backend - FORCE FRESH DATA
+        // Fetch user role from backend
         try {
-          const token = await currentUser.getIdToken(true); // Force refresh
-          const response = await axios.get("http://localhost:5000/api/users/me", {
-            headers: { Authorization: `Bearer ${token}` },
-          });
+          const token = await currentUser.getIdToken(true);
+          const getProfile = async () =>
+            axios.get("http://localhost:5000/api/users/me", {
+              headers: { Authorization: `Bearer ${token}` },
+            });
 
-          if (response.data.success && response.data.user) {
-            const role = response.data.user.role;
-            console.log("✅ User role fetched:", role); // Debug log
-            setUserRole(role);
-            localStorage.setItem("role", role);
-          } else {
-            console.warn("⚠️ No role data received from backend");
-            setUserRole(null);
-            localStorage.removeItem("role");
+          let response;
+          try {
+            response = await getProfile();
+          } catch (err) {
+            // Retry login if 401
+            if (err?.response?.status === 401) {
+              await axios.post(
+                "http://localhost:5000/api/login",
+                {},
+                { headers: { Authorization: `Bearer ${token}` } }
+              );
+              response = await getProfile(); // retry
+            } else {
+              throw err;
+            }
           }
+
+          const role = response.data.user?.role || null;
+          setUserRole(role);
+          localStorage.setItem("role", role || "");
+          console.log("✅ User role fetched:", role);
         } catch (err) {
           console.error("❌ Error fetching user role:", err);
           setUserRole(null);
           localStorage.removeItem("role");
+        } finally {
+          setInitializing(false); // move here to ensure role fetched before initializing = false
         }
 
         // Refresh token every 30 minutes
         refreshInterval = setInterval(setToken, 30 * 60 * 1000);
       } else {
-        // Clear everything when no user
+        // No user
         console.log("🔄 Clearing auth data - no user logged in");
-        localStorage.clear(); // Clear ALL localStorage
+        localStorage.clear();
         setUserRole(null);
         clearInterval(refreshInterval);
+        setInitializing(false);
       }
     });
 
@@ -65,20 +80,18 @@ export function AuthProvider({ children }) {
   }, []);
 
   const logout = async () => {
-    console.log("🚪 Logging out - clearing all data");
     try {
       await signOut(auth);
     } catch (err) {
       console.error("Logout error:", err);
     }
-    // Clear ALL localStorage data
     localStorage.clear();
     setUser(null);
     setUserRole(null);
   };
 
   return (
-    <AuthContext.Provider value={{ user, userRole, logout }}>
+    <AuthContext.Provider value={{ user, userRole, initializing, logout }}>
       {children}
     </AuthContext.Provider>
   );

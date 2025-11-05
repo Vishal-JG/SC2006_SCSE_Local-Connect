@@ -25,7 +25,13 @@ const ProfileUI = () => {
         });
         if (!res.ok) throw new Error("Failed to load user profile");
         const data = await res.json();
-        setUser(data.user);
+        
+        // Merge backend data with Firebase displayName as fallback
+        const userProfile = {
+          ...data.user,
+          display_name: data.user.display_name || currentUser.displayName || 'User'
+        };
+        setUser(userProfile);
       } catch (err) {
         setMessage(err.message);
       } finally {

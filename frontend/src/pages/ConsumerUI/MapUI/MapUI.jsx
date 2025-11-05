@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { createPortal } from 'react-dom';
-import { MapContainer, TileLayer, Marker, Popup, Circle, Polyline } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup, Circle, Polyline, useMap } from "react-leaflet";
 import L from "leaflet";
 import axios from "axios";
 import "./MapUI.css";
-import { FaArrowLeft, FaCar, FaTrashAlt, FaTruck } from "react-icons/fa";
+import { FaArrowLeft, FaCar, FaTrashAlt, FaTruck, FaCrosshairs } from "react-icons/fa";
 import service_marker from "../../../assets/service_marker.png";
 import user_marker from "../../../assets/user_marker.png";
 import carpark_marker from "../../../assets/carpark_marker.jpg";
@@ -15,13 +15,25 @@ import "leaflet-routing-machine/dist/leaflet-routing-machine.css";
 import RoutingControl from "../../../components/RoutingControl";
 import BookingOverlay from "../BookingUI/BookingOverlay";
 import {jwtDecode} from "jwt-decode";
-const DEFAULT_LOCATION = { lat: 1.3521, lng: 103.8198 };
+const DEFAULT_LOCATION = { lat: 1.3483, lng: 103.6831 }; // NTU Singapore
 
 const serviceIcon = new L.Icon({ iconUrl: service_marker, iconSize: [40, 40] });
 const carparkIcon = new L.Icon({ iconUrl: carpark_marker, iconSize: [38, 38] });
 const userIcon = new L.Icon({ iconUrl: user_marker, iconSize: [35, 35]});
 const wasteIcon = new L.Icon({ iconUrl: waste_marker, iconSize: [38, 38] });
-const deliveryIcon  = new L.Icon({ iconUrl: camera_icon, iconSize: [20, 20] }); 
+const deliveryIcon  = new L.Icon({ iconUrl: camera_icon, iconSize: [20, 20] });
+
+// Component to handle map recentering
+function RecenterMap({ center }) {
+  const map = useMap();
+  useEffect(() => {
+    if (center) {
+      map.setView([center.lat, center.lng], 14);
+    }
+  }, [center, map]);
+  return null;
+}
+
 const MapUI = () => {
   const { type, id } = useParams();
   console.log("Service Type:", type);
@@ -48,6 +60,10 @@ const MapUI = () => {
   const [listingId, setListingId] = useState(null);
 
   const [showBooking, setShowBooking] = useState(false);
+  
+  const [enlargedImage, setEnlargedImage] = useState(null);
+  
+  const [mapCenter, setMapCenter] = useState(null);
   const token = localStorage.getItem("token");
   let userId = null;
 
@@ -162,14 +178,22 @@ const MapUI = () => {
   useEffect(() => {
     if (!navigator.geolocation) {
       setLocationStatus("Geolocation not supported by browser");
+      setUserCoor(DEFAULT_LOCATION); // fallback
       return;
     }
     navigator.geolocation.getCurrentPosition(
-      () => {
-        setUserCoor({ lat: 1.3521, lng: 103.8198 }); // fallback location
+      (position) => {
+        setUserCoor({ 
+          lat: position.coords.latitude, 
+          lng: position.coords.longitude 
+        });
         setLocationStatus("Location detected");
       },
-      () => setLocationStatus("Unable to detect location.")
+      (error) => {
+        console.error("Geolocation error:", error);
+        setLocationStatus("Unable to detect location. Using default.");
+        setUserCoor(DEFAULT_LOCATION); // fallback on error
+      }
     );
   }, []);
 
@@ -251,6 +275,12 @@ const MapUI = () => {
   const showWasteToggle = type == "home cleaning";
   const showCameraToggle = type == "package delivery";
 
+  const handleRecenter = () => {
+    if (serviceLocation) {
+      setMapCenter({ lat: serviceLocation.lat, lng: serviceLocation.lng });
+    }
+  };
+
   return (
     <>
     <div className="mapui-container">
@@ -290,12 +320,21 @@ const MapUI = () => {
           <FaTruck /> {showDelivery ? "Hide Deliveries" : "Show Delivery Points"}
         </button>
         )}
+        <button
+          className="recenter-map-btn"
+          onClick={handleRecenter}
+          title="Recenter map to service location"
+        >
+          <FaCrosshairs /> Recenter
+        </button>
+
         {serviceLocation?.lat && serviceLocation?.lng && (
           <MapContainer
             center={[serviceLocation.lat, serviceLocation.lng]}
             zoom={14}
             style={{ height: "500px", width: "100%", borderRadius: "18px" }}
           >
+            <RecenterMap center={mapCenter} />
             <TileLayer
               attribution='&copy; <a href="https://osm.org">OpenStreetMap</a> contributors'
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -357,13 +396,17 @@ const MapUI = () => {
               <Marker key={d.id} position={[d.lat, d.lng]} icon={deliveryIcon}>
                 <Popup>
                   <b>{d.name}</b>
-                  <p>Package Delivery Location</p>
+                  <p>Traffic Camera View</p>
                   {d.image && (
-                    <img
-                      src={d.image}
-                      alt="Camera"
-                      style={{ width: "100px", borderRadius: "8px", marginTop: "5px" }}
-                    />
+                    <div>
+                      <img
+                        src={d.image}
+                        alt="Camera"
+                        style={{ width: "100px", borderRadius: "8px", marginTop: "5px", cursor: "pointer" }}
+                        onClick={() => setEnlargedImage({ url: d.image, name: d.name })}
+                      />
+                      <p style={{ fontSize: "11px", color: "#666", marginTop: "3px" }}>Click to enlarge</p>
+                    </div>
                   )}
                 </Popup>
               </Marker>
@@ -384,6 +427,32 @@ const MapUI = () => {
         listingId={listingId}
         userId={userId}
       />
+
+      {/* Image Enlargement Modal */}
+      {enlargedImage && (
+        <div 
+          className="image-modal-overlay"
+          onClick={() => setEnlargedImage(null)}
+        >
+          <div 
+            className="image-modal-content"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button 
+              className="image-modal-close"
+              onClick={() => setEnlargedImage(null)}
+            >
+              ×
+            </button>
+            <h3 className="image-modal-title">{enlargedImage.name}</h3>
+            <img 
+              src={enlargedImage.url} 
+              alt={enlargedImage.name}
+              className="image-modal-img"
+            />
+          </div>
+        </div>
+      )}
     </>
   );
 };
