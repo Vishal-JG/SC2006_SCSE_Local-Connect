@@ -217,6 +217,7 @@ class Booking:
                 l.title,
                 l.description as service_description,
                 l.price,
+                l.image_url, 
                 p.business_name,
                 p.description as provider_description,
                 u.display_name as customer_name,

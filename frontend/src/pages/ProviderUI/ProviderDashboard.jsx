@@ -1,10 +1,11 @@
 import React, { useCallback } from "react";
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { auth } from "../../firebase";
 import styles from './ProviderDashboard.module.css';
 
 // Importing reusable components
 import BackButton from '../../components/BackButton';
-import Header from '../../components/LandingPage';
 
 // Import assets
 import addServiceIcon from '../../assets/material-symbols_add-ad-outline.svg';
@@ -18,11 +19,16 @@ const ProviderDashboard = () => {
   const onMyListingsClick = useCallback(() => navigate("/ProviderUI/MyListingsPage"), [navigate]);
   const onAnalyticsClick = useCallback(() => navigate("/ProviderUI/AnalyticsPage"), [navigate]);
   const onServicesClick = useCallback(() => navigate("/ProviderUI/ServicesInProgressPage"), [navigate]);
-  //const onLogoutClick = useCallback(() => navigate("/login"), [navigate]);
-  const onLogoutClick = useCallback(() => {
-    alert("Logging out... (placeholder action)");
-    }, []);
-
+  const onLogoutClick = useCallback(async () => {
+    try {
+      await auth.signOut(); // End Firebase session
+      localStorage.removeItem("token"); // Optional cleanup
+      navigate("/login"); // Redirect to login
+    } catch (err) {
+      console.error("Logout failed:", err);
+      alert("Logout failed. Please try again.");
+    }
+  }, [navigate]);
 
   return (
     <div className={styles.providerDashboard}>

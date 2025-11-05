@@ -1,55 +1,108 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { auth } from "../../firebase";
+import { getIdToken } from "firebase/auth";
 import styles from "./AcceptedServicesPage.module.css";
 import BackButton from "../../components/BackButton";
 
-// Importing assets - SAMPLE IMAGES
-import sample1 from "../../assets/sample1.png";
-import sample2 from "../../assets/sample2.png";
-import sample3 from "../../assets/sample3.png";
-
-// Dummy data
-const sampleAcceptedServices = [
-  { id: 1, name: "Elco Plumbing Co.", imageUrl: sample1 },
-  { id: 2, name: "RapidFlow Plumbing Co.", imageUrl: sample2 },
-  { id: 3, name: "QuickFix Solutions", imageUrl: sample3 },
-];
+const fallbackImg = "https://via.placeholder.com/160x120.png?text=Service+Image";
 
 const AcceptedServicesPage = () => {
-    const navigate = useNavigate();
-    const onViewClick = (service) => {
-      navigate(`/ProviderUI/ViewServicePage/${service.id}`, { state: { service } });
-    };
+  const navigate = useNavigate();
+  const [services, setServices] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  
+  useEffect(() => {
+    const fetchServices = async () => {
+      setLoading(true);
+      setError("");
+      try {
+        const user = auth.currentUser;
+        if (!user) throw new Error("You must be logged in!");
+        const idToken = await getIdToken(user);
 
-    const onCompleteClick = (service) => {
-      const confirmed = window.confirm(
-        `Are you sure you want to mark "${service.name}" as completed?`
-      );
-      if (confirmed) {
-        console.log("Service marked as completed:", service.id);
-        // Later: update backend status via PATCH/PUT
+        const res = await axios.get(
+        "http://localhost:5000/api/bookings?role=provider&status=confirmed",
+        { headers: { Authorization: `Bearer ${idToken}` } }
+        );
+
+        if (res.data.success) {
+          setServices(res.data.bookings || []);
+        } else {
+          setError("Failed to fetch services.");
+        }
+      } catch (err) {
+        console.error(err);
+        setError("Couldn't fetch accepted services.");
+      } finally {
+        setLoading(false);
       }
     };
+    fetchServices();
+  }, []);
 
-    return (
+  // View service details
+  const onViewClick = (service) => {
+    navigate(`/ProviderUI/ViewServicePage/${service.listing_id}`, { state: { service } });
+  };
+
+  // Mark service as completed
+  const onCompleteClick = async (service) => {
+    const confirmed = window.confirm(
+      `Are you sure you want to mark "${service.title}" as completed?`
+    );
+    if (!confirmed) return;
+
+    try {
+      setSuccess("");
+      setError("");
+      const user = auth.currentUser;
+      if (!user) throw new Error("You must be logged in!");
+      const idToken = await getIdToken(user);
+
+      // Update booking status (use booking_id, not listing_id!)
+      await axios.put(
+        `http://localhost:5000/api/bookings/${service.booking_id}/status`,
+        { status: "completed" },
+        { headers: { Authorization: `Bearer ${idToken}` } }
+      );
+
+      // Remove from list after completion
+      setServices((old) => old.filter((s) => s.booking_id !== service.booking_id));
+      setSuccess(`Marked "${service.title}" as completed!`);
+    } catch (err) {
+      console.error(err);
+      setError("Failed to mark as completed.");
+    }
+  };
+
+  if (loading) return <div className={styles.acceptedServicesPage}>Loading...</div>;
+  if (error) return <div className={styles.acceptedServicesPage}>{error}</div>;
+
+  return (
     <div className={styles.acceptedServicesPage}>
-
       <div className={styles.pageHeader}>
         <BackButton />
         <h2>Accepted Services</h2>
       </div>
 
+      {success && <div style={{ color: "green", marginBottom: 10 }}>{success}</div>}
+
       {/* Service cards */}
       <div className={styles.listingsGrid}>
-        {sampleAcceptedServices.map((service) => (
-          <div key={service.id} className={styles.listingCard}>
+        {services.length === 0 && <div>No accepted/in-progress services right now.</div>}
+        {services.map((service) => (
+          <div key={service.booking_id} className={styles.listingCard}>
             <img
-              src={service.imageUrl}
-              alt={service.name}
+              src={service.image_url || fallbackImg}
+              alt={service.title || "Service"}
               className={styles.listingImage}
             />
             <div className={styles.listingInfo}>
-              <p className={styles.listingName}>{service.name}</p>
+              <p className={styles.listingName}>{service.title || "Untitled Service"}</p>
               <div className={styles.buttonGroup}>
                 <button
                   className={styles.viewButton}
@@ -69,7 +122,7 @@ const AcceptedServicesPage = () => {
         ))}
       </div>
     </div>
-    );
+  );
 };
 
 export default AcceptedServicesPage;

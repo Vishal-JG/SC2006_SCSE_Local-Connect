@@ -6,7 +6,6 @@ import firebase_admin
 
 service_bp = Blueprint("service_bp", __name__)
 
-
 def verify_token():
     """Helper to verify Firebase token and return user_id."""
     auth_header = request.headers.get('Authorization')
@@ -114,13 +113,35 @@ def provider_update_service(listing_id):
         return jsonify({'error': 'You can only update your own services'}), 403
     
     data = request.get_json() or {}
+
+    # Handle status update
+    # Only allow provider to mark service as "completed"
+    new_status = data.get('status')
+    if new_status:
+        if new_status != "completed":
+            return jsonify({'error': 'Providers can only mark services as completed'}), 403
+        
+        # Update only the status field
+        updated_service = Service.update(
+            listing_id=listing_id,
+            status="completed"
+        )
+        
+        if updated_service:
+            return jsonify({
+                'message': f'Service "{service.title}" marked as completed',
+                'service': updated_service.to_dict()
+            })
+        return jsonify({'error': 'Failed to update service status'}), 500
+    
     updated_service = Service.update(
         listing_id=listing_id,
         title=data.get('title'),
         description=data.get('description'),
         price=data.get('price'),
-        category_id=data.get('category_id')
-        # Note: providers cannot change status themselves
+        category_id=data.get('category_id'),
+        image_url=data.get('image_url') # to accept and forward image URL
+        # Note: providers cannot change status themselves # CHANGED ABOVE
     )
     
     if updated_service:

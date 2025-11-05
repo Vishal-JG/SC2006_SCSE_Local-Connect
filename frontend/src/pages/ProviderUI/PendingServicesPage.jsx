@@ -1,77 +1,126 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { auth } from "../../firebase";
+import { getIdToken } from "firebase/auth";
 import styles from "./PendingServicesPage.module.css";
-
-// Import reusable components
 import BackButton from "../../components/BackButton";
 
-// Importing assets - SAMPLE IMAGES
-import sample1 from "../../assets/sample1.png";
-import sample2 from "../../assets/sample2.png";
-import sample3 from "../../assets/sample3.png";
-
-// Sample dummy data
-const samplePendingServices = [
-  { id: 1, name: "Elco Plumbing Co.", imageUrl: sample1 },
-  { id: 2, name: "RapidFlow Plumbing Co.", imageUrl: sample2 },
-  { id: 3, name: "QuickFix Solutions", imageUrl: sample3 },
-];
+const fallbackImg = "https://via.placeholder.com/160x120.png?text=Service+Image";
 
 const PendingServicesPage = () => {
   const navigate = useNavigate();
+  const [services, setServices] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
+
+  useEffect(() => {
+    const fetchPendingBookings = async () => {
+      setLoading(true);
+      setError("");
+      try {
+        const user = auth.currentUser;
+        if (!user) throw new Error("You must be logged in!");
+        const idToken = await getIdToken(user);
+
+        // ✅ Fetch pending bookings for provider
+        const res = await axios.get(
+          "http://localhost:5000/api/bookings?role=provider&status=pending",
+          { headers: { Authorization: `Bearer ${idToken}` } }
+        );
+
+        if (res.data.success) {
+          setServices(res.data.bookings || []);
+        } else {
+          setError("Failed to fetch pending services.");
+        }
+      } catch (err) {
+        console.error(err);
+        setError("Couldn't fetch pending services.");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchPendingBookings();
+  }, []);
+
+  // ✅ Navigate to service details page
   const onViewClick = (service) => {
-  navigate(`/ProviderUI/ViewServicePage/${service.id}`, { state: { service } });
+    navigate(`/ProviderUI/ViewServicePage/${service.listing_id}`, { state: { service } });
   };
 
-  const onAcceptClick = (service) => {
-    const confirmed = window.confirm(`Are you sure you want to accept "${service.name}"?`);
-    if (confirmed) {
-      console.log("Service accepted:", service.id);
-      // TODO: Update service status in backend or dummy data
+  // ✅ Accept a pending booking
+  const onAcceptClick = async (service) => {
+    const confirmed = window.confirm(`Accept booking for "${service.title}"?`);
+    if (!confirmed) return;
+
+    try {
+      setSuccess("");
+      setError("");
+      const user = auth.currentUser;
+      if (!user) throw new Error("You must be logged in!");
+      const idToken = await getIdToken(user);
+
+      // ✅ Update booking status via backend route
+      await axios.put(
+        `http://localhost:5000/api/bookings/${service.booking_id}/status`,
+        { status: "confirmed" }, // change pending → confirmed
+        { headers: { Authorization: `Bearer ${idToken}` } }
+      );
+
+      // ✅ Remove from state (disappear from list)
+      setServices((old) => old.filter((s) => s.booking_id !== service.booking_id));
+      setSuccess(`Accepted "${service.title}" successfully!`);
+    } catch (err) {
+      console.error(err);
+      setError("Failed to accept service.");
     }
   };
 
+  if (loading) return <div className={styles.pendingServicesPage}>Loading...</div>;
+  if (error) return <div className={styles.pendingServicesPage}>{error}</div>;
+
   return (
-  <div className={styles.pendingServicesPage}>
-    <div className={styles.pageHeader}>
-      <BackButton />
-      <h2>Pending Services</h2>
-    </div>
+    <div className={styles.pendingServicesPage}>
+      <div className={styles.pageHeader}>
+        <BackButton />
+        <h2>Pending Services</h2>
+      </div>
 
-    {/* Service cards */}
-    <div className={styles.servicesGrid}>
-      {samplePendingServices.map((service) => (
-        <div key={service.id} className={styles.serviceCard}>
-          <img
-            src={service.imageUrl}
-            alt={service.name}
-            className={styles.serviceImage}
-          />
-          <div className={styles.serviceInfo}>
-            <p className={styles.serviceName}>{service.name}</p>
+      {success && <div style={{ color: "green", marginBottom: 10 }}>{success}</div>}
 
-            {/* Buttons */}
-            <div className={styles.buttonGroup}>
-              <button
-                className={styles.viewButton}
-                onClick={() => onViewClick(service)}
-              >
-                View
-              </button>
-
-              <button
-                className={styles.acceptButton}
-                onClick={() => onAcceptClick(service)}
-              >
-                Accept
-              </button>
+      <div className={styles.servicesGrid}>
+        {services.length === 0 && <div>No pending bookings to accept.</div>}
+        {services.map((service) => (
+          <div key={service.booking_id} className={styles.serviceCard}>
+            <img
+              src={service.image_url || fallbackImg}
+              alt={service.title || "Service"}
+              className={styles.serviceImage}
+            />
+            <div className={styles.serviceInfo}>
+              <p className={styles.serviceName}>{service.title || "Untitled Service"}</p>
+              <div className={styles.buttonGroup}>
+                <button
+                  className={styles.viewButton}
+                  onClick={() => onViewClick(service)}
+                >
+                  View
+                </button>
+                <button
+                  className={styles.acceptButton}
+                  onClick={() => onAcceptClick(service)}
+                >
+                  Accept
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
-  </div>
   );
 };
 

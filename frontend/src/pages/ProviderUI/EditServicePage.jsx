@@ -1,143 +1,216 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate, useParams, useLocation } from "react-router-dom";
-import styles from "./EditServicePage.module.css";
+import React, { useEffect, useState, useCallback } from "react";
+import { useNavigate, useLocation, useParams } from "react-router-dom";
+import axios from "axios";
+import { auth } from "../../firebase";
+import { getIdToken } from "firebase/auth";
 import BackButton from "../../components/BackButton";
+import styles from "./EditServicePage.module.css";
+
+const fallbackImg = "https://via.placeholder.com/160x120.png?text=Service+Image";
 
 const EditServicePage = () => {
   const navigate = useNavigate();
-  const { id } = useParams();
   const location = useLocation();
-  const serviceFromState = location.state?.service;
+  const { listing_id } = useParams();
 
-  // Fallback service if none provided
-  const fallbackService = {
-    id,
-    name: "Elco Plumbing Co.",
-    category: "Plumbing",
-    price: "120",
-    description: "Professional plumbing services with 24/7 support.",
-    imageUrl: "/assets/sample1.png",
-  };
-
-  const serviceToUse = serviceFromState || fallbackService;
-
-  // Form state
-  const [serviceName, setServiceName] = useState("");
+  const [title, setTitle] = useState("");
   const [category, setCategory] = useState("");
   const [price, setPrice] = useState("");
   const [description, setDescription] = useState("");
-  const [media, setMedia] = useState(null);
+  const [imageUrl, setImageUrl] = useState(""); // <-- image state
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
+  // Fetch existing service data (from state or backend)
   useEffect(() => {
-    setServiceName(serviceToUse.name || "");
-    setCategory(serviceToUse.category || "");
-    setPrice(serviceToUse.price || "");
-    setDescription(serviceToUse.description || "");
-    setMedia(serviceToUse.imageUrl || null);
-  }, [serviceToUse]);
+    const fetchService = async () => {
+      setLoading(true);
+      setError("");
+      try {
+        const user = auth.currentUser;
+        if (!user) throw new Error("You must be logged in!");
+        const idToken = await getIdToken(user);
 
-  const handleMediaUpload = (e) => {
-    const file = e.target.files[0];
-    if (file) setMedia(file);
-  };
+        const serviceFromState = location.state?.service;
+        if (serviceFromState) {
+          setTitle(serviceFromState.title || "");
+          setCategory(serviceFromState.category_id || "");
+          setPrice(serviceFromState.price || "");
+          setDescription(serviceFromState.description || "");
+          setImageUrl(serviceFromState.image_url || ""); // set image from state
+        } else {
+          const res = await axios.get(
+            `http://localhost:5000/api/services/${listing_id}`,
+            { headers: { Authorization: `Bearer ${idToken}` } }
+          );
+          const service = res.data;
+          setTitle(service.title || "");
+          setCategory(service.category_id || "");
+          setPrice(service.price || "");
+          setDescription(service.description || "");
+          setImageUrl(service.image_url || ""); // set image from backend
+        }
+      } catch (err) {
+        setError("Failed to load service. Please try again.");
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const handleSaveChanges = () => {
-    const updatedService = { id, serviceName, category, price, description, media };
-    console.log("Service updated (ready for backend):", updatedService);
+    fetchService();
+  }, [listing_id, location.state]);
 
-    // TODO: send PUT/PATCH request to backend
+  // Save updated service
+  const handleSave = useCallback(async () => {
+    setSaving(true);
+    setError("");
+    setSuccess("");
+    try {
+      const user = auth.currentUser;
+      if (!user) throw new Error("You must be logged in!");
+      const idToken = await getIdToken(user);
 
-    navigate("/ProviderUI/MyListingsPage");
-  };
+      const res = await axios.patch(
+        `http://localhost:5000/api/provider/services/${listing_id}`,
+        { title, category_id: category, price: parseFloat(price), description, image_url: imageUrl },
+        { headers: { Authorization: `Bearer ${idToken}` } }
+      );
 
-  const handleDelete = () => {
-    console.log("Service deleted:", id);
-    // TODO: send DELETE request to backend
-    navigate("/ProviderUI/MyListingsPage");
-  };
+      setSuccess("Service updated successfully!");
+      setTimeout(() => navigate("/ProviderUI/MyListingsPage"), 1000);
+    } catch (err) {
+      setError(
+        err.response?.data?.error || "Failed to update service. Please try again."
+      );
+    } finally {
+      setSaving(false);
+    }
+  }, [listing_id, title, category, price, description, navigate]);
+
+  // Delete service
+  const handleDelete = useCallback(async () => {
+    setDeleting(true);
+    setError("");
+    setSuccess("");
+    try {
+      const user = auth.currentUser;
+      if (!user) throw new Error("You must be logged in!");
+      const idToken = await getIdToken(user);
+
+      await axios.delete(
+        `http://localhost:5000/api/provider/services/${listing_id}`,
+        { headers: { Authorization: `Bearer ${idToken}` } }
+      );
+
+      setSuccess("Service deleted!");
+      setTimeout(() => navigate("/ProviderUI/MyListingsPage"), 1000);
+    } catch (err) {
+      setError(
+        err.response?.data?.error || "Failed to delete service. Please try again."
+      );
+    } finally {
+      setDeleting(false);
+    }
+  }, [listing_id, navigate]);
+
+  if (loading) return <div className={styles.page}>Loading service...</div>;
+  if (error) return <div className={styles.page}>{error}</div>;
 
   return (
     <div className={styles.page}>
-      {/* Header */}
       <div className={styles.header}>
         <BackButton />
         <h1 className={styles.title}>Edit Service</h1>
-        <p className={styles.subtitle}>Update the details of your service</p>
+        <p className={styles.subtitle}>Update details for your service</p>
       </div>
 
-      {/* Media Upload */}
-      <div className={styles.uploadContainer}>
-        <label htmlFor="mediaUpload" className={styles.uploadBox}>
-          {media ? (
-            typeof media === "string" ? (
-              <img src={media} alt="Service" className={styles.uploadedImage} />
-            ) : (
-              <img src={URL.createObjectURL(media)} alt="Preview" className={styles.uploadedImage} />
-            )
-          ) : (
-            <span className={styles.uploadText}>Click to upload service media</span>
-          )}
-          <input
-            id="mediaUpload"
-            type="file"
-            accept="image/*"
-            onChange={handleMediaUpload}
-            style={{ display: "none" }}
+      <div className={styles.formContainer}>
+        {/* Service Image Display */}
+        <div className={styles.inputContainer}>
+          <label className={styles.inputLabel}>Current Image</label>
+          <img
+            src={imageUrl || fallbackImg}
+            alt={title || "Service Image"}
+            className={styles.serviceImage}
           />
-        </label>
-        <span className={styles.uploadLabel}>Service Media</span>
-      </div>
+        </div>
 
-      {/* Service Name */}
-      <div className={styles.inputContainer}>
-        <label className={styles.inputLabel}>Service Name</label>
-        <input
-          type="text"
-          value={serviceName}
-          onChange={(e) => setServiceName(e.target.value)}
-          className={styles.input}
-        />
-      </div>
+        {/* Image URL Edit */}
+        <div className={styles.inputContainer}>
+          <label className={styles.inputLabel}>Image URL</label>
+          <input
+            type="text"
+            value={imageUrl}
+            onChange={(e) => setImageUrl(e.target.value)}
+            className={styles.input}
+          />
+        </div>
 
-      {/* Category */}
-      <div className={styles.inputContainer}>
-        <label className={styles.inputLabel}>Category</label>
-        <input
-          type="text"
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
-          className={styles.input}
-        />
-      </div>
+        {/* Service Name */}
+        <div className={styles.inputContainer}>
+          <label className={styles.inputLabel}>Service Name</label>
+          <input
+            type="text"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            className={styles.input}
+          />
+        </div>
 
-      {/* Price */}
-      <div className={styles.inputContainer}>
-        <label className={styles.inputLabel}>Price</label>
-        <input
-          type="number"
-          value={price}
-          onChange={(e) => setPrice(e.target.value)}
-          className={styles.input}
-        />
-      </div>
+        {/* Category */}
+        <div className={styles.inputContainer}>
+          <label className={styles.inputLabel}>Category</label>
+          <input
+            type="text"
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            className={styles.input}
+          />
+        </div>
 
-      {/* Description */}
-      <div className={styles.inputContainer}>
-        <label className={styles.inputLabel}>Service Description</label>
-        <textarea
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          className={styles.textarea}
-        />
-      </div>
+        {/* Price */}
+        <div className={styles.inputContainer}>
+          <label className={styles.inputLabel}>Price</label>
+          <input
+            type="number"
+            value={price}
+            onChange={(e) => setPrice(e.target.value)}
+            className={styles.input}
+          />
+        </div>
 
-      {/* Buttons */}
-      <div className={styles.buttonGroup}>
-        <button className={styles.saveButton} onClick={handleSaveChanges}>
-          SAVE CHANGES
+        {/* Description */}
+        <div className={styles.inputContainer}>
+          <label className={styles.inputLabel}>Service Description</label>
+          <textarea
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            className={styles.textarea}
+          />
+        </div>
+
+        {/* Feedback */}
+        {error && <p className={styles.error}>{error}</p>}
+        {success && <p className={styles.success}>{success}</p>}
+
+        {/* Save Button */}
+        <button
+          className={styles.addButton}
+          onClick={handleSave}
+          disabled={saving || deleting}
+        >
+          {saving ? "Saving..." : "SAVE CHANGES"}
         </button>
-        <button className={styles.deleteButton} onClick={handleDelete}>
-          DELETE SERVICE
+        {/* Delete Button */}
+        <button
+          className={styles.deleteButton}
+          onClick={handleDelete}
+          disabled={saving || deleting}
+        >
+          {deleting ? "Deleting..." : "DELETE SERVICE"}
         </button>
       </div>
     </div>

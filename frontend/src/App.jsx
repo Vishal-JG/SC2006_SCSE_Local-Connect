@@ -29,6 +29,10 @@ import EditServicePage from "./pages/ProviderUI/EditServicePage";
 import ViewServicePage from "./pages/ProviderUI/ViewServicePage";
 import CompletedServicePage from "./pages/ProviderUI/CompletedServicePage";
 
+// Admin UI pages
+import AdminHomePage from "./pages/AdminUI/AdminHomePage";
+import AllReviewsPage from "./pages/AdminUI/AllReviewsPage";
+
 export default function App() {
   return (
     <div className="app">
@@ -60,6 +64,11 @@ export default function App() {
           <Route path="/ProviderUI/EditServicePage/:id" element={<EditServicePage />} />
           <Route path="/ProviderUI/ViewServicePage/:id" element={<ViewServicePage />} />
           <Route path="/ProviderUI/CompletedServicePage/:id" element={<CompletedServicePage />} />
+
+          {/* Admin routes */}
+          <Route path="/AdminUI/AdminHomePage" element={<AdminHomePage />} />
+          <Route path="/AdminUI/AllReviewsPage" element={<AllReviewsPage />} />
+
         </Routes>
       </AuthProvider>
     </div>
