@@ -119,7 +119,7 @@ const BookmarkUI = () => {
             }}
           >
             <img
-              src={service.image}
+              src={service.image_url}
               alt={service.name}
               className="bookmark-image"
               onError={(e) => {

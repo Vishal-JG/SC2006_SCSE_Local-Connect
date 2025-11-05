@@ -2,6 +2,7 @@ import firebase_admin
 from firebase_admin import credentials, auth
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+from flasgger import Swagger
 from backend.controllers.external_api_controller import external_bp #import external api
 from backend.controllers.review_controller import review_bp
 from backend.controllers.admin_controller import admin_bp
@@ -21,6 +22,8 @@ load_dotenv()
 
 key_path = os.getenv('GOOGLE_APPLICATION_CREDENTIALS')
 
+print("Firebase key_path from env:", key_path)
+print("File exists?", os.path.exists(key_path))
 cred = credentials.Certificate(key_path)  
 firebase_admin.initialize_app(cred)
 
@@ -37,6 +40,46 @@ with app.app_context():
     app.cli.add_command(seed_db_command)
 app.config["GOOGLE_MAPS_API_KEY"] = os.getenv("GOOGLE_MAPS_API_KEY")  
 CORS(app, supports_credentials=True)
+
+# Configure Swagger/OpenAPI documentation
+swagger_config = {
+    "headers": [],
+    "specs": [
+        {
+            "endpoint": 'apispec',
+            "route": '/apispec.json',
+            "rule_filter": lambda rule: True,
+            "model_filter": lambda tag: True,
+        }
+    ],
+    "static_url_path": "/flasgger_static",
+    "swagger_ui": True,
+    "specs_route": "/api/docs"
+}
+swagger_template = {
+    "swagger": "2.0",
+    "info": {
+        "title": "SC2006 Local Connect API",
+        "description": "API documentation for Local Connect service marketplace backend",
+        "version": "1.0.0",
+        "contact": {
+            "name": "SC2006 Team"
+        }
+    },
+    "securityDefinitions": {
+        "Bearer": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header",
+            "description": "Firebase JWT token. Format: 'Bearer <token>'"
+        }
+    },
+    "security": [{"Bearer": []}],
+    "basePath": "/",
+    "schemes": ["http", "https"]
+}
+Swagger(app, config=swagger_config, template=swagger_template)
+
 app.register_blueprint(external_bp, url_prefix="/api") #register blueprint of external api
 app.register_blueprint(review_bp, url_prefix="/api")
 app.register_blueprint(admin_bp, url_prefix="/api")
@@ -125,6 +168,36 @@ def create_user_if_not_exists(firebase_uid, email, display_name, role='customer'
 
 @app.route('/api/login', methods=['POST'])
 def api_login():
+    """
+    User Login
+    ---
+    tags:
+      - Authentication
+    parameters:
+      - name: Authorization
+        in: header
+        type: string
+        required: true
+        description: "Firebase JWT token (format: Bearer TOKEN)"
+    responses:
+      200:
+        description: Login successful, user created or found
+        schema:
+          type: object
+          properties:
+            success:
+              type: boolean
+            email:
+              type: string
+            display_name:
+              type: string
+      400:
+        description: Invalid Firebase token
+      401:
+        description: Missing or invalid Authorization token
+      500:
+        description: Server error
+    """
     token = request.headers.get('Authorization', '').split('Bearer ')[-1]
     if not token:
         return jsonify({'error': 'Missing Authorization token'}), 401
@@ -209,6 +282,21 @@ def api_logout():
 
 @app.route('/api/hello', methods=['GET'])
 def hello():
+    """
+    Health Check
+    ---
+    tags:
+      - System
+    responses:
+      200:
+        description: Backend is running
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+              example: "Hello from Flask backend!"
+    """
     return jsonify({'message': 'Hello from Flask backend!'})
 
 @app.route('/api/data', methods=['POST'])
@@ -219,7 +307,44 @@ def data():
 
 @app.route('/api/users/me', methods=['GET'])
 def get_user_profile():
-    """Return the current user's profile information from Firebase + DB."""
+    """
+    Get Current User Profile
+    Return the current user's profile information from Firebase + DB.
+    ---
+    tags:
+      - Users
+    security:
+      - Bearer: []
+    parameters:
+      - name: Authorization
+        in: header
+        type: string
+        required: true
+        description: "Firebase JWT token (format: Bearer TOKEN)"
+    responses:
+      200:
+        description: User profile retrieved successfully
+        schema:
+          type: object
+          properties:
+            success:
+              type: boolean
+            user:
+              type: object
+              properties:
+                email:
+                  type: string
+                display_name:
+                  type: string
+                role:
+                  type: string
+                created_at:
+                  type: string
+      401:
+        description: Missing or invalid token
+      404:
+        description: User not found
+    """
     token = request.headers.get('Authorization', '').split('Bearer ')[-1]
     if not token:
         return jsonify({'error': 'Missing Authorization token'}), 401

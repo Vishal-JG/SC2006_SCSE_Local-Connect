@@ -142,6 +142,10 @@ const ServiceListPage = () => {
   return (
     <div className="service-list-page">
       <BackButton />
+
+      <h2 className="service-title">
+        {type.charAt(0).toUpperCase() + type.slice(1)}
+      </h2>
       <SearchBar
         value={search}
         onChange={(e) => setSearch(e.target.value)}
@@ -149,10 +153,6 @@ const ServiceListPage = () => {
         onSuggestionClick={(val) => setSearch(val)}
         onFilterSelect={handleFilterSelect}
       />
-
-      <h2 className="service-title">
-        {type.charAt(0).toUpperCase() + type.slice(1)}
-      </h2>
 
       {/* ✅ Show Active Filter Chip with close button */}
       {activeFilterLabel && (

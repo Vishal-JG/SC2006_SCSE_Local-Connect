@@ -12,16 +12,13 @@ import {
 
 export default function AuthPage() {
   const [isLogin, setIsLogin] = useState(true);
-
-  // Login form states
   const [loginEmail, setLoginEmail] = useState(''); 
   const [loginPassword, setLoginPassword] = useState('');
 
-  // Signup form states
   const [signUpFirstName, setSignUpFirstName] = useState('');
   const [signUpLastName, setSignUpLastName] = useState('');
   const [signUpEmail, setSignUpEmail] = useState('');
-  const [signUpPhone, setSignUpPhone] = useState(''); 
+  const [signUpPhone, setSignUpPhone] = useState('');
   const [signUpPassword, setSignUpPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [signUpRole, setSignUpRole] = useState('customer'); // 'customer' or 'provider'
@@ -33,12 +30,36 @@ export default function AuthPage() {
   const [message, setMessage] = useState('');
   const navigate = useNavigate();
   const clearMessage = () => setMessage('');
+  
+  function getFriendlyAuthError(error) {
+  if (!error || !error.code) return "An unexpected error occurred. Please try again.";
+  switch (error.code) {
+    case "auth/invalid-email":
+      return "Please enter a valid email address.";
+    case "auth/user-not-found":
+      return "No account found with that email.";
+    case "auth/wrong-password":
+      return "Incorrect password. Please try again.";
+    case "auth/email-already-in-use":
+      return "This email is already registered. Please login instead.";
+    case "auth/weak-password":
+      return "Your password should be at least 6 characters.";
+    case "auth/missing-password":
+      return "Please enter your password.";
+    case "auth/network-request-failed":
+      return "Network error, please check your internet connection.";
+    case "auth/invalid-credential":
+      return "Invalid credentials. Please login with a valid account.";
+    // Add others as needed
+    default:
+      return error.message || "Something went wrong. Please try again.";
+  }
+}
 
   // --------------------- LOGIN ---------------------
   const handleLogin = async (e) => {
     e.preventDefault();
     clearMessage();
-
     try {
       // CLEAR OLD DATA FIRST - prevents stale token/role issues
       localStorage.clear();
@@ -55,7 +76,7 @@ export default function AuthPage() {
       });
 
       let profileResponse;
-      try {
+        try {
         profileResponse = await getProfile();
       } catch (err) {
         const status = err?.response?.status;
@@ -97,7 +118,7 @@ export default function AuthPage() {
 
       setMessage(`Login successful! Welcome, ${userCredential.user.displayName || loginEmail}`);
     } catch (error) {
-      setMessage(`Error: ${error.message}`);
+      setMessage(getFriendlyAuthError(error));
     }
   };
 
@@ -106,12 +127,10 @@ export default function AuthPage() {
   const handleSignUp = async (e) => {
     e.preventDefault();
     clearMessage();
-
     if (signUpPassword !== confirmPassword) {
       setMessage("Passwords do not match");
       return;
     }
-
     try {
       const userCredential = await createUserWithEmailAndPassword(
         auth,
@@ -161,7 +180,7 @@ export default function AuthPage() {
         setMessage(`Error: ${response.data.error}`);
       }
     } catch (error) {
-      setMessage(`Error: ${error.message}`);
+      setMessage(getFriendlyAuthError(error));
     }
   };
 

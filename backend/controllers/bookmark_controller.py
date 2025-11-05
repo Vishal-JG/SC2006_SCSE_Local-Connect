@@ -64,10 +64,34 @@ def get_user_role(user_id):
 @bookmark_bp.route('/bookmarks', methods=['GET'])
 def get_bookmarks():
     """
-    Get all bookmarks for the authenticated user with service details.
-    
-    Returns:
-        JSON response with list of bookmarked services
+    Get All User Bookmarks
+    ---
+    tags:
+      - Bookmarks
+    security:
+      - Bearer: []
+    parameters:
+      - name: Authorization
+        in: header
+        type: string
+        required: true
+        description: "Firebase JWT token (format: Bearer TOKEN)"
+    responses:
+      200:
+        description: List of bookmarked services with details
+        schema:
+          type: object
+          properties:
+            success:
+              type: boolean
+            bookmarks:
+              type: array
+              items:
+                type: object
+      401:
+        description: Unauthorized
+      500:
+        description: Server error
     """
     try:
         # Verify authentication
@@ -94,15 +118,45 @@ def get_bookmarks():
 @bookmark_bp.route('/bookmarks', methods=['POST'])
 def add_bookmark():
     """
-    Add a bookmark for a service.
-    
-    Request body:
-        {
-            "listing_id": int
-        }
-    
-    Returns:
-        JSON response with created bookmark
+    Add Bookmark
+    ---
+    tags:
+      - Bookmarks
+    security:
+      - Bearer: []
+    parameters:
+      - name: Authorization
+        in: header
+        type: string
+        required: true
+        description: "Firebase JWT token (format: Bearer TOKEN)"
+      - name: body
+        in: body
+        required: true
+        schema:
+          type: object
+          properties:
+            listing_id:
+              type: integer
+              example: 123
+    responses:
+      201:
+        description: Service bookmarked successfully
+        schema:
+          type: object
+          properties:
+            success:
+              type: boolean
+            message:
+              type: string
+            bookmark:
+              type: object
+      400:
+        description: listing_id is required
+      401:
+        description: Unauthorized
+      500:
+        description: Server error
     """
     try:
         # Verify authentication
@@ -133,11 +187,41 @@ def add_bookmark():
 @bookmark_bp.route('/bookmarks/<int:bookmark_id>', methods=['DELETE'])
 def remove_bookmark(bookmark_id):
     """
-    Remove a bookmark by bookmark_id.
-    Only the owner can remove their bookmark.
-    
-    Returns:
-        JSON response confirming deletion
+    Remove Bookmark
+    ---
+    tags:
+      - Bookmarks
+    security:
+      - Bearer: []
+    parameters:
+      - name: Authorization
+        in: header
+        type: string
+        required: true
+        description: "Firebase JWT token (format: Bearer TOKEN)"
+      - name: bookmark_id
+        in: path
+        type: integer
+        required: true
+        description: ID of the bookmark to remove
+    responses:
+      200:
+        description: Bookmark removed successfully
+        schema:
+          type: object
+          properties:
+            success:
+              type: boolean
+            message:
+              type: string
+      401:
+        description: Unauthorized
+      403:
+        description: Not authorized to delete this bookmark
+      404:
+        description: Bookmark not found
+      500:
+        description: Server error
     """
     try:
         # Verify authentication
@@ -171,8 +255,39 @@ def remove_bookmark(bookmark_id):
 @bookmark_bp.route('/bookmarks/listing/<int:listing_id>', methods=['DELETE'])
 def remove_bookmark_by_listing(listing_id):
     """
-    Remove a bookmark by listing_id (alternative endpoint for "unbookmark" action).
-    This is useful when you know the listing_id but not the bookmark_id.
+    Remove Bookmark by Listing ID
+    ---
+    tags:
+      - Bookmarks
+    security:
+      - Bearer: []
+    parameters:
+      - name: Authorization
+        in: header
+        type: string
+        required: true
+        description: "Firebase JWT token (format: Bearer TOKEN)"
+      - name: listing_id
+        in: path
+        type: integer
+        required: true
+        description: ID of the listing to unbookmark
+    responses:
+      200:
+        description: Bookmark removed successfully
+        schema:
+          type: object
+          properties:
+            success:
+              type: boolean
+            message:
+              type: string
+      401:
+        description: Unauthorized
+      404:
+        description: Bookmark not found
+      500:
+        description: Server error
     
     Returns:
         JSON response confirming deletion

@@ -33,7 +33,59 @@ def get_user_role(user_id):
 
 @service_bp.route("/provider/services", methods=["POST"])
 def provider_add_service():
-    """Provider adds a new service."""
+    """
+    Provider Add New Service
+    ---
+    tags:
+      - Provider Services
+    security:
+      - Bearer: []
+    parameters:
+      - name: Authorization
+        in: header
+        type: string
+        required: true
+        description: "Firebase JWT token (format: Bearer TOKEN)"
+      - name: body
+        in: body
+        required: true
+        schema:
+          type: object
+          required:
+            - title
+            - price
+          properties:
+            title:
+              type: string
+              example: "Private Chef Service"
+            description:
+              type: string
+              example: "Gourmet meals prepared in your home"
+            price:
+              type: number
+              example: 150.00
+            category_id:
+              type: integer
+              example: 1
+    responses:
+      201:
+        description: Service created successfully
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+            service:
+              type: object
+      400:
+        description: Missing required fields
+      403:
+        description: User is not a provider
+      404:
+        description: Provider profile not found
+      500:
+        description: Server error
+    """
     user_id, error_response, status_code = verify_token()
     if error_response:
         return error_response, status_code
@@ -81,7 +133,40 @@ def provider_add_service():
 
 @service_bp.route("/provider/services", methods=["GET"])
 def provider_list_services():
-    """Provider lists their own services."""
+    """
+    Provider List Own Services
+    ---
+    tags:
+      - Provider Services
+    security:
+      - Bearer: []
+    parameters:
+      - name: Authorization
+        in: header
+        type: string
+        required: true
+        description: "Firebase JWT token (format: Bearer TOKEN)"
+    responses:
+      200:
+        description: List of provider's services
+        schema:
+          type: array
+          items:
+            type: object
+            properties:
+              listing_id:
+                type: integer
+              title:
+                type: string
+              price:
+                type: number
+              status:
+                type: string
+      403:
+        description: User is not a provider
+      404:
+        description: Provider profile not found
+    """
     user_id, error_response, status_code = verify_token()
     if error_response:
         return error_response, status_code
@@ -100,7 +185,55 @@ def provider_list_services():
 
 @service_bp.route("/provider/services/<int:listing_id>", methods=["PUT", "PATCH"])
 def provider_update_service(listing_id):
-    """Provider updates their own service."""
+    """
+    Provider Update Own Service
+    ---
+    tags:
+      - Provider Services
+    security:
+      - Bearer: []
+    parameters:
+      - name: Authorization
+        in: header
+        type: string
+        required: true
+        description: "Firebase JWT token (format: Bearer TOKEN)"
+      - name: listing_id
+        in: path
+        type: integer
+        required: true
+        description: ID of the service to update
+      - name: body
+        in: body
+        required: true
+        schema:
+          type: object
+          properties:
+            title:
+              type: string
+            description:
+              type: string
+            price:
+              type: number
+            category_id:
+              type: integer
+    responses:
+      200:
+        description: Service updated successfully
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+            service:
+              type: object
+      403:
+        description: Not authorized or not a provider
+      404:
+        description: Service not found
+      500:
+        description: Server error
+    """
     user_id, error_response, status_code = verify_token()
     if error_response:
         return error_response, status_code
@@ -159,7 +292,40 @@ def provider_update_service(listing_id):
 
 @service_bp.route("/provider/services/<int:listing_id>", methods=["DELETE"])
 def provider_delete_service(listing_id):
-    """Provider deletes their own service."""
+    """
+    Provider Delete Own Service
+    ---
+    tags:
+      - Provider Services
+    security:
+      - Bearer: []
+    parameters:
+      - name: Authorization
+        in: header
+        type: string
+        required: true
+        description: "Firebase JWT token (format: Bearer TOKEN)"
+      - name: listing_id
+        in: path
+        type: integer
+        required: true
+        description: ID of the service to delete
+    responses:
+      200:
+        description: Service deleted successfully
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+              example: "Service deleted"
+      403:
+        description: Not authorized or not a provider
+      404:
+        description: Service or provider not found
+      500:
+        description: Failed to delete service
+    """
     user_id, error_response, status_code = verify_token()
     if error_response:
         return error_response, status_code
@@ -189,7 +355,43 @@ def provider_delete_service(listing_id):
 
 @service_bp.route("/services", methods=["GET"])
 def list_services():
-    """List all approved services (public endpoint for consumers)."""
+    """
+    List All Approved Services (Consumer View)
+    ---
+    tags:
+      - Consumer Services
+    parameters:
+      - name: status
+        in: query
+        type: string
+        required: false
+        default: approved
+        description: Filter services by status
+    responses:
+      200:
+        description: List of services
+        schema:
+          type: array
+          items:
+            type: object
+            properties:
+              listing_id:
+                type: integer
+              provider_id:
+                type: integer
+              title:
+                type: string
+              description:
+                type: string
+              price:
+                type: number
+              category_id:
+                type: integer
+              status:
+                type: string
+              created_at:
+                type: string
+    """
     # Optional: verify token if you want to restrict to logged-in users
     # For now, make it public or only show approved services
     status_filter = request.args.get('status', 'approved')
@@ -199,7 +401,42 @@ def list_services():
 
 @service_bp.route("/services/<int:listing_id>", methods=["GET"])
 def get_service(listing_id):
-    """Get details of a specific service (public for consumers)."""
+    """
+    Get Service Details (Consumer View)
+    ---
+    tags:
+      - Consumer Services
+    parameters:
+      - name: listing_id
+        in: path
+        type: integer
+        required: true
+        description: ID of the service to retrieve
+    responses:
+      200:
+        description: Service details
+        schema:
+          type: object
+          properties:
+            listing_id:
+              type: integer
+            provider_id:
+              type: integer
+            title:
+              type: string
+            description:
+              type: string
+            price:
+              type: number
+            category_id:
+              type: integer
+            status:
+              type: string
+            created_at:
+              type: string
+      404:
+        description: Service not found
+    """
     service = Service.get_by_id(listing_id)
     if not service:
         return jsonify({'error': 'Service not found'}), 404
@@ -212,7 +449,39 @@ def get_service(listing_id):
 
 @service_bp.route("/admin/services/<int:listing_id>", methods=["DELETE"])
 def admin_delete_service(listing_id):
-    """Admin deletes any service."""
+    """
+    Admin Delete Any Service
+    ---
+    tags:
+      - Admin Services
+    security:
+      - Bearer: []
+    parameters:
+      - name: Authorization
+        in: header
+        type: string
+        required: true
+        description: "Firebase JWT token (format: Bearer TOKEN)"
+      - name: listing_id
+        in: path
+        type: integer
+        required: true
+        description: ID of the service to delete
+    responses:
+      200:
+        description: Service deleted successfully
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+      403:
+        description: Not authorized (admin only)
+      404:
+        description: Service not found
+      500:
+        description: Failed to delete service
+    """
     user_id, error_response, status_code = verify_token()
     if error_response:
         return error_response, status_code
@@ -232,7 +501,41 @@ def admin_delete_service(listing_id):
 
 @service_bp.route("/admin/services/<int:listing_id>/approve", methods=["POST"])
 def admin_approve_service(listing_id):
-    """Admin approves a pending service."""
+    """
+    Admin Approve Pending Service
+    ---
+    tags:
+      - Admin Services
+    security:
+      - Bearer: []
+    parameters:
+      - name: Authorization
+        in: header
+        type: string
+        required: true
+        description: "Firebase JWT token (format: Bearer TOKEN)"
+      - name: listing_id
+        in: path
+        type: integer
+        required: true
+        description: ID of the service to approve
+    responses:
+      200:
+        description: Service approved successfully
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+            service:
+              type: object
+      403:
+        description: Not authorized (admin only)
+      404:
+        description: Service not found
+      500:
+        description: Failed to approve service
+    """
     user_id, error_response, status_code = verify_token()
     if error_response:
         return error_response, status_code
@@ -249,7 +552,39 @@ def admin_approve_service(listing_id):
 
 @service_bp.route("/admin/services/<int:listing_id>/reject", methods=["POST"])
 def admin_reject_service(listing_id):
-    """Admin rejects a pending service."""
+    """
+    Admin Reject Pending Service
+    ---
+    tags:
+      - Admin Services
+    security:
+      - Bearer: []
+    parameters:
+      - name: Authorization
+        in: header
+        type: string
+        required: true
+        description: "Firebase JWT token (format: Bearer TOKEN)"
+      - name: listing_id
+        in: path
+        type: integer
+        required: true
+        description: ID of the service to reject
+    responses:
+      200:
+        description: Service rejected successfully
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+            service:
+              type: object
+      403:
+        description: Not authorized (admin only)
+      404:
+        description: Service not found
+    """
     user_id, error_response, status_code = verify_token()
     if error_response:
         return error_response, status_code
@@ -266,7 +601,51 @@ def admin_reject_service(listing_id):
 
 @service_bp.route("/admin/services", methods=["GET"])
 def admin_list_all_services():
-    """Admin lists all services (including pending/rejected)."""
+    """
+    Admin List All Services (All Statuses)
+    ---
+    tags:
+      - Admin Services
+    security:
+      - Bearer: []
+    parameters:
+      - name: Authorization
+        in: header
+        type: string
+        required: true
+        description: "Firebase JWT token (format: Bearer TOKEN)"
+      - name: status
+        in: query
+        type: string
+        required: false
+        description: Filter by status (pending, approved, rejected)
+    responses:
+      200:
+        description: List of all services
+        schema:
+          type: array
+          items:
+            type: object
+            properties:
+              listing_id:
+                type: integer
+              provider_id:
+                type: integer
+              title:
+                type: string
+              description:
+                type: string
+              price:
+                type: number
+              category_id:
+                type: integer
+              status:
+                type: string
+              created_at:
+                type: string
+      403:
+        description: Not authorized (admin only)
+    """
     user_id, error_response, status_code = verify_token()
     if error_response:
         return error_response, status_code

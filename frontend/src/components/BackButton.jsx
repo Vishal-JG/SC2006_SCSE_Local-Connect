@@ -23,9 +23,10 @@ const BackButton = ({ to }) => {
         gap: "6px",
         background: "transparent",
         border: "none",
-        color: "#4a90e2",
+        color: "white",
         fontSize: "16px",
         cursor: "pointer",
+        margin: "10px"
       }}
     >
       <FaArrowLeft /> Back

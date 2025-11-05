@@ -40,6 +40,30 @@ FAQ_RESPONSES = {
 
 @chatbot_bp.route("/chat", methods=["POST"])
 def chat():
+    """
+    Chatbot FAQ Response
+    ---
+    tags:
+      - Chatbot
+    parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+              example: "How do I find a business?"
+    responses:
+      200:
+        description: Chatbot response
+        schema:
+          type: object
+          properties:
+            reply:
+              type: string
+    """
     data = request.json
     user_msg = data.get("message", "").lower()
     

@@ -37,6 +37,35 @@ def fetch_dataset(dataset_id, limit=10, filters=None):
 # ------------------------
 @external_bp.route("/maps/geocode", methods=["GET"])
 def geocode_address():
+    """
+    Geocode Address to Coordinates
+    ---
+    tags:
+      - External APIs
+    parameters:
+      - name: address
+        in: query
+        type: string
+        required: true
+        description: Address to geocode
+        example: "1 Raffles Place, Singapore"
+    responses:
+      200:
+        description: Geocoded coordinates
+        schema:
+          type: object
+          properties:
+            lat:
+              type: number
+            lng:
+              type: number
+      400:
+        description: Address parameter required
+      404:
+        description: No results found
+      500:
+        description: External API error
+    """
     address = request.args.get("address")
     if not address:
         return jsonify({"error": "address param required"}), 400
@@ -79,6 +108,41 @@ def haversine(lat1, lon1, lat2, lon2):
 
 @external_bp.route("/govsg/ura-parking-lots", methods=["GET"])
 def get_ura_parking_lots():
+    """
+    Get URA Parking Lots (Singapore)
+    ---
+    tags:
+      - External APIs
+    parameters:
+      - name: lat
+        in: query
+        type: number
+        required: false
+        description: Latitude for proximity search
+      - name: lng
+        in: query
+        type: number
+        required: false
+        description: Longitude for proximity search
+      - name: radius
+        in: query
+        type: number
+        required: false
+        default: 1.0
+        description: Search radius in km
+    responses:
+      200:
+        description: List of parking lots
+        schema:
+          type: object
+          properties:
+            type:
+              type: string
+            features:
+              type: array
+      500:
+        description: External API error
+    """
     dataset_id = "d_d959102fa76d58f2de276bfbb7e8f68e"
     poll_url = f"https://api-open.data.gov.sg/v1/public/api/datasets/{dataset_id}/poll-download"
 

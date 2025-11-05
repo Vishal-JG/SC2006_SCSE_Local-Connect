@@ -25,6 +25,36 @@ def verify_token(token):
 # -----------------------------
 @review_bp.route("/services/<int:listing_id>/reviews", methods=["GET"])
 def get_reviews(listing_id):
+    """
+    Get All Reviews for a Service
+    ---
+    tags:
+      - Reviews
+    parameters:
+      - name: listing_id
+        in: path
+        type: integer
+        required: true
+        description: ID of the service
+    responses:
+      200:
+        description: List of reviews
+        schema:
+          type: array
+          items:
+            type: object
+            properties:
+              review_id:
+                type: integer
+              rating:
+                type: number
+              comment:
+                type: string
+              created_at:
+                type: string
+              reviewer:
+                type: string
+    """
     db = get_db()
     print(f"Fetching reviews for listing_id: {listing_id}")
     
@@ -57,6 +87,56 @@ def get_reviews(listing_id):
 
 @review_bp.route("/services/<int:listing_id>/reviews", methods=["POST"])
 def add_review(listing_id):
+    """
+    Add a New Review
+    ---
+    tags:
+      - Reviews
+    security:
+      - Bearer: []
+    parameters:
+      - name: Authorization
+        in: header
+        type: string
+        required: true
+        description: "Firebase JWT token (format: Bearer TOKEN)"
+      - name: listing_id
+        in: path
+        type: integer
+        required: true
+        description: ID of the service to review
+      - name: body
+        in: body
+        required: true
+        schema:
+          type: object
+          properties:
+            booking_id:
+              type: integer
+              example: 1
+            rating:
+              type: number
+              example: 5
+            comment:
+              type: string
+              example: "Great service!"
+    responses:
+      201:
+        description: Review added successfully
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+            review:
+              type: object
+      400:
+        description: Missing required fields or invalid booking
+      401:
+        description: Unauthorized
+      500:
+        description: Server error
+    """
     token = request.headers.get("Authorization", "").replace("Bearer ", "")
     user_id, error_response = verify_token(token)
     if error_response:
@@ -112,6 +192,53 @@ def add_review(listing_id):
 # -----------------------------
 @review_bp.route("/reviews/<int:review_id>", methods=["PUT"])
 def update_review(review_id):
+    """
+    Update a Review
+    ---
+    tags:
+      - Reviews
+    security:
+      - Bearer: []
+    parameters:
+      - name: Authorization
+        in: header
+        type: string
+        required: true
+        description: "Firebase JWT token (format: Bearer TOKEN)"
+      - name: review_id
+        in: path
+        type: integer
+        required: true
+        description: ID of the review to update
+      - name: body
+        in: body
+        required: true
+        schema:
+          type: object
+          properties:
+            rating:
+              type: number
+              example: 4
+            comment:
+              type: string
+              example: "Updated review comment"
+    responses:
+      200:
+        description: Review updated successfully
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+      400:
+        description: Nothing to update
+      401:
+        description: Unauthorized
+      404:
+        description: Review not found
+      500:
+        description: Server error
+    """
     data = request.get_json()
     rating = data.get("rating")
     comment = data.get("comment")
@@ -147,6 +274,37 @@ def update_review(review_id):
 # -----------------------------
 @review_bp.route("/reviews/<int:review_id>", methods=["DELETE"])
 def delete_review(review_id):
+    """
+    Delete a Review
+    ---
+    tags:
+      - Reviews
+    security:
+      - Bearer: []
+    parameters:
+      - name: Authorization
+        in: header
+        type: string
+        required: true
+        description: "Firebase JWT token (format: Bearer TOKEN)"
+      - name: review_id
+        in: path
+        type: integer
+        required: true
+        description: ID of the review to delete
+    responses:
+      200:
+        description: Review deleted successfully
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+      404:
+        description: Review not found
+      401:
+        description: Unauthorized
+    """
     db = get_db()
     result = db.execute("DELETE FROM Reviews WHERE review_id = ?", (review_id,))
     db.commit()
@@ -161,6 +319,26 @@ def delete_review(review_id):
 # -----------------------------
 @review_bp.route("/reviews/averages", methods=["GET"])
 def get_average_ratings():
+    """
+    Get Average Ratings for All Listings
+    ---
+    tags:
+      - Reviews
+    responses:
+      200:
+        description: Average ratings per listing
+        schema:
+          type: array
+          items:
+            type: object
+            properties:
+              listing_id:
+                type: integer
+              avg_rating:
+                type: number
+              review_count:
+                type: integer
+    """
     """
     Returns average rating per listing_id for all listings that have reviews.
     Example response:
