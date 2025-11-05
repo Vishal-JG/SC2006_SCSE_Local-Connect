@@ -1,12 +1,26 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./AdminHomePage.module.css";
-
-// import { getAuth, signOut } from "firebase/auth"; // Uncomment later when Firebase login works
+import { useAuth } from "../../AuthContext"; // adjust path if needed
+import { signOut } from "firebase/auth";
+import { auth } from "../../firebase"; // adjust path to your firebase.js
 
 const AdminHomePage = () => {
   const navigate = useNavigate();
+  const { user, userRole, logout } = useAuth();
 
+  // ------------------------------
+  // Redirect if not authenticated or not admin
+  // ------------------------------
+  useEffect(() => {
+    if (!user || userRole !== "admin") {
+      navigate("/login");
+    }
+  }, [user, userRole, navigate]);
+
+  // ------------------------------
+  // Navigation handlers
+  // ------------------------------
   const onAllReviewsClick = useCallback(
     () => navigate("/AdminUI/AllReviewsPage"),
     [navigate]
@@ -20,17 +34,18 @@ const AdminHomePage = () => {
     [navigate]
   );
 
-  const onLogoutClick = useCallback(() => {
-    // 🚧 TEMP LOGOUT PLACEHOLDER
-    // Later, when Firebase auth is connected:
-    // const auth = getAuth();
-    // signOut(auth)
-    //   .then(() => navigate("/login"))
-    //   .catch((error) => console.error("Logout failed", error));
-
-    alert("You have been logged out (placeholder)");
-    navigate("/login"); // or your landing page
-  }, [navigate]);
+  // ------------------------------
+  // Logout handler
+  // ------------------------------
+  const onLogoutClick = useCallback(async () => {
+    try {
+      await logout(); // clears context & localStorage
+      await signOut(auth); // Firebase sign out
+      navigate("/login");
+    } catch (error) {
+      console.error("Logout failed", error);
+    }
+  }, [logout, navigate]);
 
   return (
     <div className={styles.adminDashboard}>

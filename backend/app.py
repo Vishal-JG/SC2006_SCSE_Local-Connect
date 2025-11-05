@@ -9,6 +9,7 @@ from backend.controllers.chatbot_controller import chatbot_bp
 from backend.controllers.service_controller import service_bp
 from backend.controllers.bookmark_controller import bookmark_bp
 from backend.controllers.booking_controller import booking_bp
+from backend.models.user import User
 from backend.db import get_db
 import os
 
@@ -46,43 +47,125 @@ app.register_blueprint(booking_bp, url_prefix="/api")
 def index():
     return jsonify({'message': 'Flask backend is running!'})
 
-def create_user_if_not_exists(firebase_uid, email, display_name):
+def create_user_if_not_exists(firebase_uid, email, display_name, role='customer', business_name=None, business_description=None):
+    """
+    Ensure a user exists in the DB.
+    - If the email is in ADMIN_EMAILS, assign 'admin' regardless of frontend input.
+    - If the email is in PROVIDER_EMAILS, assign 'provider' regardless of frontend input.
+    - If frontend provides 'provider', create as provider (with business details if any).
+    - Otherwise, default to 'customer'.
+    """
     db = get_db()
-    user = db.execute("SELECT * FROM Users WHERE user_id = ?", (firebase_uid,)).fetchone()
-    if not user:
-        db.execute(
-            "INSERT INTO Users (user_id, email, display_name, role) VALUES (?, ?, ?, ?)",
-            (firebase_uid, email, display_name, 'customer')
-        )
+    existing_user = User.get_by_id(firebase_uid)
+    if existing_user:
+        return existing_user
+
+    # ---------------------------
+    # Admin & Provider whitelist logic
+    # ---------------------------
+    admin_emails = os.getenv("ADMIN_EMAILS", "").split(",")
+    admin_emails = [a.strip().lower() for a in admin_emails if a.strip()]
+
+    provider_emails = os.getenv("PROVIDER_EMAILS", "").split(",")
+    provider_emails = [p.strip().lower() for p in provider_emails if p.strip()]
+
+    email_lower = email.lower()
+
+    try:
+        # Backend-only admin creation
+        if email_lower in admin_emails:
+            print(f"[User Creation] Creating admin user: {email_lower}")
+            user = User.create_admin(
+                email=email,
+                display_name=display_name,
+                user_id=firebase_uid
+            )
+
+        # Backend-only provider creation
+        elif email_lower in provider_emails:
+            print(f"[User Creation] Creating provider user (predefined email): {email_lower}")
+            user = User.create_provider(
+                email=email,
+                display_name=display_name,
+                user_id=firebase_uid,
+                business_name=business_name,
+                business_description=business_description
+            )
+
+        # Frontend-requested provider creation
+        elif role == 'provider':
+            print(f"[User Creation] Creating provider user: {email_lower}")
+            user = User.create_provider(
+                email=email,
+                display_name=display_name,
+                user_id=firebase_uid,
+                business_name=business_name,
+                business_description=business_description
+            )
+
+        # Default: customer
+        else:
+            print(f"[User Creation] Creating customer user: {email_lower}")
+            user = User.create_consumer(
+                email=email,
+                display_name=display_name,
+                user_id=firebase_uid
+            )
+
         db.commit()
-        user = db.execute("SELECT * FROM Users WHERE user_id = ?", (firebase_uid,)).fetchone()
-    return user
+        return user
+
+    except Exception as e:
+        db.rollback()
+        print("[User Creation] Error:", e)
+        return None
+
+
 
 @app.route('/api/login', methods=['POST'])
 def api_login():
     token = request.headers.get('Authorization', '').split('Bearer ')[-1]
     if not token:
         return jsonify({'error': 'Missing Authorization token'}), 401
+
     try:
         decoded_token = auth.verify_id_token(token)
         firebase_uid = decoded_token.get('uid')
         email = decoded_token.get('email')
         display_name = decoded_token.get('name', 'Unnamed User')
+
         if not firebase_uid or not email:
             return jsonify({'error': 'Invalid Firebase token'}), 400
 
-        user = create_user_if_not_exists(firebase_uid, email, display_name)
+        # --- Get optional role/business info from frontend ---
+        data = request.get_json(silent=True) or {}
+        role = data.get('role', 'customer')  # 'customer' by default
+        business_name = data.get('business_name')
+        business_description = data.get('business_description')
+
+        # --- Create or fetch user ---
+        user = create_user_if_not_exists(
+            firebase_uid=firebase_uid,
+            email=email,
+            display_name=display_name,
+            role=role,
+            business_name=business_name,
+            business_description=business_description
+        )
+
         if not user:
             return jsonify({'error': 'Failed to create or find user'}), 500
 
-        # Return successful login response after user creation/fetch
+        # Return successful login response
         return jsonify({
             'success': True,
             'email': email,
-            'display_name': display_name
+            'display_name': display_name,
+            'role': user.role
         }), 200
 
     except Exception as e:
+        print("Login error:", e)
         return jsonify({'success': False, 'error': str(e)}), 401
 
     
@@ -114,33 +197,19 @@ def get_user_profile():
         return jsonify({'error': 'Missing Authorization token'}), 401
 
     try:
-        # Verify Firebase ID token
         decoded_token = auth.verify_id_token(token)
         firebase_uid = decoded_token.get('uid')
-        email = decoded_token.get('email')
 
         if not firebase_uid:
             return jsonify({'error': 'Invalid Firebase token'}), 400
 
-        # Fetch from local DB
-        conn = get_db()
-        cursor = conn.execute(
-            "SELECT email, display_name, role, created_at FROM Users WHERE email = ?", 
-            (email,)
-        )
-        user = cursor.fetchone()
-
+        user = User.get_by_id(firebase_uid)
         if not user:
             return jsonify({'error': 'User not found'}), 404
 
         return jsonify({
             'success': True,
-            'user': {
-                'email': user['email'],
-                'display_name': user['display_name'],
-                'role': user['role'],
-                'created_at': user['created_at']
-            }
+            'user': user.to_dict()
         }), 200
 
     except Exception as e:

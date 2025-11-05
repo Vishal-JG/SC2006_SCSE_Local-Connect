@@ -19,18 +19,21 @@ const ServicesInProgressPage = () => {
       <div className={styles.pageHeader}>
         <BackButton />
         <h2>Services In Progress</h2>
+        <p className={styles.subtitle}>Manage your active bookings</p>
       </div>
 
       {/* Cards */}
       <div className={styles.cardsWrapper}>
         <div className={styles.card} onClick={onAcceptedClick}>
-          <p className={styles.cardTitle}>ACCEPTED</p>
-          <p className={styles.cardTitle}>SERVICES</p>
+          <div className={styles.cardIcon}>✓</div>
+          <h3 className={styles.cardTitle}>ACCEPTED</h3>
+          <p className={styles.cardSubtitle}>View confirmed services</p>
         </div>
 
         <div className={styles.card} onClick={onPendingClick}>
-          <p className={styles.cardTitle}>PENDING</p>
-          <p className={styles.cardTitle}>SERVICES</p>
+          <div className={styles.cardIcon}>⏳</div>
+          <h3 className={styles.cardTitle}>PENDING</h3>
+          <p className={styles.cardSubtitle}>Review booking requests</p>
         </div>
       </div>
     </div>

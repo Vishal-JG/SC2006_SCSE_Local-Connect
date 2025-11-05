@@ -3,7 +3,6 @@ import './Authpage.css';
 import { auth } from '../firebase'; 
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
-import MainUI from "./MainUI/MainUI"
 
 import {
   signInWithEmailAndPassword,
@@ -22,10 +21,10 @@ export default function AuthPage() {
   const [signUpFirstName, setSignUpFirstName] = useState('');
   const [signUpLastName, setSignUpLastName] = useState('');
   const [signUpEmail, setSignUpEmail] = useState('');
-  const [signUpPhone, setSignUpPhone] = useState(''); // NEW: phone state
+  const [signUpPhone, setSignUpPhone] = useState(''); 
   const [signUpPassword, setSignUpPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [signUpRole, setSignUpRole] = useState('consumer'); // role: consumer or provider
+  const [signUpRole, setSignUpRole] = useState('customer'); // 'customer' or 'provider'
 
   // Provider-specific info
   const [businessName, setBusinessName] = useState('');
@@ -35,26 +34,60 @@ export default function AuthPage() {
   const navigate = useNavigate();
   const clearMessage = () => setMessage('');
 
+  // --------------------- LOGIN ---------------------
   const handleLogin = async (e) => {
     e.preventDefault();
     clearMessage();
 
     try {
+      // CLEAR OLD DATA FIRST - prevents stale token/role issues
+      localStorage.clear();
+      
+      // Firebase login
       const userCredential = await signInWithEmailAndPassword(auth, loginEmail, loginPassword);
-      const idToken = await userCredential.user.getIdToken();
+      const idToken = await userCredential.user.getIdToken(true); // Force fresh token
 
-      await axios.post('http://localhost:5000/api/login', {}, {
+      const loginResponse = await axios.post('http://localhost:5000/api/login', {}, {
         headers: { Authorization: `Bearer ${idToken}` }
       });
 
+      if (!loginResponse.data.success) {
+        setMessage(`Error: ${loginResponse.data.error}`);
+        return;
+      }
+
       localStorage.setItem("token", idToken);
-      setMessage(`Login successful! Welcome, ${userCredential.user.email}`);
-      navigate('/service');
+
+      // Step 2: Fetch user profile to get role
+      const profileResponse = await axios.get('http://localhost:5000/api/users/me', {
+        headers: { Authorization: `Bearer ${idToken}` }
+      });
+
+      if (!profileResponse.data.success) {
+        setMessage(`Error fetching user profile: ${profileResponse.data.error}`);
+        return;
+      }
+
+      const userRole = profileResponse.data.user.role;
+      localStorage.setItem("role", userRole);
+
+      // Step 3: Navigate based on role
+      if (userRole === 'admin') {
+        navigate('/admin/dashboard');
+      } else if (userRole === 'provider') {
+        navigate('/ProviderUI/ProviderDashboard');
+      } else {
+        navigate('/service'); // consumer
+      }
+
+      setMessage(`Login successful! Welcome, ${userCredential.user.displayName || loginEmail}`);
     } catch (error) {
       setMessage(`Error: ${error.message}`);
     }
   };
 
+
+  // --------------------- SIGNUP ---------------------
   const handleSignUp = async (e) => {
     e.preventDefault();
     clearMessage();
@@ -77,34 +110,32 @@ export default function AuthPage() {
 
       const idToken = await userCredential.user.getIdToken();
 
-      // Compose user data payload
-      const userData = {
-        uid: userCredential.user.uid,
-        email: signUpEmail,
-        displayName: `${signUpFirstName} ${signUpLastName}`,
-        firstName: signUpFirstName,
-        lastName: signUpLastName,
+      // Compose signup payload for backend
+      const signupData = {
         role: signUpRole,
-        phone: signUpPhone, 
+        phone: signUpPhone,
+        business_name: signUpRole === 'provider' ? businessName : undefined,
+        business_description: signUpRole === 'provider' ? businessDescription : undefined
       };
-  
-      if (signUpRole === 'provider') {
-        userData.businessName = businessName;
-        userData.businessDescription = businessDescription;
-      }
 
-      // Send user info to backend for database storage
-      await axios.post('http://localhost:5000/api/users', userData, {
+      const response = await axios.post('http://localhost:5000/api/login', signupData, {
         headers: { Authorization: `Bearer ${idToken}` }
       });
 
-      setMessage("Account created successfully!");
-      navigate('/MainUI');
+      if (response.data.success) {
+        localStorage.setItem("token", idToken);
+        localStorage.setItem("role", response.data.user?.role || signUpRole);
+        setMessage(`Account created successfully as ${response.data.user?.role || signUpRole}!`);
+        navigate('/MainUI');
+      } else {
+        setMessage(`Error: ${response.data.error}`);
+      }
     } catch (error) {
       setMessage(`Error: ${error.message}`);
     }
   };
 
+  // --------------------- RENDER ---------------------
   return (
     <div className="container">
       <div className="login-alignment">
@@ -132,25 +163,10 @@ export default function AuthPage() {
         {isLogin ? (
           <form onSubmit={handleLogin} className="form">
             <h2>Login</h2>
-
-            <label htmlFor="loginEmail">Email (username):</label>
-            <input
-              type="email"
-              id="loginEmail"
-              value={loginEmail}
-              onChange={(e) => setLoginEmail(e.target.value)}
-              required
-            />
-
+            <label htmlFor="loginEmail">Email:</label>
+            <input type="email" id="loginEmail" value={loginEmail} onChange={(e) => setLoginEmail(e.target.value)} required />
             <label htmlFor="loginPassword">Password:</label>
-            <input
-              type="password"
-              id="loginPassword"
-              value={loginPassword}
-              onChange={(e) => setLoginPassword(e.target.value)}
-              required
-            />
-
+            <input type="password" id="loginPassword" value={loginPassword} onChange={(e) => setLoginPassword(e.target.value)} required />
             <button type="submit">Login</button>
             <p className="message">{message}</p>
           </form>
@@ -159,102 +175,35 @@ export default function AuthPage() {
             <h2>Create Account</h2>
 
             <label>
-              <input
-                type="radio"
-                value="consumer"
-                checked={signUpRole === 'consumer'}
-                onChange={() => setSignUpRole('consumer')}
-              />
-              Consumer
+              <input type="radio" value="customer" checked={signUpRole === 'customer'} onChange={() => setSignUpRole('customer')} />
+              Customer
             </label>
             <label>
-              <input
-                type="radio"
-                value="provider"
-                checked={signUpRole === 'provider'}
-                onChange={() => setSignUpRole('provider')}
-              />
+              <input type="radio" value="provider" checked={signUpRole === 'provider'} onChange={() => setSignUpRole('provider')} />
               Provider
             </label>
 
             <label htmlFor="firstName">First Name:</label>
-            <input
-              type="text"
-              id="firstName"
-              value={signUpFirstName}
-              onChange={(e) => setSignUpFirstName(e.target.value)}
-              required
-            />
-
+            <input type="text" id="firstName" value={signUpFirstName} onChange={(e) => setSignUpFirstName(e.target.value)} required />
             <label htmlFor="lastName">Last Name:</label>
-            <input
-              type="text"
-              id="lastName"
-              value={signUpLastName}
-              onChange={(e) => setSignUpLastName(e.target.value)}
-              required
-            />
-
-            <label htmlFor="signUpEmail">Email (username):</label>
-            <input
-              type="email"
-              id="signUpEmail"
-              value={signUpEmail}
-              onChange={(e) => setSignUpEmail(e.target.value)}
-              required
-            />
-
+            <input type="text" id="lastName" value={signUpLastName} onChange={(e) => setSignUpLastName(e.target.value)} required />
+            <label htmlFor="signUpEmail">Email:</label>
+            <input type="email" id="signUpEmail" value={signUpEmail} onChange={(e) => setSignUpEmail(e.target.value)} required />
             <label htmlFor="signUpPhone">Phone Number:</label>
-            <input
-              type="tel"
-              id="signUpPhone"
-              value={signUpPhone}
-              pattern="^\d{8}$"
-              minLength={8}
-              maxLength={8}
-              inputMode="numeric"
-              onChange={(e) => {
-                const onlyNums = e.target.value.replace(/[^0-9]/g, "");
-                setSignUpPhone(onlyNums);
-              }}
-              required
-            />
-            <label htmlFor="signUpPassword">Password:</label>
-            <input
-              type="password"
-              id="signUpPassword"
-              value={signUpPassword}
-              onChange={(e) => setSignUpPassword(e.target.value)}
-              required
-            />
+            <input type="tel" id="signUpPhone" value={signUpPhone} pattern="^\d{8}$" minLength={8} maxLength={8} inputMode="numeric"
+              onChange={(e) => setSignUpPhone(e.target.value.replace(/[^0-9]/g, ""))} required />
 
+            <label htmlFor="signUpPassword">Password:</label>
+            <input type="password" id="signUpPassword" value={signUpPassword} onChange={(e) => setSignUpPassword(e.target.value)} required />
             <label htmlFor="confirmPassword">Confirm Password:</label>
-            <input
-              type="password"
-              id="confirmPassword"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              required
-            />
+            <input type="password" id="confirmPassword" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required />
 
             {signUpRole === 'provider' && (
               <>
                 <label htmlFor="businessName">Business Name:</label>
-                <input
-                  type="text"
-                  id="businessName"
-                  value={businessName}
-                  onChange={(e) => setBusinessName(e.target.value)}
-                  required
-                />
-
+                <input type="text" id="businessName" value={businessName} onChange={(e) => setBusinessName(e.target.value)} required />
                 <label htmlFor="businessDescription">Business Description:</label>
-                <textarea
-                  id="businessDescription"
-                  value={businessDescription}
-                  onChange={(e) => setBusinessDescription(e.target.value)}
-                  required
-                />
+                <textarea id="businessDescription" value={businessDescription} onChange={(e) => setBusinessDescription(e.target.value)} required />
               </>
             )}
 

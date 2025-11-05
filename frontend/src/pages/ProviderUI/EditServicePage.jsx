@@ -116,8 +116,35 @@ const EditServicePage = () => {
     }
   }, [listing_id, navigate]);
 
-  if (loading) return <div className={styles.page}>Loading service...</div>;
-  if (error) return <div className={styles.page}>{error}</div>;
+  if (loading) {
+    return (
+      <div className={styles.page}>
+        <div className={styles.header}>
+          <BackButton />
+          <h1 className={styles.title}>Edit Service</h1>
+        </div>
+        <div className={styles.loadingState}>
+          <div className={styles.loadingSpinner}>⏳</div>
+          <p>Loading service details...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error && !title) {
+    return (
+      <div className={styles.page}>
+        <div className={styles.header}>
+          <BackButton />
+          <h1 className={styles.title}>Edit Service</h1>
+        </div>
+        <div className={styles.errorState}>
+          <div className={styles.errorIcon}>⚠️</div>
+          <p>{error}</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.page}>
@@ -126,6 +153,20 @@ const EditServicePage = () => {
         <h1 className={styles.title}>Edit Service</h1>
         <p className={styles.subtitle}>Update details for your service</p>
       </div>
+
+      {success && (
+        <div className={styles.successBanner}>
+          <span className={styles.successIcon}>✓</span>
+          {success}
+        </div>
+      )}
+
+      {error && (
+        <div className={styles.errorBanner}>
+          <span className={styles.errorBannerIcon}>⚠️</span>
+          {error}
+        </div>
+      )}
 
       <div className={styles.formContainer}>
         {/* Service Image Display */}
@@ -192,26 +233,23 @@ const EditServicePage = () => {
           />
         </div>
 
-        {/* Feedback */}
-        {error && <p className={styles.error}>{error}</p>}
-        {success && <p className={styles.success}>{success}</p>}
-
-        {/* Save Button */}
-        <button
-          className={styles.addButton}
-          onClick={handleSave}
-          disabled={saving || deleting}
-        >
-          {saving ? "Saving..." : "SAVE CHANGES"}
-        </button>
-        {/* Delete Button */}
-        <button
-          className={styles.deleteButton}
-          onClick={handleDelete}
-          disabled={saving || deleting}
-        >
-          {deleting ? "Deleting..." : "DELETE SERVICE"}
-        </button>
+        {/* Action Buttons */}
+        <div className={styles.buttonGroup}>
+          <button
+            className={styles.saveButton}
+            onClick={handleSave}
+            disabled={saving || deleting}
+          >
+            {saving ? "💾 Saving..." : "💾 SAVE CHANGES"}
+          </button>
+          <button
+            className={styles.deleteButton}
+            onClick={handleDelete}
+            disabled={saving || deleting}
+          >
+            {deleting ? "🗑️ Deleting..." : "🗑️ DELETE SERVICE"}
+          </button>
+        </div>
       </div>
     </div>
   );

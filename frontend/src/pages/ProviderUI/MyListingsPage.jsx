@@ -77,24 +77,48 @@ const MyListingsPage = () => {
       <div className={styles.listingsGrid}>
         {listings.length === 0 && <div>No listings yet.</div>}
 
-        {listings.map((listing) => (
-          <div key={listing.listing_id} className={styles.listingCard}>
-            <img
-              src={listing.image_url || fallbackImg}
-              alt={listing.title || "Service"}
-              className={styles.listingImage}
-            />
-            <div className={styles.listingInfo}>
-              <p className={styles.listingName}>{listing.title || "Untitled Service"}</p>
-              <button
-                className={styles.viewEditButton}
-                onClick={() => onViewEditClick(listing)}
-              >
-                View / Edit
-              </button>
+        {listings.map((listing) => {
+          console.log(`Listing ${listing.listing_id} image_url:`, listing.image_url);
+          return (
+            <div key={listing.listing_id} className={styles.listingCard}>
+              {/* Status Badge */}
+              {listing.status === 'pending' && (
+                <div className={styles.statusBadge}>
+                  ⏳ Pending Admin Approval
+                </div>
+              )}
+              {listing.status === 'approved' && (
+                <div className={`${styles.statusBadge} ${styles.statusApproved}`}>
+                  ✓ Approved
+                </div>
+              )}
+              {listing.status === 'rejected' && (
+                <div className={`${styles.statusBadge} ${styles.statusRejected}`}>
+                  ✗ Rejected
+                </div>
+              )}
+              
+              <img
+                src={listing.image_url || fallbackImg}
+                alt={listing.title || "Service"}
+                className={styles.listingImage}
+                onError={(e) => {
+                  console.error(`Failed to load image for listing ${listing.listing_id}:`, listing.image_url);
+                  e.target.src = fallbackImg;
+                }}
+              />
+              <div className={styles.listingInfo}>
+                <p className={styles.listingName}>{listing.title || "Untitled Service"}</p>
+                <button
+                  className={styles.viewEditButton}
+                  onClick={() => onViewEditClick(listing)}
+                >
+                  View / Edit
+                </button>
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
 
         {/* Add new service card */}
         <div className={styles.addNewServiceCard} onClick={onAddNewServiceClick}>

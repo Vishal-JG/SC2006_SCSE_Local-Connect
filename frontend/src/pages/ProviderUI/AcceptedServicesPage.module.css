@@ -1,126 +1,327 @@
 .acceptedServicesPage {
   width: 100%;
   min-height: 100vh;
-  background-color: #21005d;
+  background: linear-gradient(135deg, #1a0033 0%, #21005d 50%, #2d0070 100%);
   color: #fff;
-  font-family: "Geist", sans-serif;
-  padding-bottom: 2rem;
+  font-family: "Inter", "Geist", sans-serif;
+  padding-bottom: 3rem;
 }
 
 /* Header */
 .pageHeader {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  padding: 1.5rem 2rem;
+  gap: 1.5rem;
+  padding: 2rem 3rem;
+  background: linear-gradient(90deg, rgba(199, 191, 214, 0.1) 0%, rgba(199, 191, 214, 0.05) 100%);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(199, 191, 214, 0.2);
 }
 
 .pageHeader h2 {
-  font-size: 1.6rem;
-  font-weight: 500;
-  color: #fff;
+  font-size: 2rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #ffffff 0%, #c7bfd6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: -0.5px;
 }
 
 /* Listings grid */
 .listingsGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
-  padding: 2rem 5%;
-  justify-items: center;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 2.5rem;
+  padding: 3rem 5%;
+  max-width: 1400px;
+  margin: 0 auto;
 }
 
 /* Card */
 .listingCard {
-  background-color: #c7bfd6;
-  border-radius: 10px;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.95) 0%, rgba(240, 240, 250, 0.95) 100%);
+  border-radius: 20px;
   width: 100%;
-  max-width: 400px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 1rem;
-  padding: 1rem;
+  overflow: hidden;
+  border: 1px solid rgba(199, 191, 214, 0.3);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.listingCard:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 16px 48px rgba(199, 191, 214, 0.4);
+  border-color: rgba(199, 191, 214, 0.6);
 }
 
 .listingImage {
   width: 100%;
-  height: 180px;
+  height: 220px;
   object-fit: cover;
-  border-radius: 10px;
+  transition: transform 0.3s ease;
+}
+
+.listingCard:hover .listingImage {
+  transform: scale(1.05);
 }
 
 .listingInfo {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.5rem;
+  gap: 1rem;
+  padding: 1.5rem;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.95) 100%);
 }
 
 .listingName {
-  font-weight: 500;
+  font-weight: 600;
   font-size: 1.2rem;
   color: #21005d;
   margin: 0;
+  text-align: center;
+  line-height: 1.4;
+  letter-spacing: -0.3px;
 }
 
 /* Button group */
 .buttonGroup {
   display: flex;
-  gap: 0.7rem;
-}
-
-/* Buttons */
-.viewButton,
-.completeButton {
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
-  border: none;
-  cursor: pointer;
-  font-weight: 500;
-  transition: background 0.2s ease;
+  gap: 1rem;
+  width: 100%;
 }
 
 /* View button */
 .viewButton {
-  border: 1px solid #000;
-  border-radius: 8px;
+  flex: 1;
+  padding: 0.7rem 1.2rem;
+  border: 2px solid #21005d;
+  border-radius: 12px;
   background-color: transparent;
+  color: #21005d;
+  font-weight: 600;
+  font-size: 0.9rem;
   cursor: pointer;
-  padding: 8px;
-  font-size: 14px;
-  color: #000;
+  transition: all 0.3s ease;
+  white-space: nowrap;
 }
 
 .viewButton:hover {
-  background-color: #21005d;
+  background: linear-gradient(135deg, #21005d 0%, #4a148c 100%);
   color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(33, 0, 93, 0.3);
 }
 
 /* Complete button */
 .completeButton {
   flex: 1;
-  border: 1px solid #21005d;
-  border-radius: 8px;
-  background-color: #21005d;
+  padding: 0.7rem 1.2rem;
+  border: 2px solid transparent;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #4caf50 0%, #66bb6a 100%);
   color: #fff;
-  font-weight: 500;
+  font-weight: 600;
+  font-size: 0.9rem;
   cursor: pointer;
-  transition: all 0.2s ease-in-out;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
 }
 
 .completeButton:hover {
-  background-color: #1e7e34;
-  border-color: #1c7430;
+  background: linear-gradient(135deg, #388e3c 0%, #4caf50 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
 }
 
-/* Responsive text */
+/* Empty State */
+.emptyState {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  text-align: center;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.1) 0%, rgba(199, 191, 214, 0.15) 100%);
+  border-radius: 24px;
+  border: 2px dashed rgba(199, 191, 214, 0.4);
+  backdrop-filter: blur(10px);
+  min-height: 400px;
+}
+
+.emptyIcon {
+  font-size: 5rem;
+  margin-bottom: 1.5rem;
+  animation: float 3s ease-in-out infinite;
+}
+
+.emptyState h3 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 1rem 0;
+  letter-spacing: -0.5px;
+}
+
+.emptyState p {
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0.5rem 0;
+  max-width: 500px;
+}
+
+.emptySubtext {
+  font-size: 0.95rem !important;
+  color: rgba(255, 255, 255, 0.7) !important;
+  font-style: italic;
+}
+
+/* Loading State */
+.loadingSpinner {
+  font-size: 4rem;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-20px); }
+}
+
+/* Error State */
+.errorState {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  text-align: center;
+  background: linear-gradient(145deg, rgba(244, 67, 54, 0.1) 0%, rgba(244, 67, 54, 0.05) 100%);
+  border-radius: 24px;
+  border: 2px solid rgba(244, 67, 54, 0.3);
+  backdrop-filter: blur(10px);
+  min-height: 400px;
+}
+
+.errorIcon {
+  font-size: 4rem;
+  margin-bottom: 1.5rem;
+}
+
+.errorState p {
+  font-size: 1.2rem;
+  color: #ffffff;
+  margin: 0;
+}
+
+/* Success Banner */
+.successBanner {
+  margin: 2rem 5%;
+  padding: 1.2rem 2rem;
+  background: linear-gradient(135deg, rgba(76, 175, 80, 0.95) 0%, rgba(102, 187, 106, 0.95) 100%);
+  border-radius: 16px;
+  color: #ffffff;
+  font-size: 1.1rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  box-shadow: 0 4px 20px rgba(76, 175, 80, 0.3);
+  animation: slideDown 0.3s ease-out;
+}
+
+.successIcon {
+  font-size: 1.5rem;
+  background: rgba(255, 255, 255, 0.3);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive design */
 @media (max-width: 768px) {
+  .pageHeader {
+    padding: 1.5rem 1.5rem;
+  }
+
   .pageHeader h2 {
-    font-size: 1.3rem;
+    font-size: 1.5rem;
+  }
+
+  .listingsGrid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    padding: 2rem 5%;
+  }
+
+  .listingCard {
+    border-radius: 16px;
+  }
+
+  .listingImage {
+    height: 200px;
   }
 
   .listingName {
+    font-size: 1.1rem;
+  }
+
+  .buttonGroup {
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+
+  .viewButton,
+  .completeButton {
+    padding: 0.6rem 1rem;
+    font-size: 0.85rem;
+  }
+
+  .emptyState {
+    padding: 3rem 1.5rem;
+    min-height: 300px;
+  }
+
+  .emptyIcon {
+    font-size: 4rem;
+  }
+
+  .emptyState h3 {
+    font-size: 1.5rem;
+  }
+
+  .emptyState p {
+    font-size: 1rem;
+  }
+
+  .successBanner {
+    margin: 1.5rem 5%;
+    padding: 1rem 1.5rem;
     font-size: 1rem;
   }
 }

@@ -2,9 +2,9 @@
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  padding: 40px 60px;
-  background-color: #21005d; /* dark purple to match other pages */
-  font-family: "Inter", sans-serif;
+  padding: 0;
+  background: linear-gradient(135deg, #1a0033 0%, #21005d 50%, #2d0070 100%);
+  font-family: "Inter", "Geist", sans-serif;
   color: #fff;
 }
 
@@ -13,20 +13,35 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  margin-bottom: 30px;
+  gap: 0.5rem;
+  padding: 2rem 3rem;
+  background: linear-gradient(90deg, rgba(199, 191, 214, 0.1) 0%, rgba(199, 191, 214, 0.05) 100%);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(199, 191, 214, 0.2);
 }
 
 .title {
-  font-size: 28px;
-  font-weight: 600;
-  color: #fff; /* white for contrast */
-  margin: 10px 0 4px;
+  font-size: 2rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #ffffff 0%, #c7bfd6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: -0.5px;
+  margin: 0;
 }
 
 .subtitle {
-  font-size: 16px;
-  color: #dcdcdc; /* light gray */
-  margin-bottom: 25px;
+  font-size: 1.1rem;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.8);
+  margin: 0;
+}
+
+.formContainer {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 3rem 2rem;
 }
 
 /* Upload Section */
@@ -34,77 +49,151 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  margin-bottom: 25px;
+  margin-bottom: 2.5rem;
 }
 
 .uploadedImage {
-  width: 300px;
-  height: 200px;
+  width: 100%;
+  max-width: 600px;
+  height: 300px;
   border-radius: 16px;
   object-fit: cover;
-  margin-bottom: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  margin-bottom: 1rem;
+  border: 2px solid rgba(199, 191, 214, 0.3);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
 }
 
 .uploadLabel {
-  font-size: 15px;
-  font-weight: 500;
-  color: #fff;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #ffffff;
+  letter-spacing: 0.3px;
 }
 
 /* Input Section */
 .inputContainer {
   display: flex;
   flex-direction: column;
-  margin-bottom: 20px;
-  max-width: 600px;
+  margin-bottom: 2rem;
+  width: 100%;
 }
 
 .inputLabel {
-  font-size: 15px;
-  font-weight: 500;
-  color: #fff;
-  margin-bottom: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 0.8rem;
+  letter-spacing: 0.3px;
 }
 
 .input,
 .textarea {
   width: 100%;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius: 10px;
-  padding: 10px 14px;
-  font-size: 15px;
-  background-color: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(199, 191, 214, 0.3);
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  font-size: 1rem;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.08) 0%, rgba(199, 191, 214, 0.05) 100%);
+  backdrop-filter: blur(10px);
   color: #fff;
+  font-family: "Inter", "Geist", sans-serif;
+  box-sizing: border-box;
 }
 
 .input:read-only,
 .textarea:read-only {
-  cursor: not-allowed;
+  cursor: default;
+  opacity: 0.9;
 }
 
 .textarea {
-  min-height: 120px;
+  min-height: 150px;
   resize: none;
   white-space: pre-wrap;
+  line-height: 1.6;
+}
+
+/* Loading State */
+.loadingState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  text-align: center;
+  min-height: 400px;
+}
+
+.loadingSpinner {
+  font-size: 4rem;
+  animation: spin 2s linear infinite;
+}
+
+.loadingState p {
+  font-size: 1.2rem;
+  color: rgba(255, 255, 255, 0.9);
+  margin-top: 1.5rem;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Error State */
+.errorState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  text-align: center;
+  background: linear-gradient(145deg, rgba(244, 67, 54, 0.1) 0%, rgba(244, 67, 54, 0.05) 100%);
+  border-radius: 24px;
+  border: 2px solid rgba(244, 67, 54, 0.3);
+  backdrop-filter: blur(10px);
+  min-height: 400px;
+  margin: 2rem 3rem;
+}
+
+.errorIcon {
+  font-size: 4rem;
+  margin-bottom: 1.5rem;
+}
+
+.errorState p {
+  font-size: 1.2rem;
+  color: #ffffff;
+  margin: 0;
 }
 
 /* Responsive Layout */
 @media (max-width: 768px) {
-  .page {
-    padding: 25px 20px;
+  .header {
+    padding: 1.5rem 1.5rem;
+  }
+
+  .title {
+    font-size: 1.5rem;
+  }
+
+  .subtitle {
+    font-size: 1rem;
+  }
+
+  .formContainer {
+    padding: 2rem 1.5rem;
   }
 
   .uploadedImage {
     width: 100%;
-    height: 180px;
+    height: 220px;
   }
 
-  .inputContainer {
-    max-width: 100%;
-  }
-
-  .title {
-    font-size: 24px;
+  .loadingState,
+  .errorState {
+    margin: 1.5rem 1.5rem;
+    padding: 3rem 1.5rem;
+    min-height: 300px;
   }
 }

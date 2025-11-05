@@ -13,7 +13,6 @@ const PendingServicesPage = () => {
   const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
 
 
   useEffect(() => {
@@ -57,8 +56,6 @@ const PendingServicesPage = () => {
     if (!confirmed) return;
 
     try {
-      setSuccess("");
-      setError("");
       const user = auth.currentUser;
       if (!user) throw new Error("You must be logged in!");
       const idToken = await getIdToken(user);
@@ -72,10 +69,12 @@ const PendingServicesPage = () => {
 
       // ✅ Remove from state (disappear from list)
       setServices((old) => old.filter((s) => s.booking_id !== service.booking_id));
-      setSuccess(`Accepted "${service.title}" successfully!`);
+      
+      // Show success alert
+      alert(`Accepted "${service.title}" successfully!`);
     } catch (err) {
       console.error(err);
-      setError("Failed to accept service.");
+      alert("Failed to accept service. Please try again.");
     }
   };
 
@@ -88,8 +87,6 @@ const PendingServicesPage = () => {
         <BackButton />
         <h2>Pending Services</h2>
       </div>
-
-      {success && <div style={{ color: "green", marginBottom: 10 }}>{success}</div>}
 
       <div className={styles.servicesGrid}>
         {services.length === 0 && <div>No pending bookings to accept.</div>}

@@ -79,8 +79,35 @@ const AcceptedServicesPage = () => {
     }
   };
 
-  if (loading) return <div className={styles.acceptedServicesPage}>Loading...</div>;
-  if (error) return <div className={styles.acceptedServicesPage}>{error}</div>;
+  if (loading) {
+    return (
+      <div className={styles.acceptedServicesPage}>
+        <div className={styles.pageHeader}>
+          <BackButton />
+          <h2>Accepted Services</h2>
+        </div>
+        <div className={styles.emptyState}>
+          <div className={styles.loadingSpinner}>⏳</div>
+          <p>Loading your accepted services...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className={styles.acceptedServicesPage}>
+        <div className={styles.pageHeader}>
+          <BackButton />
+          <h2>Accepted Services</h2>
+        </div>
+        <div className={styles.errorState}>
+          <div className={styles.errorIcon}>⚠️</div>
+          <p>{error}</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.acceptedServicesPage}>
@@ -89,11 +116,23 @@ const AcceptedServicesPage = () => {
         <h2>Accepted Services</h2>
       </div>
 
-      {success && <div style={{ color: "green", marginBottom: 10 }}>{success}</div>}
+      {success && (
+        <div className={styles.successBanner}>
+          <span className={styles.successIcon}>✓</span>
+          {success}
+        </div>
+      )}
 
       {/* Service cards */}
       <div className={styles.listingsGrid}>
-        {services.length === 0 && <div>No accepted/in-progress services right now.</div>}
+        {services.length === 0 ? (
+          <div className={styles.emptyState}>
+            <div className={styles.emptyIcon}>📭</div>
+            <h3>No Active Services</h3>
+            <p>You don't have any accepted or in-progress services right now.</p>
+            <p className={styles.emptySubtext}>New bookings will appear here once customers accept your services.</p>
+          </div>
+        ) : null}
         {services.map((service) => (
           <div key={service.booking_id} className={styles.listingCard}>
             <img
