@@ -51,9 +51,50 @@ const ViewServicePage = () => {
     }
   }, [listing_id, serviceFromState]);
 
-  if (loading) return <div className={styles.page}>Loading service details...</div>;
-  if (error) return <div className={styles.page}>{error}</div>;
-  if (!service) return <div className={styles.page}>No service data found.</div>;
+  if (loading) {
+    return (
+      <div className={styles.page}>
+        <div className={styles.header}>
+          <BackButton />
+          <h1 className={styles.title}>View Service</h1>
+        </div>
+        <div className={styles.loadingState}>
+          <div className={styles.loadingSpinner}>⏳</div>
+          <p>Loading service details...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className={styles.page}>
+        <div className={styles.header}>
+          <BackButton />
+          <h1 className={styles.title}>View Service</h1>
+        </div>
+        <div className={styles.errorState}>
+          <div className={styles.errorIcon}>⚠️</div>
+          <p>{error}</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!service) {
+    return (
+      <div className={styles.page}>
+        <div className={styles.header}>
+          <BackButton />
+          <h1 className={styles.title}>View Service</h1>
+        </div>
+        <div className={styles.errorState}>
+          <div className={styles.errorIcon}>📋</div>
+          <p>No service data found.</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.page}>
@@ -63,6 +104,7 @@ const ViewServicePage = () => {
         <p className={styles.subtitle}>Service details (view-only)</p>
       </div>
 
+      <div className={styles.formContainer}>
       <div className={styles.uploadContainer}>
         <img
           src={service.image_url || fallbackImg}
@@ -104,6 +146,7 @@ const ViewServicePage = () => {
           readOnly
           className={styles.textarea}
         />
+      </div>
       </div>
     </div>
   );

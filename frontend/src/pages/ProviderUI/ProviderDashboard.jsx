@@ -1,8 +1,8 @@
-import React, { useCallback } from "react";
-import axios from "axios";
+import React, { useCallback, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { auth } from "../../firebase";
 import styles from './ProviderDashboard.module.css';
+import { useAuth } from "../../AuthContext";
 
 // Importing reusable components
 import BackButton from '../../components/BackButton';
@@ -15,20 +15,37 @@ import logoutIcon from '../../assets/ic_round-log-out.svg';
 
 const ProviderDashboard = () => {
   const navigate = useNavigate();
+  const { user, userRole, logout } = useAuth();
 
+  // ------------------------------
+  // Redirect if not authenticated or not a provider
+  // ------------------------------
+  useEffect(() => {
+    if (!user || userRole !== "provider") {
+      navigate("/login");
+    }
+  }, [user, userRole, navigate]);
+
+  // ------------------------------
+  // Navigation handlers
+  // ------------------------------
   const onMyListingsClick = useCallback(() => navigate("/ProviderUI/MyListingsPage"), [navigate]);
   const onAnalyticsClick = useCallback(() => navigate("/ProviderUI/AnalyticsPage"), [navigate]);
   const onServicesClick = useCallback(() => navigate("/ProviderUI/ServicesInProgressPage"), [navigate]);
+
+  // ------------------------------
+  // Logout handler
+  // ------------------------------
   const onLogoutClick = useCallback(async () => {
     try {
-      await auth.signOut(); // End Firebase session
-      localStorage.removeItem("token"); // Optional cleanup
-      navigate("/login"); // Redirect to login
+      await logout(); // clears context & localStorage
+      await auth.signOut(); // Firebase sign out
+      navigate("/login");
     } catch (err) {
       console.error("Logout failed:", err);
       alert("Logout failed. Please try again.");
     }
-  }, [navigate]);
+  }, [logout, navigate]);
 
   return (
     <div className={styles.providerDashboard}>

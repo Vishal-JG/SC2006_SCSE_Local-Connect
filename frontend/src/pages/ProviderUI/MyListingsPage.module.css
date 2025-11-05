@@ -1,126 +1,251 @@
 .myListingsPage {
   width: 100%;
   min-height: 100vh;
-  background-color: #21005d;
+  background: linear-gradient(135deg, #1a0033 0%, #21005d 50%, #2d0070 100%);
   color: #fff;
-  font-family: "Geist", sans-serif;
-  padding-bottom: 2rem;
+  font-family: "Inter", "Geist", sans-serif;
+  padding-bottom: 3rem;
 }
 
 /* Page Header: back button + title */
 .pageHeader {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  padding: 1.5rem 2rem;
+  gap: 1.5rem;
+  padding: 2rem 3rem;
+  background: linear-gradient(90deg, rgba(199, 191, 214, 0.1) 0%, rgba(199, 191, 214, 0.05) 100%);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(199, 191, 214, 0.2);
 }
 
 .pageHeader h2 {
-  font-size: 1.6rem;
-  font-weight: 500;
+  font-size: 2rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #ffffff 0%, #c7bfd6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: -0.5px;
 }
 
 /* Listing cards grid */
 .listingsGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 2rem;
-  padding: 2rem 5%;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 2.5rem;
+  padding: 3rem 5%;
+  max-width: 1400px;
+  margin: 0 auto;
 }
 
 /* Individual listing card */
 .listingCard {
-  background-color: rgba(255, 255, 255, 0.9);
-  border-radius: 10px;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.95) 0%, rgba(240, 240, 250, 0.95) 100%);
+  border-radius: 20px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
   cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  border: 1px solid rgba(199, 191, 214, 0.3);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 }
 
 .listingCard:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 16px 48px rgba(199, 191, 214, 0.4);
+  border-color: rgba(199, 191, 214, 0.6);
+}
+
+/* Status Badge */
+.statusBadge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  background: linear-gradient(135deg, #ff9800 0%, #ffb74d 100%);
+  color: #fff;
+  z-index: 10;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.statusApproved {
+  background: linear-gradient(135deg, #4caf50 0%, #81c784 100%);
+  animation: none;
+}
+
+.statusRejected {
+  background: linear-gradient(135deg, #f44336 0%, #e57373 100%);
+  animation: none;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.85;
+    transform: scale(1.03);
+  }
 }
 
 /* Listing image */
 .listingImage {
   width: 100%;
-  height: 160px;
+  height: 220px;
   object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.listingCard:hover .listingImage {
+  transform: scale(1.05);
 }
 
 /* Info section below image */
 .listingInfo {
-  padding: 1rem;
+  padding: 1.5rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 1rem;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.95) 100%);
 }
 
 /* Listing name */
 .listingName {
-  font-size: 1.1rem;
-  font-weight: 500;
+  font-size: 1.2rem;
+  font-weight: 600;
   color: #21005d;
   margin: 0;
+  flex: 1;
+  line-height: 1.4;
+  letter-spacing: -0.3px;
 }
 
 /* View/Edit button */
 .viewEditButton {
-  padding: 0.4rem 0.8rem;
-  border: 1px solid #21005d;
-  border-radius: 5px;
-  background: transparent;
-  color: #21005d;
-  font-weight: 500;
+  padding: 0.6rem 1.2rem;
+  border: 2px solid transparent;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #21005d 0%, #4a148c 100%);
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.9rem;
   cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  box-shadow: 0 4px 12px rgba(33, 0, 93, 0.3);
 }
 
 .viewEditButton:hover {
-  background-color: #c7bfd6;
-  color: #21005d;
+  background: linear-gradient(135deg, #4a148c 0%, #6a1b9a 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(33, 0, 93, 0.4);
 }
 
 /* Add new service card */
 .addNewServiceCard {
-  background-color: #c7bfd6;
-  border-radius: 10px;
+  background: linear-gradient(135deg, rgba(199, 191, 214, 0.3) 0%, rgba(199, 191, 214, 0.15) 100%);
+  border-radius: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  height: 160px;
+  gap: 1rem;
+  min-height: 300px;
   cursor: pointer;
-  transition: transform 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 2px dashed rgba(199, 191, 214, 0.5);
+  backdrop-filter: blur(10px);
+  position: relative;
+  overflow: hidden;
+}
+
+.addNewServiceCard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(199, 191, 214, 0.1) 0%, transparent 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.addNewServiceCard:hover::before {
+  opacity: 1;
 }
 
 .addNewServiceCard:hover {
-  transform: translateY(-5px);
-  background-color: #b6a9c8;
+  transform: translateY(-8px) scale(1.02);
+  border-color: rgba(199, 191, 214, 0.8);
+  background: linear-gradient(135deg, rgba(199, 191, 214, 0.4) 0%, rgba(199, 191, 214, 0.25) 100%);
+  box-shadow: 0 16px 48px rgba(199, 191, 214, 0.3);
 }
 
 .addNewServiceCard img {
-  width: 35px;
-  height: 35px;
+  width: 48px;
+  height: 48px;
+  filter: brightness(0) invert(1);
+  opacity: 0.9;
+  transition: all 0.3s ease;
+}
+
+.addNewServiceCard:hover img {
+  transform: scale(1.1) rotate(90deg);
+  opacity: 1;
 }
 
 .addNewServiceCard p {
-  font-size: 1.1rem;
-  font-weight: 500;
+  font-size: 1.2rem;
+  font-weight: 600;
   margin: 0;
-  color: #21005d;
+  color: #ffffff;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  letter-spacing: 0.3px;
 }
 
 /* Responsive tweaks */
 @media (max-width: 768px) {
+  .pageHeader {
+    padding: 1.5rem 1.5rem;
+  }
+  
   .pageHeader h2 {
-    font-size: 1.3rem;
+    font-size: 1.5rem;
   }
 
-  .listingName, .addNewServiceCard p {
-    font-size: 1rem;
+  .listingsGrid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    padding: 2rem 5%;
+  }
+
+  .listingCard {
+    border-radius: 16px;
+  }
+
+  .listingImage {
+    height: 200px;
+  }
+
+  .listingName {
+    font-size: 1.1rem;
+  }
+  
+  .addNewServiceCard p {
+    font-size: 1.1rem;
+  }
+
+  .viewEditButton {
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
   }
 }

@@ -53,6 +53,10 @@ def provider_add_service():
     price = data.get('price')
     description = data.get('description')
     category_id = data.get('category_id')
+    image_url = data.get('image_url')
+    location = data.get('location')
+    latitude = data.get('latitude')
+    longitude = data.get('longitude')
     
     if not title or price is None:
         return jsonify({'error': 'title and price are required'}), 400
@@ -64,6 +68,10 @@ def provider_add_service():
             price=price,
             description=description,
             category_id=category_id,
+            image_url=image_url,
+            location=location,
+            latitude=latitude,
+            longitude=longitude,
             status='pending'  # New services start as pending
         )
         return jsonify({'message': 'Service created', 'service': service.to_dict()}), 201

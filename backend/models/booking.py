@@ -164,22 +164,32 @@ class Booking:
     @staticmethod
     def get_by_provider(provider_id, status=None):
         """
-        Get all bookings for services offered by a specific provider.
+        Get all bookings for services offered by a specific provider WITH service details.
         
         Args:
             provider_id: ID of the provider
             status: Optional status filter
             
         Returns:
-            list[Booking]: List of booking objects
+            list[dict]: List of booking dictionaries with service details (title, image_url, etc.)
         """
         db = get_db()
         
         if status:
             rows = db.execute(
                 """
-                SELECT b.* FROM Bookings b
+                SELECT 
+                    b.*,
+                    l.title,
+                    l.description as service_description,
+                    l.price,
+                    l.image_url,
+                    l.category_id,
+                    u.display_name as customer_name,
+                    u.email as customer_email
+                FROM Bookings b
                 JOIN Listings l ON b.listing_id = l.listing_id
+                LEFT JOIN Users u ON b.user_id = u.user_id
                 WHERE l.provider_id = ? AND b.status = ?
                 ORDER BY b.booking_date DESC
                 """,
@@ -188,15 +198,26 @@ class Booking:
         else:
             rows = db.execute(
                 """
-                SELECT b.* FROM Bookings b
+                SELECT 
+                    b.*,
+                    l.title,
+                    l.description as service_description,
+                    l.price,
+                    l.image_url,
+                    l.category_id,
+                    u.display_name as customer_name,
+                    u.email as customer_email
+                FROM Bookings b
                 JOIN Listings l ON b.listing_id = l.listing_id
+                LEFT JOIN Users u ON b.user_id = u.user_id
                 WHERE l.provider_id = ?
                 ORDER BY b.booking_date DESC
                 """,
                 (provider_id,)
             ).fetchall()
             
-        return [Booking.from_row(row) for row in rows]
+        # Return as dictionaries with all joined data
+        return [dict(row) for row in rows]
     
     @staticmethod
     def get_with_details(booking_id):

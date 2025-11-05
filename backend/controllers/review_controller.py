@@ -26,15 +26,28 @@ def verify_token(token):
 @review_bp.route("/services/<int:listing_id>/reviews", methods=["GET"])
 def get_reviews(listing_id):
     db = get_db()
-    print("Current config keys:", current_app.config.keys())
+    print(f"Fetching reviews for listing_id: {listing_id}")
+    
+    # First check if reviews exist for this listing
+    all_reviews = db.execute("""
+        SELECT * FROM Reviews WHERE listing_id = ?
+    """, (listing_id,)).fetchall()
+    print(f"Found {len(all_reviews)} reviews in Reviews table for listing {listing_id}")
+    
+    # Now try with JOIN
     reviews = db.execute("""
         SELECT r.review_id, r.rating, r.comment, r.created_at, u.display_name AS reviewer
         FROM Reviews r
-        JOIN Users u ON r.user_id = u.user_id
+        LEFT JOIN Users u ON r.user_id = u.user_id
         WHERE r.listing_id = ?
         ORDER BY r.created_at DESC
     """, (listing_id,)).fetchall()
-    return jsonify([dict(r) for r in reviews]), 200
+    
+    print(f"After JOIN, found {len(reviews)} reviews")
+    result = [dict(r) for r in reviews]
+    print(f"Returning: {result}")
+    
+    return jsonify(result), 200
 
 
 # -----------------------------

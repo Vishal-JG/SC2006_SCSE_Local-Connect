@@ -143,7 +143,7 @@ def get_user_bookings():
         
         if role == 'provider':
             # Get provider_id first
-            from models.provider import Provider
+            from backend.models.provider import Provider
             provider = Provider.get_by_user_id(user_id)
             
             if not provider:
@@ -152,14 +152,16 @@ def get_user_bookings():
                     'error': 'User is not a service provider'
                 }), 403
                 
+            # get_by_provider now returns dicts with service details
             bookings = Booking.get_by_provider(provider.provider_id, status)
         else:
-            # Default to customer role
+            # Default to customer role - returns Booking objects
             bookings = Booking.get_by_user(user_id, status)
+            bookings = [booking.to_dict() for booking in bookings]
             
         return jsonify({
             'success': True,
-            'bookings': [booking.to_dict() for booking in bookings]
+            'bookings': bookings  # Already dicts for provider, converted for customer
         }), 200
         
     except Exception as e:
@@ -205,7 +207,7 @@ def get_booking_details(booking_id):
             
         # Check authorization (must be either the customer or the service provider)
         # Get the provider's user_id from the booking details
-        from models.provider import Provider
+        from backend.models.provider import Provider
         provider = Provider.get_by_listing_id(booking_details['listing_id'])
         
         if not provider or (booking_details['user_id'] != user_id and provider.user_id != user_id):
@@ -276,9 +278,22 @@ def update_booking_status(booking_id):
                 'error': 'Booking not found'
             }), 404
             
-        # Get provider information for the booking
-        from models.provider import Provider
-        provider = Provider.get_by_listing_id(booking.listing_id)
+        # Check authorization - need to determine if user is the provider for this booking's listing
+        from backend.models.provider import Provider
+        from backend.models.service import Service
+        from backend.db import get_db
+        
+        # Get listing to find its provider_id
+        listing = Service.get_by_id(booking.listing_id)
+        if not listing:
+            return jsonify({
+                'success': False,
+                'error': 'Associated service not found'
+            }), 404
+        
+        # Get provider profile for current user
+        provider = Provider.get_by_user_id(user_id)
+        is_provider_for_this_listing = (provider and provider.provider_id == listing.provider_id)
         
         # Authorization rules:
         # 1. Customers can only cancel their own bookings
@@ -291,7 +306,7 @@ def update_booking_status(booking_id):
                     'error': 'Customers can only cancel bookings'
                 }), 403
                 
-        elif provider and provider.user_id == user_id:
+        elif is_provider_for_this_listing:
             # Provider can confirm, cancel, or complete
             if new_status not in [Booking.STATUS_CONFIRMED, Booking.STATUS_CANCELLED, Booking.STATUS_COMPLETED]:
                 return jsonify({

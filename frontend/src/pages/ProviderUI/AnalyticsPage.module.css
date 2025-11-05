@@ -1,101 +1,228 @@
 .analyticsPage {
-  width: 100%;
-  min-height: 100vh;
-  background-color: #21005d;
+  padding: 2rem;
+  background-color: #0f0c1d;
   color: #fff;
-  font-family: "Geist", sans-serif;
-  padding-bottom: 2rem; /* remove full 2rem 3% padding */
+  font-family: 'Inter', sans-serif;
+  min-height: 100vh;
 }
 
-/* Header */
+/* Page Header */
 .pageHeader {
   display: flex;
   align-items: center;
   gap: 1rem;
-  padding: 1.5rem 2rem;
+  margin-bottom: 2rem;
 }
 
-.pageHeader h2 {
-  font-size: 1.6rem;
-  font-weight: 500;
+.pageTitle {
+  font-size: 2rem;
+  font-weight: 700;
   color: #fff;
 }
 
-/* Stats cards */
+/* Stats Cards */
 .statsContainer {
-  display: flex;
-  gap: 2rem;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1.5rem;
   margin-bottom: 2rem;
-  padding: 0 2rem; /* add horizontal padding to match page margins */
-  box-sizing: border-box; /* ensure padding doesn’t break layout */
 }
 
 .statCard {
-  background-color: #c7bfd6;
-  color: #21005d;
-  padding: 1.5rem 2rem;
-  border-radius: 10px;
-  min-width: 180px;
-  text-align: center;
-  flex: 1;
+  background: linear-gradient(145deg, #1f0e36, #2c154f);
+  border-radius: 1rem;
+  padding: 1rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.2), 0 10px 20px rgba(0,0,0,0.4);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: default;
+}
+
+.statCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.4), 0 15px 30px rgba(0,0,0,0.5);
+}
+
+.statIcon svg {
+  color: #FFD700;
+}
+
+.statContent {
+  display: flex;
+  flex-direction: column;
 }
 
 .statLabel {
   font-size: 0.9rem;
-  font-weight: 500;
-  margin-bottom: 0.5rem;
+  color: #c7bfd6;
+  margin: 0;
 }
 
 .statValue {
-  font-size: 1.5rem;
+  font-size: 1.6rem;
   font-weight: 600;
+  margin-top: 0.2rem;
 }
 
-/* Completed services list */
+/* Charts */
+.chartsContainer {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.chartCard {
+  background: linear-gradient(145deg, #1f0e36, #2c154f);
+  border-radius: 1rem;
+  padding: 1rem;
+  box-shadow: 0 0 15px rgba(135,206,235,0.2), 0 10px 20px rgba(0,0,0,0.4);
+}
+
+.chartTitle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+  color: #fff;
+}
+
+.chartTitle svg {
+  color: #87CEEB;
+  stroke-width: 2;
+}
+
+.noData {
+  color: #c7bfd6;
+  text-align: center;
+  padding: 2rem 0;
+}
+
+/* Completed Services */
 .completedServicesContainer {
   margin-top: 2rem;
 }
 
-.completedServicesContainer h3 {
-  font-size: 1.4rem;
-  font-weight: 500;
+.sectionTitle {
+  font-size: 1.5rem;
+  font-weight: 600;
   margin-bottom: 1rem;
-  padding: 0 1.2rem;
 }
 
 .completedServicesList {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 1.5rem;
-  padding: 0 2rem; /* same horizontal padding as stats */
-  box-sizing: border-box;
+  gap: 1rem;
 }
 
 .completedServiceCard {
-  background-color: #c7bfd6;
-  border-radius: 10px;
+  background: linear-gradient(145deg, #1f0e36, #2c154f);
+  border-radius: 1rem;
   padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 0 10px rgba(135,206,235,0.2), 0 8px 16px rgba(0,0,0,0.4);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
   cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  color: #21005d; 
+}
+
+.completedServiceCard:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 0 20px rgba(135,206,235,0.4), 0 12px 24px rgba(0,0,0,0.5);
+}
+
+.serviceCardHeader {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.serviceIcon svg {
+  color: #87CEEB;
+}
+
+.serviceInfo {
+  display: flex;
+  flex-direction: column;
 }
 
 .serviceName {
   font-weight: 600;
-  font-size: 1.1rem;
-  margin-bottom: 0.3rem;
-  color: #21005d; 
+  font-size: 1rem;
+  color: #fff;
+  margin: 0;
 }
 
-.customerName {
-  font-size: 0.95rem;
-  margin-bottom: 0.3rem;
-  color: #21005d; 
+.bookingId {
+  font-size: 0.85rem;
+  color: #c7bfd6;
 }
 
-.rating {
-  font-size: 0.9rem;
-  font-weight: 500;
-  color: #21005d;
+.serviceCardFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+  color: #c7bfd6;
+}
+
+.serviceDate {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.serviceRating {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.ratingValue {
+  font-weight: 600;
+  color: #FFD700;
+}
+
+.ratingStar {
+  color: #FFD700;
+}
+
+.reviewCount {
+  color: #c7bfd6;
+  font-size: 0.8rem;
+}
+
+.noServices {
+  text-align: center;
+  padding: 2rem;
+  color: #c7bfd6;
+}
+
+.noServicesSubtext {
+  font-size: 0.85rem;
+  color: #8c82a1;
+  margin-top: 0.5rem;
+}
+
+/* Responsive adjustments */
+@media (min-width: 768px) {
+  .chartsContainer {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.statIcon svg,
+.serviceIcon svg,
+.chartTitle svg {
+  color: #FFD700; /* neon gold for stats and ratings */
+  vertical-align: middle;
+}
+
+.chartTitle svg {
+  color: #87CEEB; /* neon blue for chart icons */
+  stroke-width: 2;
 }

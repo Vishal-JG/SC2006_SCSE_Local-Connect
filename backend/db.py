@@ -149,176 +149,178 @@ def seed_db_command():
     (40, 10, 'Pipe Installation', 'New pipe installation for homes.', 140.00, 'approved', 'https://images.unsplash.com/photo-1501594907352-04cda38ebc29?auto=format&fit=crop&w=400&q=80', 'Tiong Bahru', 1.2869, 103.8287);
     """)
 
-    # Seed Bookings
+    # Seed Bookings - Realistic growth pattern for provider_id 1 (listings 1, 11, 21, 31)
+    # Data spans May-November 2025 with increasing booking volume (business growth)
     db.executescript("""
     INSERT INTO Bookings (listing_id, user_id, booking_date, status) VALUES
-    (1, 'o8D1NE4esoWkurIzw9EuogMnwKI2', '2025-10-21 18:00:00', 'confirmed'),
-    (4, 2, '2025-10-22 09:00:00', 'completed'),
-    (10, 1, '2025-10-22 14:00:00', 'pending');
+    -- MAY 2025 - Starting slow (3 bookings)
+    (1, 'uid2', '2025-05-10 18:00:00', 'completed'),
+    (21, 'uid4', '2025-05-18 08:30:00', 'completed'),
+    (31, 'uid5', '2025-05-28 15:00:00', 'completed'),
+    
+    -- JUNE 2025 - Growing (6 bookings)
+    (1, 'uid4', '2025-06-05 19:00:00', 'completed'),
+    (11, 'uid2', '2025-06-10 19:00:00', 'completed'),
+    (21, 'uid6', '2025-06-15 08:00:00', 'completed'),
+    (31, 'uid7', '2025-06-20 15:30:00', 'completed'),
+    (1, 'uid8', '2025-06-25 18:30:00', 'completed'),
+    (11, 'uid9', '2025-06-28 19:30:00', 'completed'),
+    
+    -- JULY 2025 - Steady growth (8 bookings)
+    (1, 'uid5', '2025-07-03 18:00:00', 'completed'),
+    (11, 'uid4', '2025-07-08 19:00:00', 'completed'),
+    (21, 'uid2', '2025-07-12 08:00:00', 'completed'),
+    (21, 'uid10', '2025-07-15 08:30:00', 'completed'),
+    (31, 'uid6', '2025-07-20 15:00:00', 'completed'),
+    (1, 'uid7', '2025-07-23 18:30:00', 'completed'),
+    (11, 'uid8', '2025-07-26 19:30:00', 'completed'),
+    (21, 'uid9', '2025-07-30 08:00:00', 'completed'),
+    
+    -- AUGUST 2025 - Peak season (12 bookings)
+    (1, 'uid2', '2025-08-02 18:00:00', 'completed'),
+    (1, 'uid4', '2025-08-06 19:00:00', 'completed'),
+    (11, 'uid5', '2025-08-10 19:00:00', 'completed'),
+    (21, 'uid6', '2025-08-12 08:30:00', 'completed'),
+    (31, 'uid7', '2025-08-15 15:30:00', 'completed'),
+    (1, 'uid8', '2025-08-18 18:30:00', 'completed'),
+    (11, 'uid9', '2025-08-20 19:30:00', 'completed'),
+    (21, 'uid10', '2025-08-22 08:00:00', 'completed'),
+    (31, 'uid2', '2025-08-25 15:00:00', 'completed'),
+    (1, 'uid4', '2025-08-27 18:00:00', 'completed'),
+    (11, 'uid6', '2025-08-29 19:00:00', 'completed'),
+    (21, 'uid8', '2025-08-31 08:30:00', 'completed'),
+    
+    -- SEPTEMBER 2025 - High demand (14 bookings)
+    (1, 'uid5', '2025-09-02 18:30:00', 'completed'),
+    (11, 'uid7', '2025-09-05 19:30:00', 'completed'),
+    (1, 'uid9', '2025-09-08 18:00:00', 'completed'),
+    (21, 'uid10', '2025-09-10 08:00:00', 'completed'),
+    (31, 'uid2', '2025-09-12 15:30:00', 'completed'),
+    (11, 'uid4', '2025-09-15 19:00:00', 'completed'),
+    (1, 'uid6', '2025-09-18 18:30:00', 'completed'),
+    (21, 'uid8', '2025-09-20 08:30:00', 'completed'),
+    (31, 'uid9', '2025-09-22 15:00:00', 'completed'),
+    (11, 'uid10', '2025-09-24 19:30:00', 'completed'),
+    (1, 'uid2', '2025-09-26 18:00:00', 'completed'),
+    (21, 'uid4', '2025-09-28 08:00:00', 'completed'),
+    (11, 'uid5', '2025-09-29 19:00:00', 'completed'),
+    (31, 'uid7', '2025-09-30 15:30:00', 'completed'),
+    
+    -- OCTOBER 2025 - Sustained high demand (15 bookings)
+    (1, 'uid8', '2025-10-02 18:30:00', 'completed'),
+    (11, 'uid9', '2025-10-04 19:30:00', 'completed'),
+    (21, 'uid10', '2025-10-06 08:00:00', 'completed'),
+    (31, 'uid2', '2025-10-08 15:00:00', 'completed'),
+    (1, 'uid4', '2025-10-10 18:00:00', 'completed'),
+    (11, 'uid6', '2025-10-12 19:00:00', 'completed'),
+    (21, 'uid7', '2025-10-14 08:30:00', 'completed'),
+    (1, 'uid8', '2025-10-16 18:30:00', 'completed'),
+    (31, 'uid9', '2025-10-18 15:30:00', 'completed'),
+    (11, 'uid10', '2025-10-20 19:30:00', 'completed'),
+    (1, 'uid2', '2025-10-22 18:00:00', 'completed'),
+    (21, 'uid4', '2025-10-24 08:00:00', 'completed'),
+    (11, 'uid5', '2025-10-26 19:00:00', 'completed'),
+    (31, 'uid6', '2025-10-28 15:00:00', 'completed'),
+    (1, 'uid7', '2025-10-30 18:30:00', 'completed'),
+    
+    -- NOVEMBER 2025 - Current month (5 bookings so far)
+    (11, 'uid8', '2025-11-01 19:00:00', 'completed'),
+    (21, 'uid9', '2025-11-02 08:30:00', 'completed'),
+    (1, 'uid10', '2025-11-03 18:00:00', 'completed'),
+    (31, 'uid2', '2025-11-04 15:30:00', 'completed'),
+    (11, 'uid4', '2025-11-05 19:30:00', 'completed'),
+    
+    -- Other providers' bookings
+    (2, 'uid2', '2025-10-22 09:00:00', 'completed'),
+    (4, 'uid2', '2025-10-22 09:00:00', 'completed'),
+    (10, 'uid2', '2025-10-22 14:00:00', 'pending');
     """)
 
-    # Seed Reviews
+    # Seed Reviews - Realistic mix of ratings (not all 5 stars)
+    # About 60% 5-star, 25% 4-star, 10% 3-star, 5% 2-star for more realistic data
     db.executescript("""
     INSERT INTO Reviews (booking_id, user_id, listing_id, rating, comment) VALUES
-    -- Listing 1
-    (1, 1, 1, 5, 'Amazing chef experience, highly recommend!'),
-    (2, 2, 1, 4, 'Very good service, delicious food!'),
+    -- MAY 2025 Reviews
+    (1, 'uid2', 1, 5, 'Amazing chef experience, highly recommend!'),
+    (2, 'uid4', 21, 4, 'Good breakfast, arrived on time.'),
+    (3, 'uid5', 31, 5, 'Beautiful custom cake for my event!'),
+    
+    -- JUNE 2025 Reviews
+    (4, 'uid4', 1, 5, 'Outstanding culinary skills, will book again!'),
+    (5, 'uid2', 11, 5, 'Perfect dinner party, everyone loved it!'),
+    (6, 'uid6', 21, 5, 'Best breakfast I ever had!'),
+    (7, 'uid7', 31, 4, 'Nice cake, good presentation.'),
+    (8, 'uid8', 1, 3, 'Good service but arrived a bit late.'),
+    (9, 'uid9', 11, 5, 'Gourmet quality, worth every penny!'),
+    
+    -- JULY 2025 Reviews
+    (10, 'uid5', 1, 4, 'Very good service, delicious food!'),
+    (11, 'uid4', 11, 5, 'Amazing experience for our anniversary!'),
+    (12, 'uid2', 21, 5, 'Fresh and delicious breakfast items!'),
+    (13, 'uid10', 21, 4, 'Started my day well.'),
+    (14, 'uid6', 31, 5, 'The cake was absolutely stunning!'),
+    (15, 'uid7', 1, 5, 'Best private chef in Singapore!'),
+    (16, 'uid8', 11, 4, 'Excellent meal, great presentation.'),
+    (17, 'uid9', 21, 5, 'Amazing quality breakfast!'),
+    
+    -- AUGUST 2025 Reviews (Peak season)
+    (18, 'uid2', 1, 5, 'Absolutely fantastic dining experience!'),
+    (19, 'uid4', 1, 5, 'The meal was perfectly prepared!'),
+    (20, 'uid5', 11, 5, 'Best dining experience ever!'),
+    (21, 'uid6', 21, 4, 'Very tasty breakfast.'),
+    (22, 'uid7', 31, 5, 'Perfect for our celebration!'),
+    (23, 'uid8', 1, 4, 'Great food, professional service.'),
+    (24, 'uid9', 11, 4, 'Wonderful food, highly recommended.'),
+    (25, 'uid10', 21, 5, 'Gourmet breakfast exceeded expectations!'),
+    (26, 'uid2', 31, 5, 'Best custom cake ever!'),
+    (27, 'uid4', 1, 3, 'Food was okay, expected more variety.'),
+    (28, 'uid6', 11, 5, 'Chef Jason is incredible!'),
+    (29, 'uid8', 21, 5, 'Delicious and beautifully presented!'),
+    
+    -- SEPTEMBER 2025 Reviews (High volume)
+    (30, 'uid5', 1, 5, 'Delicious food, exceeded expectations!'),
+    (31, 'uid7', 11, 5, 'Perfect for special occasions!'),
+    (32, 'uid9', 1, 4, 'Great meal, would recommend.'),
+    (33, 'uid10', 21, 4, 'Good breakfast, nice variety.'),
+    (34, 'uid2', 31, 4, 'Beautiful cake, tasted amazing.'),
+    (35, 'uid4', 11, 5, 'Amazing dinner service!'),
+    (36, 'uid6', 1, 5, 'Top-notch chef skills!'),
+    (37, 'uid8', 21, 5, 'Perfect morning start!'),
+    (38, 'uid9', 31, 5, 'Everyone at the party loved it!'),
+    (39, 'uid10', 11, 4, 'Solid dinner experience.'),
+    (40, 'uid2', 1, 5, 'Will definitely book again!'),
+    (41, 'uid4', 21, 3, 'Breakfast was good but a bit cold.'),
+    (42, 'uid5', 11, 5, 'Exceptional quality and taste!'),
+    (43, 'uid7', 31, 5, 'Stunning cake design!'),
+    
+    -- OCTOBER 2025 Reviews (Sustained demand)
+    (44, 'uid8', 1, 4, 'Professional and delicious.'),
+    (45, 'uid9', 11, 5, 'Outstanding dinner party!'),
+    (46, 'uid10', 21, 5, 'Best breakfast service!'),
+    (47, 'uid2', 31, 5, 'Perfect cake for our event!'),
+    (48, 'uid4', 1, 5, 'Incredible culinary experience!'),
+    (49, 'uid6', 11, 5, 'Highly recommend for special events!'),
+    (50, 'uid7', 21, 4, 'Great breakfast options.'),
+    (51, 'uid8', 1, 2, 'Food was good but service was slow.'),
+    (52, 'uid9', 31, 4, 'Nice cake, good taste.'),
+    (53, 'uid10', 11, 5, 'Fantastic dinner experience!'),
+    (54, 'uid2', 1, 5, 'Chef Jason never disappoints!'),
+    (55, 'uid4', 21, 5, 'Delicious gourmet breakfast!'),
+    (56, 'uid5', 11, 4, 'Good quality dinner service.'),
+    (57, 'uid6', 31, 5, 'Amazing custom design!'),
+    (58, 'uid7', 1, 5, 'Five stars all the way!'),
+    
+    -- NOVEMBER 2025 Reviews (Current)
+    (59, 'uid8', 11, 5, 'Excellent dinner as always!'),
+    (60, 'uid9', 21, 4, 'Fresh breakfast, arrived early.'),
+    (61, 'uid10', 1, 5, 'Best chef service in town!'),
+    (62, 'uid2', 31, 5, 'Cake was absolutely perfect!'),
+    (63, 'uid4', 11, 5, 'Outstanding service and food!'),
 
-    -- Listing 2
-    (3, 1, 2, 5, 'Parcel arrived super fast.'),
-    (4, 3, 2, 4, 'Good delivery, but package was slightly late.'),
-
-    -- Listing 3
-    (5, 2, 3, 4, 'Plumber was professional and fixed the leak.'),
-    (6, 4, 3, 5, 'Excellent service, would hire again.'),
-
-    -- Listing 4
-    (7, 1, 4, 5, 'Home cleaning was thorough and quick.'),
-    (8, 3, 4, 4, 'Good cleaning, but missed a few spots.'),
-
-    -- Listing 5
-    (9, 2, 5, 5, 'Mechanic fixed my car efficiently.'),
-    (10, 4, 5, 4, 'Good service, a bit pricey.'),
-
-    -- Listing 6
-    (11, 1, 6, 4, 'Handyman did a great job.'),
-    (12, 3, 6, 5, 'Very satisfied with the repairs.'),
-
-    -- Listing 7
-    (13, 2, 7, 5, 'Salon at home was amazing!'),
-    (14, 4, 7, 4, 'Good hair styling, took a bit long.'),
-
-    -- Listing 8
-    (15, 1, 8, 5, 'Computer repair was quick and effective.'),
-    (16, 3, 8, 4, 'Device works perfectly now.'),
-
-    -- Listing 9
-    (17, 2, 9, 5, 'Tutoring really helped my child improve.'),
-    (18, 4, 9, 4, 'Good explanations, very patient tutor.'),
-
-    -- Listing 10
-    (19, 1, 10, 5, 'Plumber arrived quickly and solved the issue.'),
-    (20, 3, 10, 4, 'Good service, slightly expensive.'),
-
-    -- Listing 11
-    (21, 2, 11, 5, 'Dinner was perfect!'),
-    (22, 4, 11, 4, 'Loved the food, service was good.'),
-
-    -- Listing 12
-    (23, 1, 12, 5, 'Same-day delivery was flawless.'),
-    (24, 3, 12, 4, 'Good speed, package safe.'),
-
-    -- Listing 13
-    (25, 2, 13, 4, 'Drain cleaning took less time than expected.'),
-    (26, 4, 13, 5, 'Very satisfied, highly recommend.'),
-
-    -- Listing 14
-    (27, 1, 14, 5, 'Office cleaning was professional.'),
-    (28, 3, 14, 4, 'Good cleaning, missed a corner.'),
-
-    -- Listing 15
-    (29, 2, 15, 5, 'Battery replaced quickly.'),
-    (30, 4, 15, 4, 'Car is running fine now.'),
-
-    -- Listing 16
-    (31, 1, 16, 4, 'Furniture repaired well.'),
-    (32, 3, 16, 5, 'Excellent workmanship.'),
-
-    -- Listing 17
-    (33, 2, 17, 5, 'Haircut perfect!'),
-    (34, 4, 17, 4, 'Very happy with the styling.'),
-
-    -- Listing 18
-    (35, 1, 18, 4, 'Network setup was smooth.'),
-    (36, 3, 18, 5, 'Internet works perfectly now.'),
-
-    -- Listing 19
-    (37, 2, 19, 5, 'English tutoring helped my child a lot.'),
-    (38, 4, 19, 4, 'Good teaching, patient tutor.'),
-
-    -- Listing 20
-    (39, 1, 20, 5, 'Pipe leak repaired fast.'),
-    (40, 3, 20, 4, 'Great service, affordable price.'),
-
-    -- Listing 21
-    (41, 2, 21, 5, 'Breakfast delivered fresh and on time.'),
-    (42, 4, 21, 4, 'Very tasty breakfast, will order again.'),
-
-    -- Listing 22
-    (43, 1, 22, 5, 'Overnight delivery was perfect.'),
-    (44, 3, 22, 4, 'Parcel arrived safe and on time.'),
-
-    -- Listing 23
-    (45, 2, 23, 4, 'Bathroom plumbing fixed efficiently.'),
-    (46, 4, 23, 5, 'Good service, plumber was friendly.'),
-
-    -- Listing 24
-    (47, 1, 24, 5, 'Carpet cleaned very well.'),
-    (48, 3, 24, 4, 'Nice job, but slight odor remained.'),
-
-    -- Listing 25
-    (49, 2, 25, 5, 'Tires replaced professionally.'),
-    (50, 4, 25, 4, 'Good service, a bit long wait.'),
-
-    -- Listing 26
-    (51, 1, 26, 4, 'Furniture assembled correctly.'),
-    (52, 3, 26, 5, 'Perfect assembly, very satisfied.'),
-
-    -- Listing 27
-    (53, 2, 27, 5, 'Hair treatment worked wonders.'),
-    (54, 4, 27, 4, 'Hair feels soft and healthy.'),
-
-    -- Listing 28
-    (55, 1, 28, 5, 'Laptop repaired quickly.'),
-    (56, 3, 28, 4, 'Good service, fixed my device.'),
-
-    -- Listing 29
-    (57, 2, 29, 5, 'Science tutoring really helped.'),
-    (58, 4, 29, 4, 'Excellent explanations, patient tutor.'),
-
-    -- Listing 30
-    (59, 1, 30, 5, 'Emergency drain cleared fast.'),
-    (60, 3, 30, 4, 'Good work, resolved issue quickly.'),
-
-    -- Listing 31
-    (61, 2, 31, 5, 'Cake arrived fresh and delicious.'),
-    (62, 4, 31, 4, 'Very happy with delivery.'),
-
-    -- Listing 32
-    (63, 1, 32, 5, 'Express courier was excellent.'),
-    (64, 3, 32, 4, 'Package delivered quickly.'),
-
-    -- Listing 33
-    (65, 2, 33, 5, 'Garden plumbing fixed perfectly.'),
-    (66, 4, 33, 4, 'Good service, professional plumber.'),
-
-    -- Listing 34
-    (67, 1, 34, 5, 'Windows are sparkling clean.'),
-    (68, 3, 34, 4, 'Great cleaning, some streaks left.'),
-
-    -- Listing 35
-    (69, 2, 35, 5, 'Car detailing was amazing.'),
-    (70, 4, 35, 4, 'Very thorough cleaning, nice job.'),
-
-    -- Listing 36
-    (71, 1, 36, 5, 'Door repair was quick.'),
-    (72, 3, 36, 4, 'Good service, fixed door perfectly.'),
-
-    -- Listing 37
-    (73, 2, 37, 5, 'Hair coloring turned out great.'),
-    (74, 4, 37, 4, 'Nice job, exactly the color I wanted.'),
-
-    -- Listing 38
-    (75, 1, 38, 5, 'Hardware upgrade boosted performance.'),
-    (76, 3, 38, 4, 'Great improvement, works smoothly.'),
-
-    -- Listing 39
-    (77, 2, 39, 5, 'Language tutoring is excellent.'),
-    (78, 4, 39, 4, 'Very patient and knowledgeable tutor.'),
-
-    -- Listing 40
-    (79, 1, 40, 5, 'Pipe installation was fast and clean.'),
-    (80, 3, 40, 4, 'Good work, pipes installed properly.');
+    -- Other listings (sample reviews for remaining services)
+    (64, 'uid2', 2, 5, 'Parcel arrived super fast.'),
+    (65, 'uid2', 4, 4, 'Good delivery service.'),
+    (66, 'uid2', 4, 5, 'Home cleaning was thorough and quick.');
 
     """)
 
