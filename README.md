@@ -444,7 +444,7 @@ This project was developed as part of the **SC2006 Software Engineering** course
 
 - **Jesmond Tay Soon Xiang** - Frontend Development & API integration
 - **Preesha** - Frontend Development
-- **Team Member 3** - Backend Development
+- **Lee Zheng Jie** - Backend Development
 - **Pham Hung** - Backend Development
 - **Vishal JS** - Backend Development & Database
 
