@@ -3,22 +3,41 @@ from datetime import datetime
 import click
 from flask import current_app, g
 
+from backend.factory.database_factory import DatabaseFactory
+
 
 def get_db():
     if 'db' not in g:
-        print("Connecting to database:", current_app.config['DATABASE'])  
-        g.db = sqlite3.connect(
-            current_app.config['DATABASE'],
-            detect_types=sqlite3.PARSE_DECLTYPES
-        )
-        g.db.row_factory = sqlite3.Row
+        database_path = current_app.config['DATABASE']
+        db_type = current_app.config.get('DB_TYPE', 'sqlite')
+
+        print(f"[Database] Connecting using factory: type={db_type}, path={database_path}")
+
+        db_interface = DatabaseFactory.getDatabase(db_type)
+        db_interface.connect(database_path)
+
+        g._db_interface = db_interface
+        g.db = db_interface.get_connection()
+
     return g.db
 
 
 def close_db(e=None):
-    db = g.pop('db', None)
-    if db is not None:
-        db.close()
+    db_interface = g.pop('_db_interface', None)
+    db_connection = g.pop('db', None)
+
+    if db_interface is not None:
+        try:
+            db_interface.close()
+            db_connection = None  # interface handled closure
+        except Exception as err:
+            print(f"[Database] Error while closing interface: {err}")
+
+    if db_connection is not None:
+        try:
+            db_connection.close()
+        except Exception as err:
+            print(f"[Database] Error while closing connection: {err}")
 
 
 def init_db():

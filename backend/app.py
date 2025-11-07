@@ -28,9 +28,30 @@ cred = credentials.Certificate(key_path)
 firebase_admin.initialize_app(cred)
 
 app = Flask(__name__)
-# ensure instance path and database config exist before initializing DB
+
+# =============================================================================
+# Database Configuration - Factory Pattern Implementation
+# =============================================================================
+# Configure which database type to use. Change 'DB_TYPE' to switch databases.
+# Current: SQLite (file-based, simple, good for development)
+# Future: MongoDB, PostgreSQL, MySQL (just change config!)
+app.config['DB_TYPE'] = os.getenv('DB_TYPE', 'sqlite')  # Default: SQLite
+
+# SQLite Configuration
 app.config['DATABASE'] = os.path.join(app.instance_path, 'localconnectusers.sqlite')
 os.makedirs(app.instance_path, exist_ok=True)
+
+# Future: MongoDB Configuration (uncomment when ready to switch)
+# app.config['MONGO_URI'] = os.getenv('MONGO_URI', 'mongodb://localhost:27017')
+# app.config['MONGO_DB_NAME'] = os.getenv('MONGO_DB_NAME', 'localconnect')
+
+# Future: PostgreSQL Configuration
+# app.config['POSTGRES_HOST'] = os.getenv('POSTGRES_HOST', 'localhost')
+# app.config['POSTGRES_PORT'] = os.getenv('POSTGRES_PORT', 5432)
+# app.config['POSTGRES_DB'] = os.getenv('POSTGRES_DB', 'localconnect')
+# app.config['POSTGRES_USER'] = os.getenv('POSTGRES_USER', 'admin')
+# app.config['POSTGRES_PASSWORD'] = os.getenv('POSTGRES_PASSWORD', 'password')
+# =============================================================================
 
 init_app(app)
 
