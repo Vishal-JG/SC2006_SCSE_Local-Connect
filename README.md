@@ -442,11 +442,11 @@ This project was developed as part of the **SC2006 Software Engineering** course
 
 ### Development Team
 
-- **Team Member 1** - Full Stack Development
-- **Team Member 2** - Frontend Development
+- **Jesmond Tay Soon Xiang** - Frontend Development & API integration
+- **Preesha** - Frontend Development
 - **Team Member 3** - Backend Development
-- **Team Member 4** - Database & API Integration
-- **Team Member 5** - UI/UX Design
+- **Pham Hung** - Backend Development
+- **Vishal JS** - Backend Development & Database
 
 ---
 
