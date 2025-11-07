@@ -1,8 +1,55 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "./LandingPage.css";
 
+const testimonials = [
+  {
+    name: "Sarah Johnson",
+    image: "http://static.photos/people/200x200/1",
+    rating: 5,
+    text: "Found a great plumber within minutes when our pipe burst at midnight. Lifesaver!"
+  },
+  {
+    name: "Michael Chen",
+    image: "http://static.photos/people/200x200/2",
+    rating: 5,
+    text: "Compared prices from 5 electricians and saved 30% on my rewiring job."
+  },
+  {
+    name: "David Rodriguez",
+    image: "http://static.photos/people/200x200/3",
+    rating: 5,
+    text: "The hairdresser I found through LocatorLoom is now my regular stylist. Perfect match!"
+  },
+  {
+    name: "Emily Watson",
+    image: "http://static.photos/people/200x200/4",
+    rating: 5,
+    text: "Amazing platform! Found a reliable cleaning service that exceeded my expectations."
+  },
+  {
+    name: "James Miller",
+    image: "http://static.photos/people/200x200/5",
+    rating: 5,
+    text: "Quick response time and quality service providers. Highly recommended!"
+  }
+];
+
 const LandingPage = () => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentIndex((prevIndex) => (prevIndex + 1) % testimonials.length);
+    }, 2500); // Change testimonial every 2.5 seconds
+
+    return () => clearInterval(interval);
+  }, []);
+
+  const goToSlide = (index) => {
+    setCurrentIndex(index);
+  };
+
   return (
     <main className="landing-root">
       {/* Hero Section */}
@@ -91,43 +138,36 @@ const LandingPage = () => {
         <p className="section-description">
           Don't just take our word for it - hear from our happy customers
         </p>
-        <div className="testimonials-grid">
-          <article className="testimonial-card">
-            <div className="testimonial-profile">
-              <img src="http://static.photos/people/200x200/1" alt="Sarah Johnson" />
-              <div>
-                <h4>Sarah Johnson</h4>
-                <div className="testimonial-stars" aria-label="5 stars rating">
-                  {Array(5).fill(0).map((_, i) => <span key={i}>⭐</span>)}
+        
+        <div className="testimonial-carousel">
+          <div className="testimonial-track" style={{ transform: `translateX(-${currentIndex * 100}%)` }}>
+            {testimonials.map((testimonial, index) => (
+              <article key={index} className="testimonial-card-slide">
+                <div className="testimonial-profile">
+                  <img src={testimonial.image} alt={testimonial.name} />
+                  <div>
+                    <h4>{testimonial.name}</h4>
+                    <div className="testimonial-stars" aria-label={`${testimonial.rating} stars rating`}>
+                      {Array(testimonial.rating).fill(0).map((_, i) => <span key={i}>⭐</span>)}
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
-            <p>"Found a great plumber within minutes when our pipe burst at midnight. Lifesaver!"</p>
-          </article>
-          <article className="testimonial-card">
-            <div className="testimonial-profile">
-              <img src="http://static.photos/people/200x200/2" alt="Michael Chen" />
-              <div>
-                <h4>Michael Chen</h4>
-                <div className="testimonial-stars" aria-label="5 stars rating">
-                  {Array(5).fill(0).map((_, i) => <span key={i}>⭐</span>)}
-                </div>
-              </div>
-            </div>
-            <p>"Compared prices from 5 electricians and saved 30% on my rewiring job."</p>
-          </article>
-          <article className="testimonial-card">
-            <div className="testimonial-profile">
-              <img src="http://static.photos/people/200x200/3" alt="David Rodriguez" />
-              <div>
-                <h4>David Rodriguez</h4>
-                <div className="testimonial-stars" aria-label="5 stars rating">
-                  {Array(5).fill(0).map((_, i) => <span key={i}>⭐</span>)}
-                </div>
-              </div>
-            </div>
-            <p>"The hairdresser I found through LocatorLoom is now my regular stylist. Perfect match!"</p>
-          </article>
+                <p>{testimonial.text}</p>
+              </article>
+            ))}
+          </div>
+          
+          {/* Navigation Dots */}
+          <div className="testimonial-dots">
+            {testimonials.map((_, index) => (
+              <button
+                key={index}
+                className={`dot ${index === currentIndex ? 'active' : ''}`}
+                onClick={() => goToSlide(index)}
+                aria-label={`Go to testimonial ${index + 1}`}
+              />
+            ))}
+          </div>
         </div>
       </section>
     </main>

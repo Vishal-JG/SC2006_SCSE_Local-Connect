@@ -3,27 +3,39 @@
     font-size: 1rem;
     box-sizing: border-box;
     width: 100%;             
-    background: #181A1B;
-    color: #F5F6FA;
-    padding: 18px 0;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    color: #e4e4e7;
+    padding: 0 2.5rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
     font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
     height: 5rem;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .nav-middle{
-    margin-left: 2rem;
-    padding-right: 0;
+    flex: 1;
+    display: flex;
+    justify-content: center;
     margin: 0;
+    padding: 0;
 }
 .nav-left {
     flex-shrink: 0;
     width: 8rem;
-    height: 5rem;
+    height: 4rem;
     cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.nav-left:hover {
+    transform: scale(1.05);
 }
 
 .nav-middle ul,
@@ -31,7 +43,7 @@
     display: flex;
     align-items: center;
     list-style: none;   
-    gap: 28px;
+    gap: 2rem;
     margin: 0;
     padding: 0;
 }
@@ -40,32 +52,72 @@
 .nav-right li {
     cursor: pointer;
     font-weight: 500;
-    transition: color 0.2s, bottom-border-color 2s;
-    padding-bottom: 6px;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    padding: 0.6rem 1.2rem;
+    border-radius: 10px;
+    position: relative;
+    color: #a1a1aa;
 }
 
 .nav-middle li:hover,
-.nav-right li:hover,
+.nav-right li:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateY(-2px);
+}
+
 .nav-middle .active {
-    color: #3B82F6;
-    border-bottom: 2px solid #3B82F6;
+    color: #fff;
+    background: rgba(99, 102, 241, 0.2);
+    box-shadow: 0 0 20px rgba(99, 102, 241, 0.3), inset 0 0 20px rgba(99, 102, 241, 0.1);
+    border: 1px solid rgba(99, 102, 241, 0.3);
+}
+
+.nav-middle .active::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #6366f1, transparent);
+    border-radius: 2px;
 }
 
 .nav-right button {
-    background: transparent;
-    color: #F5F6FA;
-    border: 1px solid #3B82F6;
-    padding: 8px 24px;
-    border-radius: 24px;
-    font-size: 16px;
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    color: #fff;
+    border: none;
+    padding: 0.7rem 2rem;
+    border-radius: 12px;
+    font-size: 0.95rem;
     font-weight: 600;
     cursor: pointer;
-    transition: background 0.2s ease, color 0.2s ease;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+    position: relative;
+    overflow: hidden;
+}
+
+.nav-right button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+.nav-right button:hover::before {
+    left: 100%;
 }
 
 .nav-right button:hover {
-    background: #3B82F6;
-    color: #fff;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(99, 102, 241, 0.6);
 }
 
 .bookmark-icon {
@@ -73,11 +125,56 @@
     position: relative;
     width: 22px;
     height: 22px;
-    filter: invert(90%);
     cursor: pointer;
     display: inline-block;
+    transition: transform 0.3s ease;
 }
+
+.bookmark-icon:hover {
+    transform: scale(1.1);
+}
+
 .login-btn{
-    margin-right: 1rem;
-    margin-bottom: 1rem;
+    margin: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .navbar {
+        padding: 0 1rem;
+    }
+    
+    .nav-middle ul,
+    .nav-right ul {
+        gap: 1rem;
+    }
+    
+    .nav-middle li,
+    .nav-right li {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .navbar {
+        height: auto;
+        flex-wrap: wrap;
+        padding: 1rem;
+    }
+    
+    .nav-middle ul {
+        gap: 0.5rem;
+    }
+    
+    .nav-middle li,
+    .nav-right li {
+        padding: 0.35rem 0.6rem;
+        font-size: 0.85rem;
+    }
+    
+    .nav-right button {
+        padding: 0.5rem 1.25rem;
+        font-size: 0.85rem;
+    }
 }

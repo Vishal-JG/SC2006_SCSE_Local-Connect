@@ -1,5 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { getAuth, updatePassword } from "firebase/auth";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { 
+  faUser, 
+  faEnvelope, 
+  faCamera, 
+  faLock, 
+  faTrashAlt,
+  faTimes,
+  faExclamationTriangle,
+  faCheckCircle
+} from "@fortawesome/free-solid-svg-icons";
 import "./ProfileUI.css";
 import defaultPic from "../../../assets/default-pic.png";
 
@@ -8,6 +19,11 @@ const ProfileUI = () => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState("");
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [passwordError, setPasswordError] = useState("");
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -50,19 +66,46 @@ const ProfileUI = () => {
   };
 
   const handleChangePassword = async () => {
-    const auth = getAuth();
-    const newPassword = prompt("Enter your new password:");
-    if (!newPassword) return;
+    setShowPasswordModal(true);
+  };
+
+  const handlePasswordSubmit = async (e) => {
+    e.preventDefault();
+    setPasswordError("");
+
+    if (!newPassword || !confirmPassword) {
+      setPasswordError("Please fill in all fields");
+      return;
+    }
+
+    if (newPassword.length < 6) {
+      setPasswordError("Password must be at least 6 characters");
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
+      setPasswordError("Passwords do not match");
+      return;
+    }
+
     try {
+      const auth = getAuth();
       await updatePassword(auth.currentUser, newPassword);
-      alert("Password updated successfully!");
+      setMessage("Password updated successfully!");
+      setShowPasswordModal(false);
+      setNewPassword("");
+      setConfirmPassword("");
+      setTimeout(() => setMessage(""), 3000);
     } catch (err) {
-      alert("Error updating password: " + err.message);
+      setPasswordError("Error updating password: " + err.message);
     }
   };
 
   const handleDeleteAccount = async () => {
-    if (!window.confirm("Are you sure you want to delete your account?")) return;
+    setShowDeleteModal(true);
+  };
+
+  const confirmDeleteAccount = async () => {
     try {
       const auth = getAuth();
       const token = await auth.currentUser.getIdToken();
@@ -82,24 +125,38 @@ const ProfileUI = () => {
   if (loading)
     return (
       <div className="profile-container">
-        <p>Loading...</p>
+        <div className="loading-state">
+          <div className="spinner"></div>
+          <p>Loading your profile...</p>
+        </div>
       </div>
     );
-  if (message)
+  if (message && !user)
     return (
       <div className="profile-container">
-        <p className="profile-message">{message}</p>
+        <p className="profile-message error">{message}</p>
       </div>
   );
   if (!user)
     return (
       <div className="profile-container">
-        <p>{message || "No user found."}</p>
+        <p className="profile-message">{message || "No user found."}</p>
       </div>
     );
 
   return (
     <div className="profile-container">
+      {message && (
+        <div className="success-notification">
+          <FontAwesomeIcon icon={faCheckCircle} />
+          {message}
+        </div>
+      )}
+
+      <div className="profile-header">
+        <h1>My Profile</h1>
+      </div>
+
       <div className="profile-card">
         <div className="profile-image-wrapper">
           <img
@@ -108,7 +165,7 @@ const ProfileUI = () => {
             alt="Profile"
           />
           <label htmlFor="upload-photo" className="upload-btn">
-            Upload Photo
+            <FontAwesomeIcon icon={faCamera} />
           </label>
           <input
             type="file"
@@ -119,18 +176,105 @@ const ProfileUI = () => {
           />
         </div>
 
-        <h3 className="profile-name">{user.display_name || user.name}</h3>
-        <p className="profile-email">{user.email}</p>
+        <h2 className="profile-name">{user.display_name || user.name}</h2>
+        <p className="profile-email">
+          <FontAwesomeIcon icon={faEnvelope} className="email-icon" />
+          {user.email}
+        </p>
 
         <div className="profile-actions">
           <button className="btn primary" onClick={handleChangePassword}>
+            <FontAwesomeIcon icon={faLock} />
             Change Password
           </button>
           <button className="btn danger" onClick={handleDeleteAccount}>
+            <FontAwesomeIcon icon={faTrashAlt} />
             Delete Account
           </button>
         </div>
       </div>
+
+      {/* Password Change Modal */}
+      {showPasswordModal && (
+        <div className="modal-overlay" onClick={() => setShowPasswordModal(false)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <button className="modal-close" onClick={() => setShowPasswordModal(false)}>
+              <FontAwesomeIcon icon={faTimes} />
+            </button>
+            <div className="modal-header">
+              <FontAwesomeIcon icon={faLock} className="modal-icon" />
+              <h2>Change Password</h2>
+            </div>
+            <form onSubmit={handlePasswordSubmit}>
+              <div className="form-group">
+                <label htmlFor="new-password">New Password</label>
+                <input
+                  type="password"
+                  id="new-password"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  placeholder="Enter new password"
+                  className="form-input"
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="confirm-password">Confirm Password</label>
+                <input
+                  type="password"
+                  id="confirm-password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  placeholder="Confirm new password"
+                  className="form-input"
+                />
+              </div>
+              {passwordError && (
+                <div className="error-message">
+                  <FontAwesomeIcon icon={faExclamationTriangle} />
+                  {passwordError}
+                </div>
+              )}
+              <div className="modal-actions">
+                <button type="button" className="btn secondary" onClick={() => setShowPasswordModal(false)}>
+                  Cancel
+                </button>
+                <button type="submit" className="btn primary">
+                  Update Password
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Account Modal */}
+      {showDeleteModal && (
+        <div className="modal-overlay" onClick={() => setShowDeleteModal(false)}>
+          <div className="modal-content danger-modal" onClick={(e) => e.stopPropagation()}>
+            <button className="modal-close" onClick={() => setShowDeleteModal(false)}>
+              <FontAwesomeIcon icon={faTimes} />
+            </button>
+            <div className="modal-header">
+              <FontAwesomeIcon icon={faExclamationTriangle} className="modal-icon danger-icon" />
+              <h2>Delete Account</h2>
+            </div>
+            <div className="modal-body">
+              <p className="warning-text">
+                Are you sure you want to delete your account? This action cannot be undone and all your data will be permanently removed.
+              </p>
+            </div>
+            <div className="modal-actions">
+              <button className="btn secondary" onClick={() => setShowDeleteModal(false)}>
+                Cancel
+              </button>
+              <button className="btn danger" onClick={confirmDeleteAccount}>
+                <FontAwesomeIcon icon={faTrashAlt} />
+                Delete Account
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

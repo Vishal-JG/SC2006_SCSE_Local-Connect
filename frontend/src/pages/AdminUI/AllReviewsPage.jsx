@@ -82,7 +82,7 @@ const AllReviewsPage = () => {
   return (
     <div className={styles.allReviews}>
       <div className={styles.header}>
-        <BackButton />
+        <BackButton to="../AdminUI/AdminHomePage"/>
         <h2>All Reviews</h2>
       </div>
 

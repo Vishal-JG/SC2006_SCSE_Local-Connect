@@ -1,10 +1,10 @@
 @import "leaflet/dist/leaflet.css";
 
 html, body {
-    background-image: url("./assets/white-background.jpg");
+    /* background-image: url("./assets/white-background.jpg"); */
     height: 100%;
     width: 100%;
-    background: linear-gradient(135deg, #488cfb 0%, #21c6b7 100%);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;

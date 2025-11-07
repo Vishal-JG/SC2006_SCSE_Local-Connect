@@ -7,6 +7,8 @@ import { auth } from "../../firebase";
 import { getIdToken } from "firebase/auth";
 import { LineChart, Line, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, Cell } from "recharts";
 import { CheckCircle, Star, MessageCircle, BarChart2, Package } from 'lucide-react';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faChartLine, faStar, faComment, faCheckCircle, faBox } from "@fortawesome/free-solid-svg-icons";
 
 const AnalyticsPage = () => {
   const [completedServices, setCompletedServices] = useState([]);
@@ -33,8 +35,8 @@ const AnalyticsPage = () => {
         const ratingsMap = {};
         (ratingsRes.data || []).forEach(item => {
           ratingsMap[item.listing_id] = {
-            avg_rating: item.avg_rating,
-            review_count: item.review_count,
+            avg_rating: parseFloat(item.avg_rating),
+            review_count: parseInt(item.review_count),
           };
         });
         setAverageRatings(ratingsMap);
@@ -76,12 +78,16 @@ const AnalyticsPage = () => {
     return sortedEntries.map(([date, count]) => ({ date, count }));
   })();
 
-  // Rating distribution
+  // Rating distribution - This should show distribution of review counts by star rating
+  // For now we'll show the distribution of average ratings across services
   const ratingData = (() => {
     const dist = { 5:0, 4:0, 3:0, 2:0, 1:0 };
     Object.values(averageRatings).forEach(r => {
-      const rounded = Math.round(r.avg_rating);
-      dist[rounded] = (dist[rounded] || 0) + 1;
+      if (r && r.avg_rating) {
+        const rounded = Math.round(r.avg_rating);
+        // Count each review separately, not just the service
+        dist[rounded] = (dist[rounded] || 0) + (r.review_count || 0);
+      }
     });
     return Object.entries(dist).map(([stars, count]) => ({ stars:`${stars}⭐`, count })).reverse();
   })();
@@ -95,15 +101,17 @@ const AnalyticsPage = () => {
   return (
     <div className={styles.analyticsPage}>
       <div className={styles.pageHeader}>
-        <BackButton />
-        <h2 className={styles.pageTitle}>📊 Analytics Dashboard</h2>
+        <BackButton to="/ProviderUI/ProviderDashboard" />
+        <h2 className={styles.pageTitle}>
+          <FontAwesomeIcon icon={faChartLine} /> Analytics Dashboard
+        </h2>
       </div>
 
       {/* Stats Cards */}
       <div className={styles.statsContainer}>
         <div className={styles.statCard}>
           <div className={styles.statIcon}>
-            <CheckCircle size={36} />
+            <FontAwesomeIcon icon={faCheckCircle} />
           </div>
           <div className={styles.statContent}>
             <p className={styles.statLabel}>Completed Services</p>
@@ -112,7 +120,7 @@ const AnalyticsPage = () => {
         </div>
         <div className={styles.statCard}>
           <div className={styles.statIcon}>
-            <Star size={36} />
+            <FontAwesomeIcon icon={faStar} />
           </div>
           <div className={styles.statContent}>
             <p className={styles.statLabel}>Average Rating</p>
@@ -121,7 +129,7 @@ const AnalyticsPage = () => {
         </div>
         <div className={styles.statCard}>
           <div className={styles.statIcon}>
-            <MessageCircle size={36} />
+            <FontAwesomeIcon icon={faComment} />
           </div>
           <div className={styles.statContent}>
             <p className={styles.statLabel}>Total Reviews</p>
@@ -134,22 +142,39 @@ const AnalyticsPage = () => {
       <div className={styles.chartsContainer}>
         <div className={styles.chartCard}>
           <h3 className={styles.chartTitle}>
-            <BarChart2 size={20} /> Completed Services Trend
+            <FontAwesomeIcon icon={faChartLine} /> Completed Services Trend
           </h3>
           {chartData.length > 0 ? (
             <ResponsiveContainer width="100%" height={300}>
               <AreaChart data={chartData}>
                 <defs>
                   <linearGradient id="colorCount" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#FFD700" stopOpacity={0.6}/>
-                    <stop offset="95%" stopColor="#FFD700" stopOpacity={0}/>
+                    <stop offset="5%" stopColor="#FFD700" stopOpacity={0.8}/>
+                    <stop offset="95%" stopColor="#FFA500" stopOpacity={0.3}/>
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(199,191,214,0.2)" />
-                <XAxis dataKey="date" stroke="#c7bfd6" />
-                <YAxis stroke="#c7bfd6" />
-                <Tooltip contentStyle={{ backgroundColor:'#21005d', border:'1px solid #c7bfd6', borderRadius:'8px', color:'#fff' }} />
-                <Area type="monotone" dataKey="count" stroke="#FFD700" fill="url(#colorCount)" strokeWidth={3} />
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.3)" />
+                <XAxis 
+                  dataKey="date" 
+                  stroke="#ffffff" 
+                  style={{ fontSize: '14px', fontWeight: '700', fill: '#ffffff' }} 
+                />
+                <YAxis 
+                  stroke="#ffffff" 
+                  style={{ fontSize: '14px', fontWeight: '700', fill: '#ffffff' }} 
+                />
+                <Tooltip 
+                  contentStyle={{ 
+                    backgroundColor:'rgba(255, 255, 255, 0.98)', 
+                    border:'2px solid #FFD700', 
+                    borderRadius:'12px', 
+                    color:'#2d3748',
+                    boxShadow: '0 8px 16px rgba(0,0,0,0.3)',
+                    fontWeight: '700',
+                    fontSize: '14px'
+                  }} 
+                />
+                <Area type="monotone" dataKey="count" stroke="#FFD700" fill="url(#colorCount)" strokeWidth={4} />
               </AreaChart>
             </ResponsiveContainer>
           ) : <div className={styles.noData}>No completed services yet</div>}
@@ -157,15 +182,32 @@ const AnalyticsPage = () => {
 
         <div className={styles.chartCard}>
           <h3 className={styles.chartTitle}>
-            <Star size={20} /> Rating Distribution
+            <FontAwesomeIcon icon={faStar} /> Rating Distribution
           </h3>
           {ratingData.some(d => d.count>0) ? (
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={ratingData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(199,191,214,0.2)" />
-                <XAxis dataKey="stars" stroke="#c7bfd6" />
-                <YAxis stroke="#c7bfd6" />
-                <Tooltip contentStyle={{ backgroundColor:'#21005d', border:'1px solid #c7bfd6', borderRadius:'8px', color:'#fff' }} />
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.3)" />
+                <XAxis 
+                  dataKey="stars" 
+                  stroke="#ffffff" 
+                  style={{ fontSize: '14px', fontWeight: '700', fill: '#ffffff' }} 
+                />
+                <YAxis 
+                  stroke="#ffffff" 
+                  style={{ fontSize: '14px', fontWeight: '700', fill: '#ffffff' }} 
+                />
+                <Tooltip 
+                  contentStyle={{ 
+                    backgroundColor:'rgba(255, 255, 255, 0.98)', 
+                    border:'2px solid #FFD700', 
+                    borderRadius:'12px', 
+                    color:'#2d3748',
+                    boxShadow: '0 8px 16px rgba(0,0,0,0.3)',
+                    fontWeight: '700',
+                    fontSize: '14px'
+                  }} 
+                />
                 <Bar dataKey="count" radius={[8,8,0,0]}>
                   {ratingData.map((entry,index)=><Cell key={index} fill={COLORS[index%COLORS.length]} />)}
                 </Bar>
@@ -177,10 +219,13 @@ const AnalyticsPage = () => {
 
       {/* Recent Completed Services */}
       <div className={styles.completedServicesContainer}>
-        <h3 className={styles.sectionTitle}>📋 Recent Completed Services</h3>
+        <h3 className={styles.sectionTitle}>
+          <FontAwesomeIcon icon={faBox} /> Recent Completed Services
+        </h3>
         <div className={styles.completedServicesList}>
           {completedServices.length === 0 ? (
             <div className={styles.noServices}>
+              <FontAwesomeIcon icon={faBox} className={styles.noServicesIcon} />
               <p>No completed services yet.</p>
               <p className={styles.noServicesSubtext}>Complete bookings to populate analytics!</p>
             </div>
@@ -194,7 +239,7 @@ const AnalyticsPage = () => {
                   <div key={service.booking_id} className={styles.completedServiceCard} onClick={()=>onServiceClick(service)}>
                     <div className={styles.serviceCardHeader}>
                       <div className={styles.serviceIcon}>
-                        <Package size={28} />
+                        <FontAwesomeIcon icon={faBox} />
                       </div>
                       <div className={styles.serviceInfo}>
                         <p className={styles.serviceName}>{service.title||"Service"}</p>
@@ -203,9 +248,9 @@ const AnalyticsPage = () => {
                     </div>
                     <div className={styles.serviceCardFooter}>
                       <div className={styles.serviceDate}>📅 {new Date(service.booking_date).toLocaleDateString()}</div>
-                      {rating && (
+                      {rating && rating.avg_rating > 0 && (
                         <div className={styles.serviceRating}>
-                          <span className={styles.ratingValue}>{rating.avg_rating}</span>
+                          <span className={styles.ratingValue}>{rating.avg_rating.toFixed(1)}</span>
                           <span className={styles.ratingStar}>⭐</span>
                           <span className={styles.reviewCount}>({rating.review_count})</span>
                         </div>

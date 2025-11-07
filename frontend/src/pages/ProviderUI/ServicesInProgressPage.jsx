@@ -17,7 +17,7 @@ const ServicesInProgressPage = () => {
   return (
     <div className={styles.servicesInProgressPage}>
       <div className={styles.pageHeader}>
-        <BackButton />
+        <BackButton to="/ProviderUI/ProviderDashboard" />
         <h2>Services In Progress</h2>
         <p className={styles.subtitle}>Manage your active bookings</p>
       </div>

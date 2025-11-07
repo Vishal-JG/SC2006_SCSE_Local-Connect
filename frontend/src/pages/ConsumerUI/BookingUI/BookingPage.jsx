@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { getAuth } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCalendarXmark, faCalendarCheck } from '@fortawesome/free-solid-svg-icons';
 import "./BookingPage.css";
 
 const BookingPage = () => {
+  const navigate = useNavigate();
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState("");
-  const [cancelId, setCancelId] = useState(null); // ID of booking to cancel
+  const [cancelId, setCancelId] = useState(null);
   const [showConfirm, setShowConfirm] = useState(false);
   const [serviceNames, setServiceNames] = useState({});
   const [showSuccess, setShowSuccess] = useState(false);
@@ -107,7 +111,18 @@ const BookingPage = () => {
   if (bookings.length === 0)
     return (
       <div className="booking-container">
-        <div className="booking-message">You have no bookings yet.</div>
+        <h2 className="booking-title">My Bookings</h2>
+        <div className="empty-state">
+          <div className="empty-icon">
+            <FontAwesomeIcon icon={faCalendarXmark} />
+          </div>
+          <h3>No Bookings Yet</h3>
+          <p>You haven't made any bookings. Start exploring services!</p>
+          <button className="browse-btn" onClick={() => navigate('/service')}>
+            <FontAwesomeIcon icon={faCalendarCheck} />
+            Browse Services
+          </button>
+        </div>
       </div>
     );
 

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { getAuth } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBookmark, faDollarSign, faStar, faBoxOpen } from "@fortawesome/free-solid-svg-icons";
 import "./BookmarkUI.css";
 
 const DEFAULT_IMAGE = "https://via.placeholder.com/300x200?text=No+Image";
@@ -94,16 +96,39 @@ const BookmarkUI = () => {
 
   return (
     <div className="bookmark-container">
+      <div className="bookmark-header">
+        <h1>My Bookmarks</h1>
+      </div>
+
       {showNotification && (
         <div className="notification error">
+          <FontAwesomeIcon icon={faStar} className="notification-icon" />
           You must be logged in to view your bookmarks.
         </div>
       )}
 
-      {loading && <div>Loading bookmarks…</div>}
-      {error && <div className="error">Error: {error}</div>}
+      {loading && (
+        <div className="loading-state">
+          <div className="spinner"></div>
+          <p>Loading your bookmarks...</p>
+        </div>
+      )}
+
+      {error && (
+        <div className="error-state">
+          <p>Error: {error}</p>
+        </div>
+      )}
+
       {!loading && !error && bookmarks.length === 0 && (
-        <div>No bookmarks found.</div>
+        <div className="empty-state">
+          <FontAwesomeIcon icon={faBoxOpen} className="empty-icon" />
+          <h2>No Bookmarks Yet</h2>
+          <p>Start exploring services and save your favorites here!</p>
+          <button className="browse-btn" onClick={() => navigate('/service')}>
+            Browse Services
+          </button>
+        </div>
       )}
 
       <div className="bookmark-list">
@@ -118,19 +143,29 @@ const BookmarkUI = () => {
               if (e.key === "Enter" || e.key === " ") handleCardClick(service.id);
             }}
           >
-            <img
-              src={service.image_url}
-              alt={service.name}
-              className="bookmark-image"
-              onError={(e) => {
-                e.target.onerror = null;
-                e.target.src = DEFAULT_IMAGE;
-              }}
-            />
+            <div className="bookmark-image-wrapper">
+              <img
+                src={service.image}
+                alt={service.name}
+                className="bookmark-image"
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = DEFAULT_IMAGE;
+                }}
+              />
+              <div className="bookmark-overlay">
+                <FontAwesomeIcon icon={faBookmark} className="bookmark-icon" />
+              </div>
+            </div>
             <div className="bookmark-details">
               <h3>{service.name}</h3>
-              <p>{service.description}</p>
-              <p className="bookmark-price">{service.price}</p>
+              <p className="bookmark-description">{service.description}</p>
+              <div className="bookmark-footer">
+                <span className="bookmark-price">
+                  <FontAwesomeIcon icon={faDollarSign} />
+                  {service.price}
+                </span>
+              </div>
             </div>
           </div>
         ))}

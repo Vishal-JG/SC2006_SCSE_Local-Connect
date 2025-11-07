@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
-import { FaSearch, FaFilter } from "react-icons/fa";
-import { motion, AnimatePresence } from "framer-motion"; // ✨ smooth animation
+import { FaSearch, FaSortAmountDown, FaDollarSign, FaMapMarkerAlt, FaStar } from "react-icons/fa";
+import { motion, AnimatePresence } from "framer-motion";
 import "./SearchBar.css";
 
 const SearchBar = ({
@@ -77,7 +77,7 @@ const SearchBar = ({
           onClick={() => setShowFilter((prev) => !prev)}
           aria-label="Filter options"
         >
-          <FaFilter />
+          <FaSortAmountDown />
         </button>
 
 
@@ -90,11 +90,15 @@ const SearchBar = ({
               exit={{ opacity: 0, y: -5 }}
               transition={{ duration: 0.2 }}
             >
-              <li onClick={() => handleFilterSelect("price")}>💰 Sort by Price</li>
-              <li onClick={() => handleFilterSelect("location")}>
-                📍 Nearest Location
+              <li onClick={() => handleFilterSelect("price")}>
+                <FaDollarSign /> Sort by Price
               </li>
-              <li onClick={() => handleFilterSelect("rating")}>⭐ Rating</li>
+              <li onClick={() => handleFilterSelect("location")}>
+                <FaMapMarkerAlt /> Nearest Location
+              </li>
+              <li onClick={() => handleFilterSelect("rating")}>
+                <FaStar /> Rating
+              </li>
             </motion.ul>
           )}
         </AnimatePresence>

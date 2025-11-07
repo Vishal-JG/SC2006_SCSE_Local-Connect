@@ -23,14 +23,16 @@ const userIcon = new L.Icon({ iconUrl: user_marker, iconSize: [35, 35]});
 const wasteIcon = new L.Icon({ iconUrl: waste_marker, iconSize: [38, 38] });
 const deliveryIcon  = new L.Icon({ iconUrl: camera_icon, iconSize: [20, 20] });
 
-// Component to handle map recentering
-function RecenterMap({ center }) {
+// Component to handle map recentering and bounds adjustment
+function RecenterMap({ center, bounds }) {
   const map = useMap();
   useEffect(() => {
-    if (center) {
+    if (bounds) {
+      map.fitBounds(bounds, { padding: [50, 50] });
+    } else if (center) {
       map.setView([center.lat, center.lng], 14);
     }
-  }, [center, map]);
+  }, [center, bounds, map]);
   return null;
 }
 
@@ -64,6 +66,8 @@ const MapUI = () => {
   const [enlargedImage, setEnlargedImage] = useState(null);
   
   const [mapCenter, setMapCenter] = useState(null);
+  const [mapBounds, setMapBounds] = useState(null);
+  
   const token = localStorage.getItem("token");
   let userId = null;
 
@@ -278,6 +282,53 @@ const MapUI = () => {
   const handleRecenter = () => {
     if (serviceLocation) {
       setMapCenter({ lat: serviceLocation.lat, lng: serviceLocation.lng });
+      setMapBounds(null);
+    }
+  };
+
+  const handleToggleCarparks = () => {
+    const newShowState = !showCarparks;
+    setShowCarparks(newShowState);
+    
+    if (newShowState && serviceLocation && userCoor) {
+      // Fit map to show both service location and user location
+      const bounds = [
+        [serviceLocation.lat, serviceLocation.lng],
+        [userCoor.lat, userCoor.lng]
+      ];
+      setMapBounds(bounds);
+      setMapCenter(null);
+    }
+  };
+
+  const handleToggleWaste = () => {
+    const newShowState = !showWaste;
+    setShowWaste(newShowState);
+    
+    if (newShowState && serviceLocation && userCoor) {
+      // Fit map to show both service location and user location
+      const bounds = [
+        [serviceLocation.lat, serviceLocation.lng],
+        [userCoor.lat, userCoor.lng]
+      ];
+      setMapBounds(bounds);
+      setMapCenter(null);
+    }
+  };
+
+  const handleToggleDelivery = () => {
+    const newShowState = !showDelivery;
+    setShowDelivery(newShowState);
+    setShowRoute(!showRoute);
+    
+    if (newShowState && serviceLocation && userCoor) {
+      // Fit map to show both service location and user location
+      const bounds = [
+        [serviceLocation.lat, serviceLocation.lng],
+        [userCoor.lat, userCoor.lng]
+      ];
+      setMapBounds(bounds);
+      setMapCenter(null);
     }
   };
 
@@ -297,7 +348,7 @@ const MapUI = () => {
         {showCarparkToggle && (
           <button
             className={`carpark-toggle side ${showCarparks ? "active" : ""}`}
-            onClick={() => setShowCarparks((p) => !p)}
+            onClick={handleToggleCarparks}
           >
             <FaCar /> {showCarparks ? "Hide Carparks" : "Show Nearby Carparks"}
           </button>
@@ -306,7 +357,7 @@ const MapUI = () => {
         {showWasteToggle && (
           <button
             className={`carpark-toggle side ${showWaste ? "active" : ""}`}
-            onClick={() => setShowWaste((p) => !p)}
+            onClick={handleToggleWaste}
           >
             <FaTrashAlt /> {showWaste ? "Hide Waste Collection" : "Show Waste Collection"}
           </button>
@@ -314,8 +365,7 @@ const MapUI = () => {
         {showCameraToggle && (
         <button
           className={`carpark-toggle side ${showDelivery ? "active" : ""}`}
-          onClick={() => {setShowDelivery((p) => !p); setShowRoute((r) => !r);}
-          }
+          onClick={handleToggleDelivery}
         >
           <FaTruck /> {showDelivery ? "Hide Deliveries" : "Show Delivery Points"}
         </button>
@@ -334,7 +384,7 @@ const MapUI = () => {
             zoom={14}
             style={{ height: "500px", width: "100%", borderRadius: "18px" }}
           >
-            <RecenterMap center={mapCenter} />
+            <RecenterMap center={mapCenter} bounds={mapBounds} />
             <TileLayer
               attribution='&copy; <a href="https://osm.org">OpenStreetMap</a> contributors'
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

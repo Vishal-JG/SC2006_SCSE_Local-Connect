@@ -1,6 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import BackButton from "../../components/BackButton";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { 
+  faUser, 
+  faCalendarAlt, 
+  faStar, 
+  faCommentDots, 
+  faTrashAlt,
+  faExclamationTriangle,
+  faCheckCircle
+} from "@fortawesome/free-solid-svg-icons";
 import styles from "./ReviewPage.module.css";
 
 const ReviewPage = () => {
@@ -54,46 +64,86 @@ const ReviewPage = () => {
 
   const handleCancel = () => setShowModal(false);
 
-  if (loading) return <div className={styles.reviewScreen}>Loading...</div>;
-  if (error) return <div className={styles.reviewScreen}>Error: {error}</div>;
+  if (loading) return (
+    <div className={styles.reviewScreen}>
+      <div className={styles.loadingState}>
+        <div className={styles.spinner}></div>
+        <p>Loading review details...</p>
+      </div>
+    </div>
+  );
+  
+  if (error) return (
+    <div className={styles.reviewScreen}>
+      <div className={styles.errorState}>
+        <FontAwesomeIcon icon={faExclamationTriangle} className={styles.errorIcon} />
+        <p>Error: {error}</p>
+      </div>
+    </div>
+  );
 
   return (
     <div className={styles.reviewScreen}>
       <div className={styles.header}>
-        <BackButton />
-        <h2>Review Details</h2>
+        <BackButton to="/AdminUI/AllReviewsPage" />
+        <h2>
+          <FontAwesomeIcon icon={faCommentDots} /> Review Details
+        </h2>
       </div>
 
       <div className={styles.reviewCard}>
         <div className={styles.reviewerInfo}>
-          <p className={styles.name}>{review.reviewer}</p>
-          <p className={styles.date}>Posted on: {review.date || "N/A"}</p>
+          <div className={styles.infoRow}>
+            <FontAwesomeIcon icon={faUser} className={styles.icon} />
+            <p className={styles.name}>{review.reviewer}</p>
+          </div>
+          <div className={styles.infoRow}>
+            <FontAwesomeIcon icon={faCalendarAlt} className={styles.icon} />
+            <p className={styles.date}>{review.date || "N/A"}</p>
+          </div>
         </div>
 
         <div className={styles.reviewContent}>
-          <p className={styles.service}>Service: {review.service}</p>
-          <p className={styles.rating}>⭐ {review.rating} / 5</p>
-          <p className={styles.comment}>“{review.comment}”</p>
+          <div className={styles.serviceSection}>
+            <p className={styles.label}>Service:</p>
+            <p className={styles.service}>{review.service}</p>
+          </div>
+          
+          <div className={styles.ratingSection}>
+            <FontAwesomeIcon icon={faStar} className={styles.starIcon} />
+            <span className={styles.rating}>{review.rating}</span>
+            <span className={styles.ratingMax}>/ 5</span>
+          </div>
+          
+          <div className={styles.commentSection}>
+            <p className={styles.label}>Review Comment:</p>
+            <p className={styles.comment}>"{review.comment}"</p>
+          </div>
         </div>
       </div>
 
       <div className={styles.actions}>
         <button className={styles.deleteBtn} onClick={handleDelete}>
+          <FontAwesomeIcon icon={faTrashAlt} />
           Delete Review
         </button>
       </div>
 
       {showModal && (
-        <div className={styles.modalOverlay}>
-          <div className={styles.modal}>
+        <div className={styles.modalOverlay} onClick={handleCancel}>
+          <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+            <div className={styles.modalIcon}>
+              <FontAwesomeIcon icon={faExclamationTriangle} />
+            </div>
             <h3>Confirm Deletion</h3>
-            <p>Are you sure you want to delete this review?</p>
+            <p>Are you sure you want to delete this review? This action cannot be undone.</p>
             <div className={styles.modalActions}>
               <button className={styles.cancelBtn} onClick={handleCancel}>
                 Cancel
               </button>
               <button className={styles.confirmBtn} onClick={handleConfirm}>
-                Confirm
+                <FontAwesomeIcon icon={faCheckCircle} />
+                Confirm Delete
               </button>
             </div>
           </div>

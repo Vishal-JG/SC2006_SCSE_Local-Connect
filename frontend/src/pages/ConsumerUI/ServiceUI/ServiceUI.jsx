@@ -4,6 +4,33 @@ import arrow from '../../../assets/arrow_back.png'
 import serviceImages from '../../../assets/services';
 import SearchBar from '../../../components/SearchBar';
 import { useNavigate } from "react-router-dom";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { 
+  faUtensils, 
+  faTruckFast, 
+  faBolt, 
+  faBroom, 
+  faWrench, 
+  faScrewdriverWrench, 
+  faScissors, 
+  faLaptop, 
+  faBookOpen, 
+  faFaucet 
+} from '@fortawesome/free-solid-svg-icons';
+
+// Professional Font Awesome icon mapping for each service
+const serviceIconsFA = {
+  'Personal Chef': faUtensils,
+  'Package Delivery': faTruckFast,
+  'Electrician Services': faBolt,
+  'Home Cleaning': faBroom,
+  'Auto Mechanic': faWrench,
+  'Handyman Repairs': faScrewdriverWrench,
+  'Beauty Salon': faScissors,
+  'Tech Support': faLaptop,
+  'Private Tutoring': faBookOpen,
+  'Plumbing Services': faFaucet
+};
 
 const ServiceUI = () => {
   const navigate = useNavigate();
@@ -16,7 +43,10 @@ const ServiceUI = () => {
     <>
       <div className='services-list' id="services-list">
         <div className='top'>
-          <h1>Discover our services</h1>
+          <div className="header-content">
+            <h1>Discover Our Services</h1>
+            <p className="header-subtitle">Find trusted professionals for all your needs</p>
+          </div>
         </div>
         <div className="explore-services-list">
           {serviceImages.map((service, index) => (
@@ -26,8 +56,14 @@ const ServiceUI = () => {
               onClick={() => handleServiceClick(service.name.toLowerCase())}
               style={{ cursor: "pointer" }}
             >
-              <img src={service.src} alt={service.name} />
-              <p>{service.name}</p>
+              <div className="service-icon-wrapper">
+                <FontAwesomeIcon 
+                  icon={serviceIconsFA[service.name]} 
+                  className="service-icon"
+                />
+              </div>
+              <p className="service-name">{service.name}</p>
+              <span className="service-arrow">→</span>
             </div>
           ))}
         </div>

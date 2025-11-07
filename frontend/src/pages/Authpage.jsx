@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './Authpage.css';
+import styles from './Authpage.module.css';
 import { auth } from '../firebase'; 
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
@@ -186,78 +186,202 @@ export default function AuthPage() {
 
   // --------------------- RENDER ---------------------
   return (
-    <div className="container">
-      <div className="login-alignment">
-        <div className="toggle-buttons">
+    <div className={styles.authContainer}>
+      <div className={styles.authCard}>
+        {/* Header */}
+        <div className={styles.authHeader}>
+          <h1 className={styles.logo}>LocalConnect</h1>
+          <p className={styles.tagline}>Connect with local services</p>
+        </div>
+
+        {/* Tab Switcher */}
+        <div className={styles.tabSwitcher}>
           <button
-            className={isLogin ? 'active' : ''}
-            onClick={() => {
-              setIsLogin(true);
-              clearMessage();
-            }}
+            type="button"
+            className={`${styles.tab} ${isLogin ? styles.activeTab : ''}`}
+            onClick={() => setIsLogin(true)}
           >
             Login
           </button>
           <button
-            className={!isLogin ? 'active' : ''}
-            onClick={() => {
-              setIsLogin(false);
-              clearMessage();
-            }}
+            type="button"
+            className={`${styles.tab} ${!isLogin ? styles.activeTab : ''}`}
+            onClick={() => setIsLogin(false)}
           >
             Sign Up
           </button>
         </div>
 
+        {/* Message */}
+        {message ? <div className={styles.message}>{message}</div> : null}
+
+        {/* Forms */}
         {isLogin ? (
-          <form onSubmit={handleLogin} className="form">
-            <h2>Login</h2>
-            <label htmlFor="loginEmail">Email:</label>
-            <input type="email" id="loginEmail" value={loginEmail} onChange={(e) => setLoginEmail(e.target.value)} required />
-            <label htmlFor="loginPassword">Password:</label>
-            <input type="password" id="loginPassword" value={loginPassword} onChange={(e) => setLoginPassword(e.target.value)} required />
-            <button type="submit">Login</button>
-            <p className="message">{message}</p>
+          <form onSubmit={handleLogin} className={styles.form}>
+            <div className={styles.inputGroup}>
+              <label className={styles.label}>Email</label>
+              <input
+                type="email"
+                className={styles.input}
+                placeholder="Enter your email"
+                value={loginEmail}
+                onChange={(e) => setLoginEmail(e.target.value)}
+                required
+              />
+            </div>
+
+            <div className={styles.inputGroup}>
+              <label className={styles.label}>Password</label>
+              <input
+                type="password"
+                className={styles.input}
+                placeholder="Enter your password"
+                value={loginPassword}
+                onChange={(e) => setLoginPassword(e.target.value)}
+                required
+              />
+            </div>
+
+            <button type="submit" className={styles.submitButton}>
+              Login
+            </button>
           </form>
         ) : (
-          <form onSubmit={handleSignUp} className="form">
-            <h2>Create Account</h2>
+          <form onSubmit={handleSignUp} className={styles.form}>
+            <div className={styles.nameRow}>
+              <div className={styles.inputGroup}>
+                <label className={styles.label}>First Name</label>
+                <input
+                  type="text"
+                  className={styles.input}
+                  placeholder="First name"
+                  value={signUpFirstName}
+                  onChange={(e) => setSignUpFirstName(e.target.value)}
+                  required
+                />
+              </div>
+              <div className={styles.inputGroup}>
+                <label className={styles.label}>Last Name</label>
+                <input
+                  type="text"
+                  className={styles.input}
+                  placeholder="Last name"
+                  value={signUpLastName}
+                  onChange={(e) => setSignUpLastName(e.target.value)}
+                  required
+                />
+              </div>
+            </div>
 
-            <label>
-              <input type="radio" value="customer" checked={signUpRole === 'customer'} onChange={() => setSignUpRole('customer')} />
-              Customer
-            </label>
-            <label>
-              <input type="radio" value="provider" checked={signUpRole === 'provider'} onChange={() => setSignUpRole('provider')} />
-              Provider
-            </label>
+            <div className={styles.inputGroup}>
+              <label className={styles.label}>Email</label>
+              <input
+                type="email"
+                className={styles.input}
+                placeholder="Enter your email"
+                value={signUpEmail}
+                onChange={(e) => setSignUpEmail(e.target.value)}
+                required
+              />
+            </div>
 
-            <label htmlFor="firstName">First Name:</label>
-            <input type="text" id="firstName" value={signUpFirstName} onChange={(e) => setSignUpFirstName(e.target.value)} required />
-            <label htmlFor="lastName">Last Name:</label>
-            <input type="text" id="lastName" value={signUpLastName} onChange={(e) => setSignUpLastName(e.target.value)} required />
-            <label htmlFor="signUpEmail">Email:</label>
-            <input type="email" id="signUpEmail" value={signUpEmail} onChange={(e) => setSignUpEmail(e.target.value)} required />
-            <label htmlFor="signUpPhone">Phone Number:</label>
-            <input type="tel" id="signUpPhone" value={signUpPhone} pattern="^\d{8}$" minLength={8} maxLength={8} inputMode="numeric"
-              onChange={(e) => setSignUpPhone(e.target.value.replace(/[^0-9]/g, ""))} required />
+            <div className={styles.inputGroup}>
+              <label className={styles.label}>Phone</label>
+              <input
+                type="tel"
+                className={styles.input}
+                placeholder="Enter your phone number"
+                value={signUpPhone}
+                onChange={(e) => setSignUpPhone(e.target.value)}
+              />
+            </div>
 
-            <label htmlFor="signUpPassword">Password:</label>
-            <input type="password" id="signUpPassword" value={signUpPassword} onChange={(e) => setSignUpPassword(e.target.value)} required />
-            <label htmlFor="confirmPassword">Confirm Password:</label>
-            <input type="password" id="confirmPassword" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required />
+            <div className={styles.inputGroup}>
+              <label className={styles.label}>Password</label>
+              <input
+                type="password"
+                className={styles.input}
+                placeholder="Create a password"
+                value={signUpPassword}
+                onChange={(e) => setSignUpPassword(e.target.value)}
+                required
+              />
+            </div>
 
+            <div className={styles.inputGroup}>
+              <label className={styles.label}>Confirm Password</label>
+              <input
+                type="password"
+                className={styles.input}
+                placeholder="Confirm your password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                required
+              />
+            </div>
+
+            {/* Role Selector (UI only, uses existing signUpRole state) */}
+            <div className={styles.inputGroup}>
+              <label className={styles.label}>I am a...</label>
+              <div className={styles.roleSelector}>
+                <label className={styles.radioLabel}>
+                  <input
+                    type="radio"
+                    name="role"
+                    value="customer"
+                    checked={signUpRole === 'customer'}
+                    onChange={(e) => setSignUpRole(e.target.value)}
+                  />
+                  <span className={styles.radioText}>
+                    <strong>Customer</strong>
+                    <small>Looking for services</small>
+                  </span>
+                </label>
+                <label className={styles.radioLabel}>
+                  <input
+                    type="radio"
+                    name="role"
+                    value="provider"
+                    checked={signUpRole === 'provider'}
+                    onChange={(e) => setSignUpRole(e.target.value)}
+                  />
+                  <span className={styles.radioText}>
+                    <strong>Provider</strong>
+                    <small>Offering services</small>
+                  </span>
+                </label>
+              </div>
+            </div>
+
+            {/* Provider fields (UI only, already conditional on signUpRole) */}
             {signUpRole === 'provider' && (
-              <>
-                <label htmlFor="businessName">Business Name:</label>
-                <input type="text" id="businessName" value={businessName} onChange={(e) => setBusinessName(e.target.value)} required />
-                <label htmlFor="businessDescription">Business Description:</label>
-                <textarea id="businessDescription" value={businessDescription} onChange={(e) => setBusinessDescription(e.target.value)} required />
-              </>
+              <div className={styles.providerFields}>
+                <div className={styles.inputGroup}>
+                  <label className={styles.label}>Business Name</label>
+                  <input
+                    type="text"
+                    className={styles.input}
+                    placeholder="Your business name"
+                    value={businessName}
+                    onChange={(e) => setBusinessName(e.target.value)}
+                  />
+                </div>
+                <div className={styles.inputGroup}>
+                  <label className={styles.label}>Business Description</label>
+                  <textarea
+                    className={styles.textarea}
+                    placeholder="Tell us about your business..."
+                    value={businessDescription}
+                    onChange={(e) => setBusinessDescription(e.target.value)}
+                    rows={3}
+                  />
+                </div>
+              </div>
             )}
 
-            <button type="submit">Create Account</button>
-            <p className="message">{message}</p>
+            <button type="submit" className={styles.submitButton}>
+              Sign Up
+            </button>
           </form>
         )}
       </div>

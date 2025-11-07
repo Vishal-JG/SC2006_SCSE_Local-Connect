@@ -2,8 +2,10 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import BackButton from "../../../components/BackButton";
 import BookmarkButton from "../../../components/Bookmark";
-import { FaMapMarkerAlt, FaStar, FaWhatsapp, FaCalendarAlt } from "react-icons/fa";
-import BookingOverlay from "../BookingUI/BookingOverlay"; // your overlay component
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faStar, faMapMarkerAlt, faCalendarAlt, faRecycle, faDollarSign } from '@fortawesome/free-solid-svg-icons';
+import { faWhatsapp } from '@fortawesome/free-brands-svg-icons';
+import BookingOverlay from "../BookingUI/BookingOverlay";
 import ReviewSection from "../../../components/ReviewSection";
 import "./ServiceDetailPage.css";
 
@@ -105,56 +107,55 @@ const ServiceDetailPage = () => {
         <div className="service-info">
           <h1 className="service-title">{service.title || service.name}</h1>
 
-          {/* Rating */}
-          <div className="rating-row">
-            <FaStar className="star-icon" />
-            <span className="rating-score">{service.avg_rating}</span>
-            <span className="rating-text">/ 5</span>
+          {/* Rating & Price Row */}
+          <div className="info-badges">
+            <div className="rating-badge">
+              <FontAwesomeIcon icon={faStar} />
+              <span>{service.avg_rating} / 5</span>
+            </div>
+            <div className="price-badge">
+              <FontAwesomeIcon icon={faDollarSign} />
+              <span>${service.price || "50 - 60"}</span>
+            </div>
           </div>
 
           {/* Location */}
           {service.location && (
             <div className="location-row">
-              <FaMapMarkerAlt
-                className="location-icon"
-                onClick={() => navigate("/map")}
-                title="View on Map"
-              />
+              <FontAwesomeIcon icon={faMapMarkerAlt} className="location-icon" />
               <span>{service.location}</span>
             </div>
           )}
 
           <p className="service-description">{service.description}</p>
 
-          <p className="service-price">
-            <b>Price:</b> ${service.price || "50 - 60"}
-          </p>
-
           {/* Actions Row */}
-          <div className="actions-row" style={{ flexWrap: "wrap", gap: "12px" }}>
+          <div className="actions-row">
             {/* Home cleaning → Recycling Points */}
             {isHomeCleaning && (
               <button
-                className="action-btn action-btn--secondary recycling-btn"
+                className="action-btn recycling-btn"
                 onClick={() => navigate("map")}
               >
-                ♻️ Show Recycling Points
+                <FontAwesomeIcon icon={faRecycle} />
+                Recycling Points
               </button>
             )}
 
             {/* Other services with location → View on Map */}
             {!isHomeCleaning && service.latitude && service.longitude && (
               <button
-                className="action-btn action-btn--map action-btn--primary location-btn"
+                className="action-btn map-btn"
                 onClick={() => navigate("map")}
               >
-                📍 View on Map
+                <FontAwesomeIcon icon={faMapMarkerAlt} />
+                View on Map
               </button>
             )}
 
             {/* WhatsApp Contact */}
             <button
-              className="action-btn action-btn--whatsapp"
+              className="action-btn whatsapp-btn"
               onClick={() => {
                 const phoneNumber = "+60197123431"; 
                 const message = encodeURIComponent(
@@ -163,16 +164,16 @@ const ServiceDetailPage = () => {
                 window.open(`https://wa.me/${phoneNumber}?text=${message}`, "_blank");
               }}
             >
-              <FaWhatsapp style={{ marginRight: "8px" }} />
-              Contact via WhatsApp
+              <FontAwesomeIcon icon={faWhatsapp} />
+              WhatsApp
             </button>
 
             {/* Book Now */}
             <button
-              className="action-btn action-btn--primary booknow-btn"
+              className="action-btn book-btn"
               onClick={() => setIsBookingOpen(true)}
             >
-              <FaCalendarAlt style={{ marginRight: "8px" }} />
+              <FontAwesomeIcon icon={faCalendarAlt} />
               Book Now
             </button>
           </div>

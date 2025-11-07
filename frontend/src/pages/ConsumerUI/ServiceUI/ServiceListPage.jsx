@@ -3,6 +3,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import "./ServiceListPage.css";
 import SearchBar from "../../../components/SearchBar";
 import BackButton from "../../../components/BackButton";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faStar, faLocationDot, faDollarSign, faArrowRight } from '@fortawesome/free-solid-svg-icons';
 
 const categoryMap = {
   personalchef: 1,
@@ -98,9 +100,8 @@ const ServiceListPage = () => {
   const sortedServices = [...filteredServices].sort((a, b) => {
     if (sortOption === "price") return a.price - b.price;
     if (sortOption === "rating") {
-      const ratingA = Math.floor(Math.random() * 2) + 4;
-      const ratingB = Math.floor(Math.random() * 2) + 4;
-      return ratingB - ratingA;
+      // Sort by actual avg_rating, highest first
+      return parseFloat(b.avg_rating) - parseFloat(a.avg_rating);
     }
     if (sortOption === "location" && userLocation) {
       const distA = calculateDistance(
@@ -173,51 +174,58 @@ const ServiceListPage = () => {
         {sortedServices.length > 0 ? (
           sortedServices.map((service) => (
             <div className="service-card" key={service.listing_id}>
-              <img
-                className="service-card-img"
-                src={service.image_url}
-                alt={service.title}
-              />
+              <div className="service-card-image-wrapper">
+                <img
+                  className="service-card-img"
+                  src={service.image_url}
+                  alt={service.title}
+                />
+                <div className="service-card-badge">
+                  <FontAwesomeIcon icon={faDollarSign} />
+                  {service.price}
+                </div>
+              </div>
               <div className="service-card-content">
                 <h3>{service.title}</h3>
 
                 {/* ✅ Rating */}
-                <p className="service-card-rating">
-                  ⭐ {service.avg_rating} / 5
-                </p>
+                <div className="service-card-rating">
+                  <FontAwesomeIcon icon={faStar} className="star-icon" />
+                  <span>{service.avg_rating} / 5</span>
+                </div>
 
                 {/* ✅ Location + Distance */}
                 {service.location && (
-                  <p style={{ color: "#555", marginBottom: "10px" }}>
-                    📍 {service.location}
-                    {userLocation &&
-                      service.latitude &&
-                      service.longitude && (
-                        <>
-                          {" "}
-                          (
-                          {calculateDistance(
-                            userLocation.lat,
-                            userLocation.lon,
-                            service.latitude,
-                            service.longitude
-                          ).toFixed(1)}{" "}
-                          km away)
-                        </>
-                      )}
-                  </p>
+                  <div className="service-card-location">
+                    <FontAwesomeIcon icon={faLocationDot} />
+                    <span>
+                      {service.location}
+                      {userLocation &&
+                        service.latitude &&
+                        service.longitude && (
+                          <>
+                            {" - "}
+                            {calculateDistance(
+                              userLocation.lat,
+                              userLocation.lon,
+                              service.latitude,
+                              service.longitude
+                            ).toFixed(1)}{" "}
+                            km
+                          </>
+                        )}
+                    </span>
+                  </div>
                 )}
 
-                <p style={{ marginBottom: "12px", fontWeight: "600" }}>
-                  ${service.price}
-                </p>
                 <button
                   className="service-card-btn"
                   onClick={() =>
                     navigate(`/service/${type}/${service.listing_id}`)
                   }
                 >
-                  View details
+                  View Details
+                  <FontAwesomeIcon icon={faArrowRight} />
                 </button>
               </div>
             </div>

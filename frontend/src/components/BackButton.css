@@ -1,0 +1,50 @@
+.back-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  font-size: 0.95rem;
+  font-weight: 600;
+  padding: 0.65rem 1.25rem;
+  border-radius: 12px;
+  cursor: pointer;
+  margin: 1rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+}
+
+.back-button:hover {
+  background: rgba(255, 255, 255, 0.25);
+  border-color: rgba(255, 255, 255, 0.35);
+  transform: translateX(-4px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.back-button:active {
+  transform: translateX(-2px) scale(0.98);
+}
+
+.back-button-icon {
+  font-size: 1rem;
+  transition: transform 0.3s ease;
+}
+
+.back-button:hover .back-button-icon {
+  transform: translateX(-3px);
+}
+
+/* Alternative solid style variant */
+.back-button-solid {
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  border: none;
+  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+}
+
+.back-button-solid:hover {
+  background: linear-gradient(135deg, #5558e3 0%, #7c4ee8 100%);
+  box-shadow: 0 6px 25px rgba(99, 102, 241, 0.4);
+}

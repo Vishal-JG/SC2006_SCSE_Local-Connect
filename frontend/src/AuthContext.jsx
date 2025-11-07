@@ -27,27 +27,22 @@ export function AuthProvider({ children }) {
         // Fetch user role from backend
         try {
           const token = await currentUser.getIdToken(true);
-          const getProfile = async () =>
-            axios.get("http://localhost:5000/api/users/me", {
-              headers: { Authorization: `Bearer ${token}` },
-            });
-
-          let response;
+          
+          // ALWAYS prime the backend session first on auth state change
           try {
-            response = await getProfile();
-          } catch (err) {
-            // Retry login if 401
-            if (err?.response?.status === 401) {
-              await axios.post(
-                "http://localhost:5000/api/login",
-                {},
-                { headers: { Authorization: `Bearer ${token}` } }
-              );
-              response = await getProfile(); // retry
-            } else {
-              throw err;
-            }
+            await axios.post(
+              "http://localhost:5000/api/login",
+              {},
+              { headers: { Authorization: `Bearer ${token}` } }
+            );
+          } catch (primeErr) {
+            console.warn("⚠️ Backend priming failed (may be okay):", primeErr.message);
           }
+          
+          // Now fetch the profile
+          const response = await axios.get("http://localhost:5000/api/users/me", {
+            headers: { Authorization: `Bearer ${token}` },
+          });
 
           const role = response.data.user?.role || null;
           setUserRole(role);
@@ -58,7 +53,7 @@ export function AuthProvider({ children }) {
           setUserRole(null);
           localStorage.removeItem("role");
         } finally {
-          setInitializing(false); // move here to ensure role fetched before initializing = false
+          setInitializing(false);
         }
 
         // Refresh token every 30 minutes

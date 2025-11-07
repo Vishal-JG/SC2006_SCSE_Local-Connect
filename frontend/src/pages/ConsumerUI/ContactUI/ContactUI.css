@@ -1,61 +1,136 @@
-.contactus-container {
-  max-width: 600px;
-  margin: 5rem auto;
-  padding: 2rem 2.5rem;
-  background: #f5f9fc;
-  border-radius: 18px;
-  box-shadow: 0 3px 26px rgba(27, 62, 111, 0.12);
-  color: #153257;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+/* Contact Page */
+.contact-page {
+  min-height: 100vh;
+  padding: 4rem 2rem 2rem;
+  font-family: 'Inter', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* Hero Section */
+.contact-hero {
   text-align: center;
+  margin-bottom: 3rem;
 }
 
-.contactus-container h1 {
-  font-size: 2rem;
-  margin-bottom: 1rem;
-  font-weight: 700;
-  letter-spacing: 0.02em;
-}
-
-.contactus-container p {
-  font-size: 1.15rem;
-  line-height: 1.6;
-  margin-bottom: 2rem;
-  color: #2d4a7c;
-}
-
-.contact-options {
+.contact-icon-wrapper {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 1.5rem;
   display: flex;
+  align-items: center;
   justify-content: center;
-  gap: 2rem;
-  flex-wrap: wrap;
-}
-
-.contact-btn {
-  display: inline-block;
-  padding: 0.9rem 2.3rem;
-  font-size: 1.1rem;
-  font-weight: 600;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  font-size: 2.5rem;
   color: white;
-  border-radius: 10px;
-  transition: background-color 0.3s ease;
+}
+
+.contact-hero h1 {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.02em;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.contact-hero p {
+  font-size: 1.2rem;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 400;
+  letter-spacing: 0.01em;
+}
+
+/* Container */
+.contact-container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* Contact Cards */
+.contact-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.contact-card {
+  background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+  border: 2px solid rgba(102, 126, 234, 0.1);
+  border-radius: 20px;
+  padding: 3rem 2rem;
+  text-align: center;
   text-decoration: none;
-  box-shadow: 0 3px 8px rgba(0,0,0,0.12);
-  min-width: 170px;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 0 5px 20px rgba(102, 126, 234, 0.1);
+  position: relative;
+  overflow: hidden;
 }
 
-.contact-btn.telegram {
-  background-color: #0088cc;
+.contact-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+  transform: scaleX(0);
+  transition: transform 0.4s ease;
 }
 
-.contact-btn.telegram:hover {
-  background-color: #0077b6;
+.contact-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 15px 40px rgba(102, 126, 234, 0.25);
+  border-color: rgba(102, 126, 234, 0.3);
 }
 
-.contact-btn.email {
-  background-color: #3a86ff;
+.contact-card:hover::before {
+  transform: scaleX(1);
 }
 
-.contact-btn.email:hover {
-  background-color: #0f52ba;
+.card-icon {
+  width: 70px;
+  height: 70px;
+  margin: 0 auto 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 16px;
+  font-size: 2rem;
+  color: white;
+  transition: transform 0.4s ease;
+}
+
+.contact-card:hover .card-icon {
+  transform: scale(1.1) rotate(5deg);
+}
+
+.contact-card h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.01em;
+}
+
+.contact-card p {
+  font-size: 1rem;
+  color: #64748b;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .contact-hero h1 {
+    font-size: 2rem;
+  }
+
+  .contact-cards {
+    grid-template-columns: 1fr;
+  }
 }

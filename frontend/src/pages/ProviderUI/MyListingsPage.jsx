@@ -69,7 +69,7 @@ const MyListingsPage = () => {
     <div className={styles.myListingsPage}>
       {/* Page header */}
       <div className={styles.pageHeader}>
-        <BackButton />
+        <BackButton to="/ProviderUI/ProviderDashboard" />
         <h2>My Listings</h2>
       </div>
 

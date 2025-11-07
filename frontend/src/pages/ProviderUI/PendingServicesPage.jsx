@@ -3,6 +3,17 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { auth } from "../../firebase";
 import { getIdToken } from "firebase/auth";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { 
+  faUser, 
+  faEnvelope, 
+  faPhone, 
+  faCalendarAlt, 
+  faClock,
+  faCheckCircle,
+  faEye,
+  faHourglassHalf
+} from "@fortawesome/free-solid-svg-icons";
 import styles from "./PendingServicesPage.module.css";
 import BackButton from "../../components/BackButton";
 
@@ -78,44 +89,140 @@ const PendingServicesPage = () => {
     }
   };
 
-  if (loading) return <div className={styles.pendingServicesPage}>Loading...</div>;
-  if (error) return <div className={styles.pendingServicesPage}>{error}</div>;
+  if (loading) return (
+    <div className={styles.pendingServicesPage}>
+      <div className={styles.loadingState}>
+        <div className={styles.spinner}></div>
+        <p>Loading pending bookings...</p>
+      </div>
+    </div>
+  );
+  
+  if (error) return (
+    <div className={styles.pendingServicesPage}>
+      <div className={styles.errorState}>{error}</div>
+    </div>
+  );
 
   return (
     <div className={styles.pendingServicesPage}>
       <div className={styles.pageHeader}>
-        <BackButton />
-        <h2>Pending Services</h2>
+        <BackButton to="/ProviderUI/ServicesInProgressPage" />
+        <h2>
+          <FontAwesomeIcon icon={faHourglassHalf} /> Pending Services
+        </h2>
       </div>
 
       <div className={styles.servicesGrid}>
-        {services.length === 0 && <div>No pending bookings to accept.</div>}
-        {services.map((service) => (
-          <div key={service.booking_id} className={styles.serviceCard}>
-            <img
-              src={service.image_url || fallbackImg}
-              alt={service.title || "Service"}
-              className={styles.serviceImage}
-            />
-            <div className={styles.serviceInfo}>
-              <p className={styles.serviceName}>{service.title || "Untitled Service"}</p>
-              <div className={styles.buttonGroup}>
-                <button
-                  className={styles.viewButton}
-                  onClick={() => onViewClick(service)}
-                >
-                  View
-                </button>
-                <button
-                  className={styles.acceptButton}
-                  onClick={() => onAcceptClick(service)}
-                >
-                  Accept
-                </button>
+        {services.length === 0 ? (
+          <div className={styles.emptyState}>
+            <div className={styles.emptyIcon}>📭</div>
+            <h3>No Pending Bookings</h3>
+            <p>You don't have any pending booking requests right now.</p>
+            <p className={styles.emptySubtext}>New booking requests will appear here when customers book your services.</p>
+          </div>
+        ) : (
+          services.map((service) => (
+            <div key={service.booking_id} className={styles.serviceCard}>
+              <div className={styles.cardHeader}>
+                <img
+                  src={service.image_url || fallbackImg}
+                  alt={service.title || "Service"}
+                  className={styles.serviceImage}
+                />
+                <div className={styles.statusBadge}>
+                  <FontAwesomeIcon icon={faHourglassHalf} /> Pending
+                </div>
+              </div>
+
+              <div className={styles.cardBody}>
+                <h3 className={styles.serviceName}>{service.title || "Untitled Service"}</h3>
+                
+                {/* Booking Details */}
+                <div className={styles.bookingDetails}>
+                  <div className={styles.detailRow}>
+                    <FontAwesomeIcon icon={faCalendarAlt} className={styles.detailIcon} />
+                    <span className={styles.detailLabel}>Date:</span>
+                    <span className={styles.detailValue}>
+                      {service.booking_date 
+                        ? new Date(service.booking_date).toLocaleDateString('en-US', {
+                            weekday: 'short',
+                            year: 'numeric',
+                            month: 'short',
+                            day: 'numeric'
+                          })
+                        : 'Not specified'}
+                    </span>
+                  </div>
+                  
+                  <div className={styles.detailRow}>
+                    <FontAwesomeIcon icon={faClock} className={styles.detailIcon} />
+                    <span className={styles.detailLabel}>Time:</span>
+                    <span className={styles.detailValue}>
+                      {service.booking_date 
+                        ? new Date(service.booking_date).toLocaleTimeString('en-US', {
+                            hour: '2-digit',
+                            minute: '2-digit'
+                          })
+                        : 'Not specified'}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Customer Details */}
+                <div className={styles.customerSection}>
+                  <h4 className={styles.sectionTitle}>Customer Information</h4>
+                  
+                  <div className={styles.customerDetails}>
+                    <div className={styles.detailRow}>
+                      <FontAwesomeIcon icon={faUser} className={styles.detailIcon} />
+                      <span className={styles.detailLabel}>Name:</span>
+                      <span className={styles.detailValue}>
+                        {service.customer_name || 'N/A'}
+                      </span>
+                    </div>
+                    
+                    <div className={styles.detailRow}>
+                      <FontAwesomeIcon icon={faEnvelope} className={styles.detailIcon} />
+                      <span className={styles.detailLabel}>Email:</span>
+                      <span className={styles.detailValue}>
+                        {service.customer_email || 'N/A'}
+                      </span>
+                    </div>
+                    
+                    {service.customer_phone && (
+                      <div className={styles.detailRow}>
+                        <FontAwesomeIcon icon={faPhone} className={styles.detailIcon} />
+                        <span className={styles.detailLabel}>Phone:</span>
+                        <span className={styles.detailValue}>
+                          {service.customer_phone}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Action Buttons */}
+                <div className={styles.buttonGroup}>
+                  <button
+                    className={styles.viewButton}
+                    onClick={() => onViewClick(service)}
+                  >
+                    <FontAwesomeIcon icon={faEye} />
+                    View Details
+                  </button>
+                  <button
+                    className={styles.acceptButton}
+                    onClick={() => onAcceptClick(service)}
+                  >
+                    <FontAwesomeIcon icon={faCheckCircle} />
+                    Accept Booking
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))
+        )}
       </div>
     </div>
   );

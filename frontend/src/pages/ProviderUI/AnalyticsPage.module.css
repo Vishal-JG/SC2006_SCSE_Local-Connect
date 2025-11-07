@@ -1,6 +1,6 @@
 .analyticsPage {
   padding: 2rem;
-  background-color: #0f0c1d;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: #fff;
   font-family: 'Inter', sans-serif;
   min-height: 100vh;
@@ -15,55 +15,68 @@
 }
 
 .pageTitle {
-  font-size: 2rem;
+  font-size: 2.2rem;
   font-weight: 700;
   color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 /* Stats Cards */
 .statsContainer {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 1.5rem;
-  margin-bottom: 2rem;
+  margin-bottom: 2.5rem;
 }
 
 .statCard {
-  background: linear-gradient(145deg, #1f0e36, #2c154f);
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
   border-radius: 1rem;
-  padding: 1rem 1.5rem;
+  padding: 1.5rem;
   display: flex;
   align-items: center;
   gap: 1rem;
-  box-shadow: 0 0 15px rgba(255, 215, 0, 0.2), 0 10px 20px rgba(0,0,0,0.4);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   cursor: default;
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .statCard:hover {
   transform: translateY(-4px);
-  box-shadow: 0 0 20px rgba(255, 215, 0, 0.4), 0 15px 30px rgba(0,0,0,0.5);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
 }
 
 .statIcon svg {
   color: #FFD700;
+  font-size: 2.5rem;
 }
 
 .statContent {
   display: flex;
   flex-direction: column;
+  gap: 0.25rem;
 }
 
 .statLabel {
-  font-size: 0.9rem;
-  color: #c7bfd6;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
   margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .statValue {
-  font-size: 1.6rem;
-  font-weight: 600;
-  margin-top: 0.2rem;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #fff;
+  margin: 0;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 /* Charts */
@@ -71,14 +84,22 @@
   display: grid;
   grid-template-columns: 1fr;
   gap: 2rem;
-  margin-bottom: 2rem;
+  margin-bottom: 2.5rem;
+}
+
+@media (min-width: 1024px) {
+  .chartsContainer {
+    grid-template-columns: 1fr 1fr;
+  }
 }
 
 .chartCard {
-  background: linear-gradient(145deg, #1f0e36, #2c154f);
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(10px);
   border-radius: 1rem;
-  padding: 1rem;
-  box-shadow: 0 0 15px rgba(135,206,235,0.2), 0 10px 20px rgba(0,0,0,0.4);
+  padding: 1.5rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  border: 2px solid rgba(255, 255, 255, 0.3);
 }
 
 .chartTitle {
@@ -86,88 +107,131 @@
   align-items: center;
   gap: 0.5rem;
   font-size: 1.2rem;
-  margin-bottom: 1rem;
-  font-weight: 600;
+  margin-bottom: 1.5rem;
+  font-weight: 700;
   color: #fff;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .chartTitle svg {
-  color: #87CEEB;
+  color: #FFD700;
   stroke-width: 2;
 }
 
 .noData {
-  color: #c7bfd6;
+  color: rgba(255, 255, 255, 0.8);
   text-align: center;
-  padding: 2rem 0;
+  padding: 3rem;
+  font-size: 1.1rem;
+  font-weight: 600;
 }
 
 /* Completed Services */
 .completedServicesContainer {
-  margin-top: 2rem;
+  margin-top: 2.5rem;
 }
 
 .sectionTitle {
   font-size: 1.5rem;
-  font-weight: 600;
-  margin-bottom: 1rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .completedServicesList {
   display: grid;
-  gap: 1rem;
+  gap: 1.5rem;
+}
+
+.noServices {
+  text-align: center;
+  padding: 3rem;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 1rem;
+  color: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.noServices p {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 0.5rem 0;
+}
+
+.noServicesIcon {
+  font-size: 4rem;
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 1rem;
+}
+
+.noServicesSubtext {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 500;
 }
 
 .completedServiceCard {
-  background: linear-gradient(145deg, #1f0e36, #2c154f);
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
   border-radius: 1rem;
-  padding: 1rem;
+  padding: 1.25rem;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 0 10px rgba(135,206,235,0.2), 0 8px 16px rgba(0,0,0,0.4);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .completedServiceCard:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 0 20px rgba(135,206,235,0.4), 0 12px 24px rgba(0,0,0,0.5);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
 }
 
 .serviceCardHeader {
   display: flex;
   align-items: center;
   gap: 1rem;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.75rem;
 }
 
 .serviceIcon svg {
-  color: #87CEEB;
+  color: #FFD700;
+  font-size: 1.75rem;
 }
 
 .serviceInfo {
   display: flex;
   flex-direction: column;
+  gap: 0.25rem;
 }
 
 .serviceName {
-  font-weight: 600;
-  font-size: 1rem;
+  font-weight: 700;
+  font-size: 1.1rem;
   color: #fff;
   margin: 0;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 .bookingId {
-  font-size: 0.85rem;
-  color: #c7bfd6;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 500;
+  margin: 0;
 }
 
 .serviceCardFooter {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 0.85rem;
-  color: #c7bfd6;
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 600;
 }
 
 .serviceDate {
@@ -179,12 +243,27 @@
 .serviceRating {
   display: flex;
   align-items: center;
-  gap: 0.25rem;
+  gap: 0.35rem;
+  background: rgba(255, 215, 0, 0.2);
+  padding: 0.35rem 0.75rem;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 215, 0, 0.3);
 }
 
 .ratingValue {
-  font-weight: 600;
+  font-weight: 700;
   color: #FFD700;
+  font-size: 1rem;
+}
+
+.ratingStar {
+  font-size: 1rem;
+}
+
+.reviewCount {
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 600;
+  font-size: 0.9rem;
 }
 
 .ratingStar {

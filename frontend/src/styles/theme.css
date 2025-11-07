@@ -1,0 +1,23 @@
+:root {
+  --primary: #667eea;      /* indigo */
+  --primary-600: #4f62e0;
+  --accent: #764ba2;       /* violet */
+  --accent-500: #8b5cf6;
+  --surface: #ffffff;
+  --surface-2: #f8fafc;
+  --text: #0f172a;         /* slate-900 */
+  --muted: #64748b;        /* slate-500 */
+  --success: #10b981;
+  --warning: #f59e0b;
+}
+
+.bg-gradient-brand {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+}
+
+.text-gradient-brand {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}

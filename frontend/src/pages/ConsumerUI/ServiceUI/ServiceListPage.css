@@ -1,102 +1,169 @@
 .service-list-page {
-    padding: 10px 0;
+    padding: 2rem 1.5rem;
+    max-width: 1400px;
+    margin: 0 auto;
 }
 
 .service-list-page h2 {
     color: white;
-    margin-bottom: 10px;
+    margin-bottom: 2rem;
     text-align: center;
-    font-size: 2rem;
-    font-weight: 700;
+    font-size: 2.5rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
 }
 
 .service-card-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr); 
-    gap: 40px; 
-    max-width: 1600px; 
-    margin: 0 auto;    
-    justify-items: stretch;
+    gap: 2rem; 
+    margin-top: 2rem;
 }
 
 
 .service-card {
     display: flex;
-    background: #fff;
-    border-radius: 12px;
-    box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+    flex-direction: column;
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     overflow: hidden;
-    height: 220px;
-    align-items: stretch;
-    width: 100%; /* Take available width from the grid column */
-    max-width: none; /* Optional: Set a max width per card */
-    margin: 0 auto;   /* Center the card inside its grid cell */
+    transition: box-shadow 0.3s ease;
+    border: 1px solid #e5e7eb;
+}
+
+.service-card-image-wrapper {
+    position: relative;
+    width: 100%;
+    height: 250px;
+    overflow: hidden;
 }
 
 .service-card-img {
-    width: 220px;
+    width: 100%;
     height: 100%;
     object-fit: cover;
-    flex-shrink: 0;
+}
+
+.service-card:hover .service-card-img {
+    transform: scale(1.05);
+    transition: transform 0.3s ease;
+}
+
+.service-card-badge {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: #10b981;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
 }
 
 .service-card-content {
-    flex: 1;
-    padding: 24px 24px 24px 24px;
+    padding: 1.5rem;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    position: relative;
+    gap: 1rem;
 }
 
 
 .service-card-content h3 {
-    margin: 0 0 12px 0;
-    color: #2d2254;
-    font-size: 1.3rem;
-    font-weight: 600;
+    margin: 0;
+    color: #1e293b;
+    font-size: 1.4rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
 }
 
 .service-card-rating {
-    color: #fbc02d;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #fbbf24;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.service-card-rating .star-icon {
     font-size: 1.1rem;
-    margin-bottom: 24px;
+}
+
+.service-card-rating span {
+    color: #64748b;
+}
+
+.service-card-location {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #64748b;
+    font-size: 0.95rem;
+}
+
+.service-card-location svg {
+    color: #667eea;
 }
 
 .service-card-btn {
-    align-self: flex-end;
-    padding: 8px 18px;
-    border: 1px solid black;
-    border-radius: 20px;
-    background: #fff;
-    color: black;
+    margin-top: auto;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
     font-size: 1rem;
+    font-weight: 600;
     cursor: pointer;
-    transition: background 0.2s, color 0.2s;
+    transition: opacity 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
 }
+
 .service-card:hover {
-  transform: translateY(-6px) scale(1.03);
-  box-shadow: 0 8px 32px rgba(54,112,255,0.13);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
 }
 
 .service-card-btn:hover {
-  background: #2563eb;
+    opacity: 0.9;
 }
 
 .no-results {
     grid-column: 1 / -1;
     text-align: center;
-    color: #888;
-    font-size: 1.1rem;
-    padding: 32px 0;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 1.2rem;
+    padding: 3rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    backdrop-filter: blur(10px);
 }
 
-.service-card-rating span {
-  transition: color 0.2s ease;
+/* Responsive */
+@media (max-width: 1024px) {
+    .service-card-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
 }
 
-.service-card:hover .service-card-rating span {
-  color: #facc15; /* slightly brighter yellow */
+@media (max-width: 768px) {
+    .service-list-page h2 {
+        font-size: 2rem;
+    }
+    
+    .service-card-image-wrapper {
+        height: 200px;
+    }
 }
 
 .active-filters-container {
@@ -275,10 +342,6 @@
   background: rgba(255,255,255,0.04);
   transform: translateY(-2px);
 }
-
-/* specific smaller tweaks if you want different color on location/recycling */
-.location-btn { /* inherits action-btn--primary if used */ }
-.recycling-btn { /* inherits action-btn--secondary if used */ }
 
 /* --- Layout for the action row --- */
 .actions-row {
