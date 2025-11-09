@@ -94,7 +94,7 @@ const ServiceDetailPage = () => {
 
   return (
     <div className="service-detail-page modern-layout">
-      <BackButton />
+      <BackButton to={type ? `/service/${type}` : "/service"} />
 
       {/* Banner with bookmark */}
       <div

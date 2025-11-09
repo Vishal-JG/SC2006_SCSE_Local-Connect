@@ -259,7 +259,7 @@
 }
 
 
-.viewButton, .acceptButton {
+.viewButton, .acceptButton, .rejectButton {
   flex: 1;
   padding: 0.9rem 1rem;
   border: none;
@@ -285,6 +285,11 @@
   color: white;
 }
 
+.rejectButton {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: white;
+}
+
 .viewButton:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
@@ -297,7 +302,13 @@
   background: linear-gradient(135deg, #059669, #047857);
 }
 
-.viewButton svg, .acceptButton svg {
+.rejectButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(239, 68, 68, 0.4);
+  background: linear-gradient(135deg, #dc2626, #b91c1c);
+}
+
+.viewButton svg, .acceptButton svg, .rejectButton svg {
   font-size: 1.1rem;
 }
 
@@ -314,7 +325,7 @@
     flex-direction: column;
   }
   
-  .viewButton, .acceptButton {
+  .viewButton, .acceptButton, .rejectButton {
     width: 100%;
   }
 }

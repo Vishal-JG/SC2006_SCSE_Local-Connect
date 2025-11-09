@@ -36,6 +36,7 @@ import AdminHomePage from "./pages/AdminUI/AdminHomePage";
 import AllReviewsPage from "./pages/AdminUI/AllReviewsPage";
 import AllExistingListingsPage from "./pages/AdminUI/AllExistingListingsPage";
 import AllPendingListingsPage from "./pages/AdminUI/AllPendingListingsPage";
+import AllUsersPage from "./pages/AdminUI/AllUsersPage";
 import ReviewPage from "./pages/AdminUI/ReviewPage";
 
 // Component to conditionally render NavBar
@@ -163,6 +164,11 @@ export default function App() {
           <Route path="/AdminUI/AllPendingListingsPage" element={
             <ProtectedRoute allowedRoles={['admin']}>
               <AllPendingListingsPage />
+            </ProtectedRoute>
+          } />
+          <Route path="/AdminUI/AllUsersPage" element={
+            <ProtectedRoute allowedRoles={['admin']}>
+              <AllUsersPage />
             </ProtectedRoute>
           } />
           <Route path="/AdminUI/ReviewPage/:id" element={

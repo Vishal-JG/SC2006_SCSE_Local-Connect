@@ -8,6 +8,7 @@ import {
   faStar, 
   faCommentDots, 
   faTrashAlt,
+  faUserMinus,
   faExclamationTriangle,
   faCheckCircle
 } from "@fortawesome/free-solid-svg-icons";
@@ -63,6 +64,12 @@ const ReviewPage = () => {
   };
 
   const handleCancel = () => setShowModal(false);
+
+  const handleDeleteUser = () => {
+    // Always navigate; pass state only if we have user_id
+    const state = review && review.user_id ? { deleteUserId: review.user_id } : {};
+    navigate('/AdminUI/AllUsersPage', { state });
+  };
 
   if (loading) return (
     <div className={styles.reviewScreen}>
@@ -127,6 +134,10 @@ const ReviewPage = () => {
           <FontAwesomeIcon icon={faTrashAlt} />
           Delete Review
         </button>
+          <button className={styles.deleteUserBtn} onClick={handleDeleteUser}>
+            <FontAwesomeIcon icon={faUserMinus} />
+            Delete User
+          </button>
       </div>
 
       {showModal && (

@@ -40,7 +40,7 @@ def list_users():
 # -----------------------------
 # Delete a user
 # -----------------------------
-@admin_bp.route("/admin/users/<int:user_id>", methods=["DELETE"])
+@admin_bp.route("/admin/users/<user_id>", methods=["DELETE"])
 def delete_user(user_id):
     """
     Delete a User
@@ -57,9 +57,9 @@ def delete_user(user_id):
         description: "Firebase JWT token (format: Bearer TOKEN)"
       - name: user_id
         in: path
-        type: integer
+        type: string
         required: true
-        description: ID of the user to delete
+        description: Firebase UID of the user to delete
     responses:
       200:
         description: User deleted successfully
@@ -182,6 +182,7 @@ def get_all_reviews():
         """
         SELECT 
             r.review_id AS id,
+         r.user_id,
             u.display_name AS reviewer,
             l.title AS service,
             r.comment,

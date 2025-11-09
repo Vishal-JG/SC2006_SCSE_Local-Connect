@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { getAuth } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCalendarXmark, faCalendarCheck } from '@fortawesome/free-solid-svg-icons';
+import { faCalendarXmark, faCalendarCheck, faStar } from '@fortawesome/free-solid-svg-icons';
 import "./BookingPage.css";
 
 const BookingPage = () => {
@@ -13,28 +13,36 @@ const BookingPage = () => {
   const [cancelId, setCancelId] = useState(null);
   const [showConfirm, setShowConfirm] = useState(false);
   const [serviceNames, setServiceNames] = useState({});
+  const [serviceDetails, setServiceDetails] = useState({});
   const [showSuccess, setShowSuccess] = useState(false);
 
 
   useEffect(() => {
     async function fetchAllServiceNames() {
         const names = {};
+        const details = {};
         for (const booking of bookings) {
         if (!names[booking.listing_id]) {
-            names[booking.listing_id] = await fetchServiceName(booking.listing_id);
+            const serviceData = await fetchServiceName(booking.listing_id);
+            names[booking.listing_id] = serviceData.name;
+            details[booking.listing_id] = serviceData;
         }
         }
         setServiceNames(names);
+        setServiceDetails(details);
     }
     if (bookings.length > 0) fetchAllServiceNames();
   }, [bookings]);
   async function fetchServiceName(listing_id) {
     const res = await fetch(`http://localhost:5000/api/services/${listing_id}`);
     if (!res.ok) {
-        return "Unknown Service";
+        return { name: "Unknown Service", category_id: null };
     }
     const service = await res.json();
-    return service.title || service.name || "Unnamed Service";
+    return { 
+      name: service.title || service.name || "Unnamed Service",
+      category_id: service.category_id
+    };
   }
 
 
@@ -96,6 +104,31 @@ const BookingPage = () => {
     setCancelId(null);
   };
 
+  const categoryTypeMap = {
+    1: "personalchef",
+    2: "packagedelivery",
+    3: "electricianservices",
+    4: "homecleaning",
+    5: "automechanic",
+    6: "handymanrepairs",
+    7: "beautysalon",
+    8: "techsupport",
+    9: "privatetutoring",
+    10: "plumbingservices",
+  };
+
+  const handleAddReview = (listingId) => {
+    // Get the service details to construct the proper route
+    const service = serviceDetails[listingId];
+    if (service && service.category_id) {
+      const categoryType = categoryTypeMap[service.category_id];
+      navigate(`/service/${categoryType}/${listingId}`);
+    } else {
+      // Fallback to just the listing page if category is unknown
+      navigate(`/service/${listingId}`);
+    }
+  };
+
   if (loading)
     return (
       <div className="booking-container">
@@ -148,11 +181,19 @@ const BookingPage = () => {
                 </p>
               </div>
             </div>
-            {booking.status === "pending" && (
-              <button className="btn danger cancel-btn" onClick={() => handleCancelClick(booking.booking_id)}>
-                Cancel
-              </button>
-            )}
+            <div className="booking-actions">
+              {booking.status === "pending" && (
+                <button className="btn danger cancel-btn" onClick={() => handleCancelClick(booking.booking_id)}>
+                  Cancel
+                </button>
+              )}
+              {booking.status === "completed" && (
+                <button className="btn review-btn" onClick={() => handleAddReview(booking.listing_id)}>
+                  <FontAwesomeIcon icon={faStar} />
+                  Add Review
+                </button>
+              )}
+            </div>
           </div>
         ))}
       </div>

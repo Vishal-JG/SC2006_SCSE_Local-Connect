@@ -192,6 +192,7 @@
 /* Delete button */
 .actions {
   display: flex;
+  gap: 1rem;
   justify-content: center;
   margin-top: 1rem;
 }
@@ -221,6 +222,32 @@
 .deleteBtn svg {
   font-size: 1.2rem;
 }
+
+  .deleteUserBtn {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 1rem 2.5rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .deleteUserBtn:hover { 
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4);
+    background: linear-gradient(135deg, #d97706, #b45309);
+  }
+
+  .deleteUserBtn svg {
+    font-size: 1.2rem;
+  }
 
 /* Modal overlay */
 .modalOverlay {

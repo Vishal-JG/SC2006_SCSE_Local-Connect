@@ -12,7 +12,8 @@ import {
   faClock,
   faCheckCircle,
   faEye,
-  faHourglassHalf
+  faHourglassHalf,
+  faTimesCircle
 } from "@fortawesome/free-solid-svg-icons";
 import styles from "./PendingServicesPage.module.css";
 import BackButton from "../../components/BackButton";
@@ -35,7 +36,6 @@ const PendingServicesPage = () => {
         if (!user) throw new Error("You must be logged in!");
         const idToken = await getIdToken(user);
 
-        // ✅ Fetch pending bookings for provider
         const res = await axios.get(
           "http://localhost:5000/api/bookings?role=provider&status=pending",
           { headers: { Authorization: `Bearer ${idToken}` } }
@@ -56,12 +56,10 @@ const PendingServicesPage = () => {
     fetchPendingBookings();
   }, []);
 
-  // ✅ Navigate to service details page
   const onViewClick = (service) => {
     navigate(`/ProviderUI/ViewServicePage/${service.listing_id}`, { state: { service } });
   };
 
-  // ✅ Accept a pending booking
   const onAcceptClick = async (service) => {
     const confirmed = window.confirm(`Accept booking for "${service.title}"?`);
     if (!confirmed) return;
@@ -71,14 +69,12 @@ const PendingServicesPage = () => {
       if (!user) throw new Error("You must be logged in!");
       const idToken = await getIdToken(user);
 
-      // ✅ Update booking status via backend route
       await axios.put(
         `http://localhost:5000/api/bookings/${service.booking_id}/status`,
         { status: "confirmed" }, // change pending → confirmed
         { headers: { Authorization: `Bearer ${idToken}` } }
       );
 
-      // ✅ Remove from state (disappear from list)
       setServices((old) => old.filter((s) => s.booking_id !== service.booking_id));
       
       // Show success alert
@@ -86,6 +82,31 @@ const PendingServicesPage = () => {
     } catch (err) {
       console.error(err);
       alert("Failed to accept service. Please try again.");
+    }
+  };
+
+  const onRejectClick = async (service) => {
+    const confirmed = window.confirm(`Are you sure you want to reject the booking for "${service.title}"?`);
+    if (!confirmed) return;
+
+    try {
+      const user = auth.currentUser;
+      if (!user) throw new Error("You must be logged in!");
+      const idToken = await getIdToken(user);
+
+      await axios.put(
+        `http://localhost:5000/api/bookings/${service.booking_id}/status`,
+        { status: "cancelled" }, // change pending → cancelled
+        { headers: { Authorization: `Bearer ${idToken}` } }
+      );
+
+      setServices((old) => old.filter((s) => s.booking_id !== service.booking_id));
+      
+      // Show success alert
+      alert(`Rejected booking for "${service.title}".`);
+    } catch (err) {
+      console.error(err);
+      alert("Failed to reject booking. Please try again.");
     }
   };
 
@@ -216,7 +237,14 @@ const PendingServicesPage = () => {
                     onClick={() => onAcceptClick(service)}
                   >
                     <FontAwesomeIcon icon={faCheckCircle} />
-                    Accept Booking
+                    Accept
+                  </button>
+                  <button
+                    className={styles.rejectButton}
+                    onClick={() => onRejectClick(service)}
+                  >
+                    <FontAwesomeIcon icon={faTimesCircle} />
+                    Reject
                   </button>
                 </div>
               </div>

@@ -18,6 +18,10 @@ const AdminHomePage = () => {
     () => navigate("/AdminUI/AllPendingListingsPage"),
     [navigate]
   );
+  const onAllUsersClick = useCallback(
+    () => navigate("/AdminUI/AllUsersPage"),
+    [navigate]
+  );
 
   const onLogoutClick = useCallback(() => {
     const auth = getAuth();
@@ -50,6 +54,10 @@ const AdminHomePage = () => {
 
         <div className={styles.card} onClick={onPendingListingsClick}>
           <p>Pending Listings</p>
+        </div>
+
+        <div className={styles.card} onClick={onAllUsersClick}>
+          <p>All Users</p>
         </div>
 
         <div className={styles.card} onClick={onLogoutClick}>

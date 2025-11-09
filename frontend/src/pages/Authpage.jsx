@@ -106,7 +106,7 @@ export default function AuthPage() {
       localStorage.setItem("role", userRole);
 
       // Step 3: Wait for AuthContext to fully sync before navigating
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise(resolve => setTimeout(resolve, 800));
 
       if (userRole === 'admin') {
         navigate('/admin/dashboard', { replace: true });
@@ -167,7 +167,7 @@ export default function AuthPage() {
         setMessage(`Account created successfully as ${userRole}!`);
         
         // Wait for AuthContext to fully sync before navigating
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        await new Promise(resolve => setTimeout(resolve, 800));
         
         if (userRole === 'admin') {
           navigate('/admin/dashboard', { replace: true });

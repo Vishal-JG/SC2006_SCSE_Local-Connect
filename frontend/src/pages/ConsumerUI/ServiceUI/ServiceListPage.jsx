@@ -142,7 +142,7 @@ const ServiceListPage = () => {
 
   return (
     <div className="service-list-page">
-      <BackButton />
+      <BackButton to="/service" />
 
       <h2 className="service-title">
         {type.charAt(0).toUpperCase() + type.slice(1)}
@@ -155,7 +155,6 @@ const ServiceListPage = () => {
         onFilterSelect={handleFilterSelect}
       />
 
-      {/* ✅ Show Active Filter Chip with close button */}
       {activeFilterLabel && (
         <div className="active-filter-chip">
           {activeFilterLabel}
@@ -169,7 +168,6 @@ const ServiceListPage = () => {
         </div>
       )}
 
-      {/* ✅ Services Grid */}
       <div className="service-card-grid">
         {sortedServices.length > 0 ? (
           sortedServices.map((service) => (
@@ -188,13 +186,11 @@ const ServiceListPage = () => {
               <div className="service-card-content">
                 <h3>{service.title}</h3>
 
-                {/* ✅ Rating */}
                 <div className="service-card-rating">
                   <FontAwesomeIcon icon={faStar} className="star-icon" />
                   <span>{service.avg_rating} / 5</span>
                 </div>
 
-                {/* ✅ Location + Distance */}
                 {service.location && (
                   <div className="service-card-location">
                     <FontAwesomeIcon icon={faLocationDot} />

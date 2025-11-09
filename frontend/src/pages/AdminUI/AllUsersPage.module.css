@@ -1,0 +1,536 @@
+.allUsersPage {
+  min-height: 100vh;
+  padding: 2rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.pageHeader {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.pageHeader h2 {
+  font-size: 2rem;
+  color: #ffffff;
+  margin: 0;
+  font-weight: 700;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.pageHeader h2 svg {
+  color: #FFD700;
+  font-size: 1.8rem;
+}
+
+.loadingState,
+.errorState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 50vh;
+  color: #ffffff;
+  font-size: 1.2rem;
+  gap: 1rem;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  border-top: 4px solid #FFD700;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.errorState {
+  background: rgba(239, 68, 68, 0.9);
+  padding: 1.5rem 2rem;
+  border-radius: 12px;
+  max-width: 500px;
+  margin: 2rem auto;
+}
+
+.emptyState {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 24px;
+  backdrop-filter: blur(10px);
+  max-width: 600px;
+  margin: 2rem auto;
+}
+
+.emptyIcon {
+  font-size: 5rem;
+  color: #FFD700;
+  margin-bottom: 1.5rem;
+  opacity: 0.8;
+}
+
+.emptyState h3 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 1rem 0;
+}
+
+.emptyState p {
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0;
+}
+
+.usersGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 1.5rem;
+}
+
+.userCard {
+  background: #ffffff;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.userCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+}
+
+.cardHeader {
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.userAvatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1.8rem;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.roleBadge {
+  padding: 0.4rem 1rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.roleAdmin {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: white;
+}
+
+.roleProvider {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+}
+
+.roleConsumer {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: white;
+}
+
+.roleDefault {
+  background: linear-gradient(135deg, #6b7280, #4b5563);
+  color: white;
+}
+
+.cardBody {
+  padding: 1.5rem;
+}
+
+.userName {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0 0 1rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.userInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.infoRow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.95rem;
+  color: #475569;
+}
+
+.infoIcon {
+  color: #667eea;
+  font-size: 1rem;
+  width: 20px;
+}
+
+.userId {
+  font-family: 'Courier New', monospace;
+  font-size: 0.85rem;
+  color: #64748b;
+}
+
+.cardActions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.viewBtn,
+.deleteBtn {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border: none;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.viewBtn {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+}
+
+.viewBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
+}
+
+.deleteBtn {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: white;
+}
+
+.deleteBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(239, 68, 68, 0.4);
+}
+
+/* Modal Styles */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(5px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 2rem;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modalContent {
+  background: white;
+  border-radius: 20px;
+  max-width: 600px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.closeBtn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: rgba(0, 0, 0, 0.1);
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: #475569;
+  font-size: 1.2rem;
+  z-index: 10;
+}
+
+.closeBtn:hover {
+  background: rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+  transform: rotate(90deg);
+}
+
+.modalHeader {
+  padding: 2rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  border-radius: 20px 20px 0 0;
+}
+
+.modalIcon {
+  font-size: 2rem;
+  color: #FFD700;
+}
+
+.modalHeader h2 {
+  font-size: 1.8rem;
+  margin: 0;
+  font-weight: 700;
+}
+
+.modalLoading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  gap: 1rem;
+  color: #64748b;
+}
+
+.modalBody {
+  padding: 2rem;
+}
+
+.detailsGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+.detailItem {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.detailItem label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.detailItem label svg {
+  color: #667eea;
+}
+
+.detailItem p {
+  font-size: 1.05rem;
+  color: #1e293b;
+  margin: 0;
+  padding: 0.75rem;
+  background: rgba(102, 126, 234, 0.05);
+  border-radius: 8px;
+  border-left: 3px solid #667eea;
+}
+
+.uidText {
+  font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
+  word-break: break-all;
+}
+
+/* Delete Modal */
+.deleteModalContent {
+  background: white;
+  border-radius: 20px;
+  max-width: 500px;
+  width: 100%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  animation: slideUp 0.3s ease;
+}
+
+.deleteModalHeader {
+  padding: 2rem;
+  text-align: center;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.warningIconCircle {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #fef3c7, #fde047);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1rem;
+  box-shadow: 0 4px 12px rgba(250, 204, 21, 0.3);
+}
+
+.warningIconCircle svg {
+  font-size: 2.5rem;
+  color: #f59e0b;
+}
+
+.deleteModalHeader h2 {
+  font-size: 1.5rem;
+  color: #1e293b;
+  margin: 0;
+  font-weight: 700;
+}
+
+.deleteModalBody {
+  padding: 2rem;
+  text-align: center;
+}
+
+.deleteModalBody > p {
+  font-size: 1.1rem;
+  color: #475569;
+  margin: 0 0 1.5rem 0;
+}
+
+.userToDelete {
+  background: rgba(239, 68, 68, 0.1);
+  padding: 1rem;
+  border-radius: 12px;
+  margin: 1rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.userToDelete strong {
+  font-size: 1.1rem;
+  color: #1e293b;
+}
+
+.userToDelete span {
+  font-size: 0.95rem;
+  color: #64748b;
+}
+
+.warningText {
+  color: #ef4444;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.deleteModalActions {
+  padding: 1.5rem 2rem;
+  display: flex;
+  gap: 1rem;
+  background: #f8fafc;
+  border-radius: 0 0 20px 20px;
+}
+
+.cancelBtn,
+.confirmDeleteBtn {
+  flex: 1;
+  padding: 0.9rem 1.5rem;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.cancelBtn {
+  background: white;
+  color: #475569;
+  border: 2px solid #e2e8f0;
+}
+
+.cancelBtn:hover {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+}
+
+.confirmDeleteBtn {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: white;
+}
+
+.confirmDeleteBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(239, 68, 68, 0.4);
+}
+
+@media (max-width: 768px) {
+  .usersGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .pageHeader h2 {
+    font-size: 1.5rem;
+  }
+
+  .modalContent {
+    max-width: 95%;
+    margin: 1rem;
+  }
+
+  .cardActions {
+    flex-direction: column;
+  }
+
+  .viewBtn,
+  .deleteBtn {
+    width: 100%;
+  }
+}
