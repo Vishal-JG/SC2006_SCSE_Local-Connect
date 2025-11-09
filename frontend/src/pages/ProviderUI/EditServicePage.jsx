@@ -11,7 +11,7 @@ const fallbackImg = "https://via.placeholder.com/160x120.png?text=Service+Image"
 const EditServicePage = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { listing_id } = useParams();
+  const { id: listing_id } = useParams(); // Route param is :id, extract as listing_id
 
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("");
