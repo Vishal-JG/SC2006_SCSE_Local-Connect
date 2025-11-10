@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPaperPlane, faEnvelope, faComments } from '@fortawesome/free-solid-svg-icons';
 import { faTelegram } from '@fortawesome/free-brands-svg-icons';
 
-const TELEGRAM_GROUP_URL = "https://t.me/yourgroup"
+const TELEGRAM_GROUP_URL = "https://t.me/+vxpCaTX3cP9hZWM1"
 const EMAIL_ADDRESS = "support@localconnect.com"
 
 const ContactUI = () => {

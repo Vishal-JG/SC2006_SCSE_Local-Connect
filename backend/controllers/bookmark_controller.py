@@ -96,12 +96,15 @@ def get_bookmarks():
     try:
         # Verify authentication
         user_id = verify_token()
+        print(f"[GET BOOKMARKS] User ID: {user_id}, Type: {type(user_id)}")
         
         # Get user role (optional - could allow all roles to bookmark)
         role = get_user_role(user_id)
+        print(f"[GET BOOKMARKS] User role: {role}")
         
         # Get bookmarks with service details
         bookmarks = Bookmark.get_with_service_details(user_id)
+        print(f"[GET BOOKMARKS] Found {len(bookmarks)} bookmarks")
         
         return jsonify({
             'success': True,
@@ -161,16 +164,19 @@ def add_bookmark():
     try:
         # Verify authentication
         user_id = verify_token()
+        print(f"[ADD BOOKMARK] User ID: {user_id}, Type: {type(user_id)}")
         
         # Get request data
         data = request.get_json()
         listing_id = data.get('listing_id')
+        print(f"[ADD BOOKMARK] Listing ID: {listing_id}")
         
         if not listing_id:
             return jsonify({'success': False, 'error': 'listing_id is required'}), 400
         
         # Create bookmark
         bookmark = Bookmark.create(user_id, listing_id)
+        print(f"[ADD BOOKMARK] Bookmark created: {bookmark.to_dict()}")
         
         return jsonify({
             'success': True,
@@ -179,8 +185,10 @@ def add_bookmark():
         }), 201
         
     except ValueError as e:
+        print(f"[ADD BOOKMARK ERROR] ValueError: {str(e)}")
         return jsonify({'success': False, 'error': str(e)}), 400
     except Exception as e:
+        print(f"[ADD BOOKMARK ERROR] Exception: {str(e)}")
         return jsonify({'success': False, 'error': str(e)}), 500
 
 

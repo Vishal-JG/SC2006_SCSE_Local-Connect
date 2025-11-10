@@ -20,7 +20,7 @@ CREATE TABLE Users (
 
 CREATE TABLE Providers (
     provider_id INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_id INTEGER NOT NULL,
+    user_id TEXT NOT NULL,
     business_name TEXT,
     description TEXT,
     approved BOOLEAN DEFAULT 0,
@@ -52,7 +52,7 @@ CREATE TABLE Listings (
 CREATE TABLE Bookings (
     booking_id INTEGER PRIMARY KEY AUTOINCREMENT,
     listing_id INTEGER NOT NULL,
-    user_id INTEGER NOT NULL,
+    user_id TEXT NOT NULL,
     booking_date DATETIME NOT NULL,
     status TEXT CHECK(status IN ('pending', 'confirmed', 'cancelled', 'completed')) DEFAULT 'pending',
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -75,7 +75,7 @@ CREATE TABLE Reviews (
 
 CREATE TABLE Bookmarks (
     bookmark_id INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_id INTEGER NOT NULL,
+    user_id TEXT NOT NULL,
     listing_id INTEGER NOT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES Users(user_id),
@@ -85,9 +85,9 @@ CREATE TABLE Bookmarks (
 
 CREATE TABLE Admin_Actions (
     action_id INTEGER PRIMARY KEY AUTOINCREMENT,
-    admin_id INTEGER NOT NULL,
+    admin_id TEXT NOT NULL,
     listing_id INTEGER,
-    target_user_id INTEGER,
+    target_user_id TEXT,
     action TEXT,
     notes TEXT,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -100,7 +100,7 @@ CREATE TABLE Listing_Status (
     status_id INTEGER PRIMARY KEY AUTOINCREMENT,
     listing_id INTEGER NOT NULL,
     status TEXT NOT NULL,
-    changed_by INTEGER,
+    changed_by TEXT,
     changed_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     notes TEXT,
     FOREIGN KEY (listing_id) REFERENCES Listings(listing_id),

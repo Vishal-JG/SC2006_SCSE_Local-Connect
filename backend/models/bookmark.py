@@ -61,6 +61,7 @@ class Bookmark:
             ValueError: If bookmark already exists (UNIQUE constraint)
         """
         db = get_db()
+        print(f"[BOOKMARK CREATE] Attempting to create bookmark - User ID: {user_id} (type: {type(user_id)}), Listing ID: {listing_id} (type: {type(listing_id)})")
         try:
             cursor = db.execute(
                 """
@@ -71,11 +72,15 @@ class Bookmark:
             )
             db.commit()
             bookmark_id = cursor.lastrowid
+            print(f"[BOOKMARK CREATE] Successfully created bookmark with ID: {bookmark_id}")
             
             # Fetch the created bookmark
-            return Bookmark.get_by_id(bookmark_id)
+            bookmark = Bookmark.get_by_id(bookmark_id)
+            print(f"[BOOKMARK CREATE] Retrieved bookmark: {bookmark.to_dict() if bookmark else 'None'}")
+            return bookmark
         except Exception as e:
             db.rollback()
+            print(f"[BOOKMARK CREATE ERROR] {type(e).__name__}: {str(e)}")
             # Handle UNIQUE constraint violation
             if 'UNIQUE constraint failed' in str(e):
                 raise ValueError("This service is already bookmarked")
@@ -139,6 +144,17 @@ class Bookmark:
             list[dict]: List of dictionaries with bookmark and service details
         """
         db = get_db()
+        
+        print(f"[GET WITH SERVICE DETAILS] Fetching bookmarks for user_id: {user_id} (type: {type(user_id)})")
+        
+        # First, check if any bookmarks exist for this user
+        bookmark_check = db.execute(
+            "SELECT COUNT(*) as count FROM Bookmarks WHERE user_id = ?",
+            (user_id,)
+        ).fetchone()
+        print(f"[GET WITH SERVICE DETAILS] Found {bookmark_check['count']} raw bookmarks in Bookmarks table")
+        
+        # Get all bookmarks regardless of listing status
         rows = db.execute(
             """
             SELECT 
@@ -160,11 +176,15 @@ class Bookmark:
             JOIN Listings l ON b.listing_id = l.listing_id
             JOIN Providers p ON l.provider_id = p.provider_id
             LEFT JOIN Categories c ON l.category_id = c.category_id
-            WHERE b.user_id = ? AND l.status = 'approved'
+            WHERE b.user_id = ?
             ORDER BY b.created_at DESC
             """,
             (user_id,)
         ).fetchall()
+        
+        print(f"[GET WITH SERVICE DETAILS] After JOIN query, found {len(rows)} bookmarks with service details")
+        if len(rows) > 0:
+            print(f"[GET WITH SERVICE DETAILS] First bookmark: {dict(rows[0])}")
         
         return [dict(row) for row in rows]
     

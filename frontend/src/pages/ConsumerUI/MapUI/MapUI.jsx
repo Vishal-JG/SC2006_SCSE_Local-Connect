@@ -335,7 +335,7 @@ const MapUI = () => {
   return (
     <>
     <div className="mapui-container">
-      <button onClick={() => navigate("/service")} className="back-btn">
+      <button onClick={() => navigate(`/service/${type}/${id}`)} className="back-btn">
         <FaArrowLeft /> Back
       </button>
 

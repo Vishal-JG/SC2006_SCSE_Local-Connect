@@ -34,18 +34,22 @@ const BookmarkUI = () => {
 
   useEffect(() => {
     const fetchBookmarks = async () => {
+      console.log("[BOOKMARK UI] Starting to fetch bookmarks...");
       try {
         const auth = getAuth();
         const user = auth.currentUser;
 
         if (!user) {
+          console.log("[BOOKMARK UI] No user logged in");
           setShowNotification(true);
           setLoading(false);
           return;
         }
 
+        console.log("[BOOKMARK UI] User logged in, getting token...");
         const token = await user.getIdToken();
 
+        console.log("[BOOKMARK UI] Fetching bookmarks from API...");
         const res = await fetch("http://localhost:5000/api/bookmarks", {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -54,6 +58,7 @@ const BookmarkUI = () => {
 
         if (!res.ok) throw new Error("Failed to fetch bookmarks");
         const data = await res.json();
+        console.log("[BOOKMARK UI] Received data:", data);
 
         const mapped =
           data.bookmarks?.map((item) => ({
@@ -65,9 +70,10 @@ const BookmarkUI = () => {
             categoryId: categoryMap[item.category_name?.toLowerCase()] || 0,
           })) || [];
 
+        console.log("[BOOKMARK UI] Mapped bookmarks:", mapped);
         setBookmarks(mapped);
       } catch (err) {
-        console.error("Error fetching bookmarks:", err);
+        console.error("[BOOKMARK UI] Error fetching bookmarks:", err);
         setError(err.message);
       } finally {
         setLoading(false);

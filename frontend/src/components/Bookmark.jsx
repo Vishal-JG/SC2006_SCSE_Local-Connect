@@ -32,6 +32,7 @@ const BookmarkButton = ({ listingId }) => {
   }, [listingId, token]);
 
   const toggleBookmark = async () => {
+    console.log("[BOOKMARK BUTTON] Toggle clicked for listing:", listingId);
     if (!token) {
       alert("Please log in to bookmark");
       return;
@@ -41,25 +42,30 @@ const BookmarkButton = ({ listingId }) => {
     try {
       if (bookmarked) {
         // Remove bookmark
+        console.log("[BOOKMARK BUTTON] Removing bookmark for listing:", listingId);
         await axios.delete(
           `http://localhost:5000/api/bookmarks/listing/${listingId}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
         );
+        console.log("[BOOKMARK BUTTON] Bookmark removed successfully");
         setBookmarked(false);
       } else {
         // Add bookmark
-        await axios.post(
+        console.log("[BOOKMARK BUTTON] Adding bookmark for listing:", listingId);
+        const response = await axios.post(
           "http://localhost:5000/api/bookmarks",
           { listing_id: listingId },
           {
             headers: { Authorization: `Bearer ${token}` },
           }
         );
+        console.log("[BOOKMARK BUTTON] Bookmark added successfully:", response.data);
         setBookmarked(true);
       }
     } catch (error) {
+      console.error("[BOOKMARK BUTTON] Error:", error.response?.data || error.message);
       alert("Failed to update bookmark");
     } finally {
       setLoading(false);

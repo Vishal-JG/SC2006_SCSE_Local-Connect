@@ -3,6 +3,8 @@ import styles from './Authpage.module.css';
 import { auth } from '../firebase'; 
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 
 import {
   signInWithEmailAndPassword,
@@ -14,6 +16,7 @@ export default function AuthPage() {
   const [isLogin, setIsLogin] = useState(true);
   const [loginEmail, setLoginEmail] = useState(''); 
   const [loginPassword, setLoginPassword] = useState('');
+  const [showLoginPassword, setShowLoginPassword] = useState(false);
 
   const [signUpFirstName, setSignUpFirstName] = useState('');
   const [signUpLastName, setSignUpLastName] = useState('');
@@ -21,6 +24,8 @@ export default function AuthPage() {
   const [signUpPhone, setSignUpPhone] = useState('');
   const [signUpPassword, setSignUpPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [showSignUpPassword, setShowSignUpPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [signUpRole, setSignUpRole] = useState('customer'); // 'customer' or 'provider'
 
   // Provider-specific info
@@ -232,14 +237,24 @@ export default function AuthPage() {
 
             <div className={styles.inputGroup}>
               <label className={styles.label}>Password</label>
-              <input
-                type="password"
-                className={styles.input}
-                placeholder="Enter your password"
-                value={loginPassword}
-                onChange={(e) => setLoginPassword(e.target.value)}
-                required
-              />
+              <div className={styles.passwordWrapper}>
+                <input
+                  type={showLoginPassword ? "text" : "password"}
+                  className={styles.input}
+                  placeholder="Enter your password"
+                  value={loginPassword}
+                  onChange={(e) => setLoginPassword(e.target.value)}
+                  required
+                />
+                <button
+                  type="button"
+                  className={styles.togglePassword}
+                  onClick={() => setShowLoginPassword(!showLoginPassword)}
+                  aria-label="Toggle password visibility"
+                >
+                  <FontAwesomeIcon icon={showLoginPassword ? faEyeSlash : faEye} />
+                </button>
+              </div>
             </div>
 
             <button type="submit" className={styles.submitButton}>
@@ -298,26 +313,46 @@ export default function AuthPage() {
 
             <div className={styles.inputGroup}>
               <label className={styles.label}>Password</label>
-              <input
-                type="password"
-                className={styles.input}
-                placeholder="Create a password"
-                value={signUpPassword}
-                onChange={(e) => setSignUpPassword(e.target.value)}
-                required
-              />
+              <div className={styles.passwordWrapper}>
+                <input
+                  type={showSignUpPassword ? "text" : "password"}
+                  className={styles.input}
+                  placeholder="Create a password"
+                  value={signUpPassword}
+                  onChange={(e) => setSignUpPassword(e.target.value)}
+                  required
+                />
+                <button
+                  type="button"
+                  className={styles.togglePassword}
+                  onClick={() => setShowSignUpPassword(!showSignUpPassword)}
+                  aria-label="Toggle password visibility"
+                >
+                  <FontAwesomeIcon icon={showSignUpPassword ? faEyeSlash : faEye} />
+                </button>
+              </div>
             </div>
 
             <div className={styles.inputGroup}>
               <label className={styles.label}>Confirm Password</label>
-              <input
-                type="password"
-                className={styles.input}
-                placeholder="Confirm your password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                required
-              />
+              <div className={styles.passwordWrapper}>
+                <input
+                  type={showConfirmPassword ? "text" : "password"}
+                  className={styles.input}
+                  placeholder="Confirm your password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  required
+                />
+                <button
+                  type="button"
+                  className={styles.togglePassword}
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  aria-label="Toggle password visibility"
+                >
+                  <FontAwesomeIcon icon={showConfirmPassword ? faEyeSlash : faEye} />
+                </button>
+              </div>
             </div>
 
             {/* Role Selector (UI only, uses existing signUpRole state) */}

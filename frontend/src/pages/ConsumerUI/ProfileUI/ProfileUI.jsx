@@ -9,7 +9,9 @@ import {
   faTrashAlt,
   faTimes,
   faExclamationTriangle,
-  faCheckCircle
+  faCheckCircle,
+  faEye,
+  faEyeSlash
 } from "@fortawesome/free-solid-svg-icons";
 import "./ProfileUI.css";
 import defaultPic from "../../../assets/default-pic.png";
@@ -24,6 +26,8 @@ const ProfileUI = () => {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -208,25 +212,45 @@ const ProfileUI = () => {
             <form onSubmit={handlePasswordSubmit}>
               <div className="form-group">
                 <label htmlFor="new-password">New Password</label>
-                <input
-                  type="password"
-                  id="new-password"
-                  value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
-                  placeholder="Enter new password"
-                  className="form-input"
-                />
+                <div className="password-input-wrapper">
+                  <input
+                    type={showNewPassword ? "text" : "password"}
+                    id="new-password"
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    placeholder="Enter new password"
+                    className="form-input"
+                  />
+                  <button
+                    type="button"
+                    className="toggle-password-btn"
+                    onClick={() => setShowNewPassword(!showNewPassword)}
+                    aria-label="Toggle password visibility"
+                  >
+                    <FontAwesomeIcon icon={showNewPassword ? faEyeSlash : faEye} />
+                  </button>
+                </div>
               </div>
               <div className="form-group">
                 <label htmlFor="confirm-password">Confirm Password</label>
-                <input
-                  type="password"
-                  id="confirm-password"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  placeholder="Confirm new password"
-                  className="form-input"
-                />
+                <div className="password-input-wrapper">
+                  <input
+                    type={showConfirmPassword ? "text" : "password"}
+                    id="confirm-password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    placeholder="Confirm new password"
+                    className="form-input"
+                  />
+                  <button
+                    type="button"
+                    className="toggle-password-btn"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    aria-label="Toggle password visibility"
+                  >
+                    <FontAwesomeIcon icon={showConfirmPassword ? faEyeSlash : faEye} />
+                  </button>
+                </div>
               </div>
               {passwordError && (
                 <div className="error-message">

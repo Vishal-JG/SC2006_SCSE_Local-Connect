@@ -112,7 +112,7 @@ app.register_blueprint(booking_bp, url_prefix="/api")
 def index():
     return jsonify({'message': 'Flask backend is running!'})
 
-def create_user_if_not_exists(firebase_uid, email, display_name, role='customer', business_name=None, business_description=None):
+def create_user_if_not_exists(firebase_uid, email, display_name, phone=None, role='customer', business_name=None, business_description=None):
     """
     Ensure a user exists in the DB.
     - If the email is in ADMIN_EMAILS, assign 'admin' regardless of frontend input.
@@ -143,6 +143,7 @@ def create_user_if_not_exists(firebase_uid, email, display_name, role='customer'
             user = User.create_admin(
                 email=email,
                 display_name=display_name,
+                phone=phone,
                 user_id=firebase_uid
             )
 
@@ -152,6 +153,7 @@ def create_user_if_not_exists(firebase_uid, email, display_name, role='customer'
             user = User.create_provider(
                 email=email,
                 display_name=display_name,
+                phone=phone,
                 user_id=firebase_uid,
                 business_name=business_name,
                 business_description=business_description
@@ -163,6 +165,7 @@ def create_user_if_not_exists(firebase_uid, email, display_name, role='customer'
             user = User.create_provider(
                 email=email,
                 display_name=display_name,
+                phone=phone,
                 user_id=firebase_uid,
                 business_name=business_name,
                 business_description=business_description
@@ -174,6 +177,7 @@ def create_user_if_not_exists(firebase_uid, email, display_name, role='customer'
             user = User.create_consumer(
                 email=email,
                 display_name=display_name,
+                phone=phone,
                 user_id=firebase_uid
             )
 
@@ -246,6 +250,7 @@ def api_login():
         # --- Get optional role/business info from frontend ---
         data = request.get_json(silent=True) or {}
         role = data.get('role', 'customer')  # 'customer' by default
+        phone = data.get('phone')  # Optional phone number
         business_name = data.get('business_name')
         business_description = data.get('business_description')
         
@@ -270,6 +275,7 @@ def api_login():
             firebase_uid=firebase_uid,
             email=email,
             display_name=display_name,
+            phone=phone,
             role=role,
             business_name=business_name,
             business_description=business_description
